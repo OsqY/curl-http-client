@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:diff_match_patch/diff_match_patch.dart' show diff, cleanupSemantic, Diff, DIFF_DELETE, DIFF_INSERT, DIFF_EQUAL;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,6 +71,16 @@ class ResponsePanel extends ConsumerWidget {
                   style: const TextStyle(
                       fontSize: 12, color: AppColors.paneHeaderFg)),
               const Spacer(),
+              ClickCursor(
+                child: IconButton(
+                  icon: const Icon(Icons.compare_arrows, size: 16),
+                  tooltip: 'Compare with saved response',
+                  onPressed: () => _compareResponse(context, response.bodyText ?? ''),
+                  padding: EdgeInsets.zero,
+                  constraints:
+                      const BoxConstraints(minWidth: 24, minHeight: 24),
+                ),
+              ),
               ClickCursor(
                 child: IconButton(
                   icon: const Icon(Icons.save, size: 16),
@@ -169,6 +180,72 @@ class ResponsePanel extends ConsumerWidget {
         );
       }
     }
+  }
+
+  Future<void> _compareResponse(
+    BuildContext context,
+    String currentBody,
+  ) async {
+    final result = await FilePicker.platform.pickFiles(
+      dialogTitle: 'Select a saved response to compare',
+      type: FileType.any,
+    );
+    if (result == null || result.files.isEmpty || !context.mounted) return;
+
+    final otherBody = await File(result.files.first.path!).readAsString();
+    if (!context.mounted) return;
+
+    final diffs = diff(otherBody, currentBody);
+    cleanupSemantic(diffs);
+
+    if (!context.mounted) return;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Diff with ${result.files.first.name}'),
+        content: SizedBox(
+          width: 700,
+          height: 500,
+          child: SingleChildScrollView(
+            child: _buildDiffText(diffs),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDiffText(List<Diff> diffs) {
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(
+          fontFamily: 'monospace',
+          fontSize: 12,
+          color: AppColors.fgDefault,
+        ),
+        children: diffs.map((diff) {
+          final style = switch (diff.operation) {
+            DIFF_INSERT => const TextStyle(
+              backgroundColor: Color(0x4027AE60),
+              color: Color(0xFF27AE60),
+            ),
+            DIFF_DELETE => const TextStyle(
+              backgroundColor: Color(0x40E74C3C),
+              color: Color(0xFFE74C3C),
+              decoration: TextDecoration.lineThrough,
+            ),
+            DIFF_EQUAL => const TextStyle(color: AppColors.fgDefault),
+            _ => const TextStyle(color: AppColors.fgDefault),
+          };
+          return TextSpan(text: diff.text, style: style);
+        }).toList(),
+      ),
+    );
   }
 }
 
