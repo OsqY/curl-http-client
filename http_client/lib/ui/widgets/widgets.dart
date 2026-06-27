@@ -7,5 +7,6 @@ export 'method_badge.dart';
 export 'response_panel.dart';
 export 'scripts_editor.dart';
 export 'section_header.dart';
+export 'sidebar.dart';
 export 'sidebar_row.dart';
 export 'status_tag.dart';
