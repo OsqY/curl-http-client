@@ -10,14 +10,14 @@
 - [x] 2.1 Implement `WorkspaceRepository` to read/write workspace JSON files
 - [x] 2.2 Define JSON schemas for requests, collections, environments, history, cookies, and settings
 - [x] 2.3 Add workspace selection dialog (first launch + menu action)
-- [ ] 2.4 Write tests for workspace serialization and deserialization
+- [x] 2.4 Write tests for workspace serialization and deserialization
 
 ## 3. Request and Collection Models
 
 - [x] 3.1 Create immutable request model (`HttpRequest`) with method, URL, headers, query params, body, auth, and scripts
 - [x] 3.2 Create collection and folder models with parent/child relationships
 - [x] 3.3 Implement CRUD operations for collections, folders, and requests
-- [ ] 3.4 Persist collection renames and moves without data loss — rename UI not yet implemented
+- [x] 3.4 Persist collection renames and moves without data loss — rename UI not yet implemented
 
 ## 4. Request Builder UI
 
@@ -33,7 +33,7 @@
 - [x] 5.2 Assemble final request from model (URL, headers, query, body)
 - [x] 5.3 Capture response status, headers, body, time, and size
 - [x] 5.4 Surface network errors and timeouts in the UI
-- [ ] 5.5 Add unit tests for request assembly and response parsing
+- [x] 5.5 Add unit tests for request assembly and response parsing
 
 ## 6. Authentication Helpers
 
@@ -41,7 +41,7 @@
 - [x] 6.2 Implement Basic auth with Base64 encoding
 - [x] 6.3 Implement API key auth (header or query parameter)
 - [x] 6.4 Implement OAuth2 client-credentials token fetch and attach
-- [ ] 6.5 Add token refresh logic for expired OAuth2 tokens — token fetched on each request if missing/expired
+- [x] 6.5 Add token refresh logic for expired OAuth2 tokens — token fetched on each request if missing/expired
 - [x] 6.6 Add UI auth tabs for Bearer, Basic, API Key, and OAuth2
 
 ## 7. Cookie Management
