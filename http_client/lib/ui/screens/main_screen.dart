@@ -43,7 +43,6 @@ class _SidebarRow extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback? onTap;
   final VoidCallback? onSecondaryTap;
-  final bool selected;
   final double leftPadding;
 
   const _SidebarRow({
@@ -52,7 +51,6 @@ class _SidebarRow extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.onSecondaryTap,
-    this.selected = false,
     this.leftPadding = 8,
   });
 
@@ -70,7 +68,6 @@ class _SidebarRow extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.only(
                 left: leftPadding, right: 8, top: 4, bottom: 4),
-            color: selected ? AppColors.border.withAlpha(30) : null,
             child: Row(
               children: [
                 if (leading != null) ...[leading!, const SizedBox(width: 6)],
@@ -84,7 +81,7 @@ class _SidebarRow extends StatelessWidget {
                     child: title ?? const SizedBox.shrink(),
                   ),
                 ),
-                if (trailing != null) trailing!,
+                ?trailing,
               ],
             ),
           ),
@@ -555,7 +552,8 @@ class _Sidebar extends ConsumerWidget {
                 ),
                 Expanded(
                   child: DropdownButtonFormField<Environment?>(
-                    value: activeEnv,
+                    initialValue: activeEnv,
+                    key: ValueKey(activeEnv?.id),
                     isExpanded: true,
                     items: [
                       const DropdownMenuItem<Environment?>(
@@ -595,7 +593,7 @@ class _Sidebar extends ConsumerWidget {
                   PopupMenuButton<String>(
                     onSelected: (v) {
                       if (v == 'delete') {
-                        _confirmDeleteEnvironment(context, ref, activeEnv!);
+                        _confirmDeleteEnvironment(context, ref, activeEnv);
                       }
                     },
                     icon: const Icon(Icons.more_vert,
@@ -610,7 +608,7 @@ class _Sidebar extends ConsumerWidget {
             ),
           ),
           loading: () => const SizedBox.shrink(),
-          error: (_, __) => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
         ),
         const Divider(height: 1),
         // Collections
@@ -709,7 +707,7 @@ class _Sidebar extends ConsumerWidget {
               },
             ),
             loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
           ),
         ),
       ],
@@ -848,7 +846,7 @@ class _Sidebar extends ConsumerWidget {
         PopupMenuItem(value: 'delete', child: Text('Delete')),
       ],
     ).then((v) {
-      if (v == null) return;
+      if (v == null || !context.mounted) return;
       switch (v) {
         case 'new_request':
           ref.read(currentRequestProvider.notifier).state = HttpRequest(
@@ -913,7 +911,7 @@ class _Sidebar extends ConsumerWidget {
         PopupMenuItem(value: 'delete', child: Text('Delete')),
       ],
     ).then((v) {
-      if (v == null) return;
+      if (v == null || !context.mounted) return;
       switch (v) {
         case 'duplicate':
           _duplicateRequest(ref, collection, request);
@@ -1887,7 +1885,8 @@ class _AuthEditorState extends State<_AuthEditor> {
     return Column(
       children: [
         DropdownButtonFormField<String>(
-          value: auth.type,
+          initialValue: auth.type,
+          key: ValueKey(auth.type),
           items: const [
             DropdownMenuItem(value: 'none', child: Text('None')),
             DropdownMenuItem(
@@ -1992,7 +1991,8 @@ class _AuthEditorState extends State<_AuthEditor> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<ApiKeyLocation>(
-                value: a.location,
+                initialValue: a.location,
+                key: ValueKey(a.location),
                 items: ApiKeyLocation.values
                     .map((l) => DropdownMenuItem(
                         value: l, child: Text(l.name)))
@@ -2100,7 +2100,8 @@ class _BodyEditorState extends State<_BodyEditor> {
     return Column(
       children: [
         DropdownButtonFormField<BodyMode>(
-          value: body.mode,
+          initialValue: body.mode,
+          key: ValueKey(body.mode),
           items: BodyMode.values
               .map((m) => DropdownMenuItem(
                   value: m, child: Text(m.displayName)))
@@ -2111,7 +2112,8 @@ class _BodyEditorState extends State<_BodyEditor> {
         ),
         if (body.mode == BodyMode.raw) ...[
           DropdownButtonFormField<RawContentType>(
-            value: body.rawContentType,
+            initialValue: body.rawContentType,
+            key: ValueKey(body.rawContentType),
             items: RawContentType.values
                 .map((t) => DropdownMenuItem(
                     value: t, child: Text(t.displayName)))
