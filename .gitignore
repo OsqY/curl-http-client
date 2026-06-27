@@ -1,0 +1,37 @@
+# Pi runtime state (AGENTS.md, skill-registry, etc.)
+.atl/
+
+# Flutter / Dart build artifacts (child: http_client/)
+**/build/
+**/.dart_tool/
+**/.pub-cache/
+**/.pub/
+**/coverage/
+**/.flutter-plugins-dependencies
+**/doc/api/
+**/ios/Flutter/.last_build_id
+**/app.*.symbols
+**/app.*.map.json
+
+# IntelliJ / IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+*.swp
+*.log
+*.class
+*.pyc
+
+# Editor / misc
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+#.vscode/
