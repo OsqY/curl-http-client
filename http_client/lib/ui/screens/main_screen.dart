@@ -10,90 +10,17 @@ import 'package:flutter_highlight/themes/vs2015.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
-import 'package:http_client/ui/widgets/method_badge.dart';
+import 'package:http_client/ui/widgets/widgets.dart';
 import 'package:http_client/utils/formatting.dart';
 import 'package:http_client/utils/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
-// ---------------------------------------------------------------------------
 // Clickable wrapper — shows hand cursor on desktop
-// ---------------------------------------------------------------------------
 
-class _ClickCursor extends StatelessWidget {
-  final Widget child;
-  const _ClickCursor({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: child,
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Sidebar row — replaces ListTile, no warnings
-// ---------------------------------------------------------------------------
 
-class _SidebarRow extends StatelessWidget {
-  final Widget? leading;
-  final Widget? title;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-  final VoidCallback? onSecondaryTap;
-  final double leftPadding;
-
-  const _SidebarRow({
-    this.leading,
-    this.title,
-    this.trailing,
-    this.onTap,
-    this.onSecondaryTap,
-    this.leftPadding = 8,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _ClickCursor(
-      child: GestureDetector(
-        onSecondaryTapDown: onSecondaryTap != null
-            ? (d) => onSecondaryTap!()
-            : null,
-        child: InkWell(
-          onTap: onTap,
-          hoverColor: AppColors.border.withAlpha(40),
-          highlightColor: AppColors.border.withAlpha(60),
-          child: Container(
-            padding: EdgeInsets.only(
-                left: leftPadding, right: 8, top: 4, bottom: 4),
-            child: Row(
-              children: [
-                if (leading != null) ...[leading!, const SizedBox(width: 6)],
-                Expanded(
-                  child: DefaultTextStyle(
-                    style: const TextStyle(
-                      color: AppColors.sidebarFg,
-                      fontSize: 12,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    child: title ?? const SizedBox.shrink(),
-                  ),
-                ),
-                ?trailing,
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Main Screen
-// ---------------------------------------------------------------------------
 
 class MainScreen extends ConsumerStatefulWidget {
   const MainScreen({super.key});
@@ -422,9 +349,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Sidebar
-// ---------------------------------------------------------------------------
 
 class _Sidebar extends ConsumerWidget {
   final void Function(HttpRequest) onRequestSelected;
@@ -460,7 +385,7 @@ class _Sidebar extends ConsumerWidget {
           child: Row(
             children: [
               Expanded(
-                child: _ClickCursor(
+                child: ClickCursor(
                   child: InkWell(
                     onTap: () {
                       ref.read(currentRequestProvider.notifier).state =
@@ -541,7 +466,7 @@ class _Sidebar extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
             child: Row(
               children: [
-                _ClickCursor(
+                ClickCursor(
                   child: IconButton(
                     icon: const Icon(Icons.add, size: 14),
                     tooltip: 'New environment',
@@ -580,7 +505,7 @@ class _Sidebar extends ConsumerWidget {
                   ),
                 ),
                 if (activeEnv != null) ...[
-                  _ClickCursor(
+                  ClickCursor(
                     child: IconButton(
                       icon: const Icon(Icons.edit, size: 14),
                       tooltip: 'Edit environment',
@@ -619,7 +544,7 @@ class _Sidebar extends ConsumerWidget {
               padding: EdgeInsets.zero,
               children: [
                 // New collection button
-                _SidebarRow(
+                SidebarRow(
                   leading:
                       const Icon(Icons.create_new_folder, size: 16),
                   title: const Text('New Collection',
@@ -640,7 +565,7 @@ class _Sidebar extends ConsumerWidget {
                           _showFolderDialog(context, ref, collection),
                     ),
                     // Folders
-                    ...collection.folders.map((folder) => _SidebarRow(
+                    ...collection.folders.map((folder) => SidebarRow(
                           leading:
                               const Icon(Icons.folder_open, size: 16),
                           title: Text(folder.name,
@@ -658,7 +583,7 @@ class _Sidebar extends ConsumerWidget {
                         if (!snapshot.hasData) return const SizedBox.shrink();
                         return Column(
                           children: snapshot.data!
-                              .map((req) => _SidebarRow(
+                              .map((req) => SidebarRow(
                                     leading: MethodBadge(method: req.method),
                                     title: Text(req.name,
                                         style:
@@ -692,7 +617,7 @@ class _Sidebar extends ConsumerWidget {
               itemCount: entries.length,
               itemBuilder: (context, index) {
                 final entry = entries[index];
-                return _SidebarRow(
+                return SidebarRow(
                   leading: MethodBadge(method: entry.request.method),
                   title: Text(entry.request.url,
                       style: const TextStyle(fontSize: 11),
@@ -1128,9 +1053,7 @@ class _Sidebar extends ConsumerWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Collection header with hover actions
-// ---------------------------------------------------------------------------
 
 class _CollectionHeader extends StatefulWidget {
   final RequestCollection collection;
@@ -1177,7 +1100,7 @@ class _CollectionHeaderState extends State<_CollectionHeader> {
               ),
             ),
             if (_hovering) ...[
-              _ClickCursor(
+              ClickCursor(
                 child: IconButton(
                   icon: const Icon(Icons.add, size: 14),
                   tooltip: 'New folder',
@@ -1187,7 +1110,7 @@ class _CollectionHeaderState extends State<_CollectionHeader> {
                       const BoxConstraints(minWidth: 20, minHeight: 20),
                 ),
               ),
-              _ClickCursor(
+              ClickCursor(
                 child: IconButton(
                   icon: const Icon(Icons.edit, size: 14),
                   tooltip: 'Rename',
@@ -1197,7 +1120,7 @@ class _CollectionHeaderState extends State<_CollectionHeader> {
                       const BoxConstraints(minWidth: 20, minHeight: 20),
                 ),
               ),
-              _ClickCursor(
+              ClickCursor(
                 child: IconButton(
                   icon: const Icon(Icons.delete, size: 14),
                   tooltip: 'Delete',
@@ -1215,9 +1138,7 @@ class _CollectionHeaderState extends State<_CollectionHeader> {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Section Header
-// ---------------------------------------------------------------------------
 
 class _SectionHeader extends StatelessWidget {
   final String title;
@@ -1242,9 +1163,7 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Request Editor
-// ---------------------------------------------------------------------------
 
 class _RequestEditor extends ConsumerStatefulWidget {
   final VoidCallback onSend;
@@ -1359,7 +1278,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
           child: Row(
             children: [
               // Method badge
-              _ClickCursor(
+              ClickCursor(
                 child: PopupMenuButton<HttpMethod>(
                   onSelected: (m) {
                     ref.read(unsavedChangesProvider.notifier).state = true;
@@ -1425,7 +1344,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
               ),
               const SizedBox(width: 6),
               // Send button
-              _ClickCursor(
+              ClickCursor(
                 child: InkWell(
                   onTap: widget.onSend,
                   child: Container(
@@ -1447,7 +1366,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
                 ),
               ),
               const SizedBox(width: 4),
-              _ClickCursor(
+              ClickCursor(
                 child: IconButton(
                   icon: const Icon(Icons.save, size: 18),
                   tooltip: 'Save (Ctrl+S)',
@@ -1482,7 +1401,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
                     color: AppColors.paneBg,
                     child: TabBarView(
                       children: [
-                        _KeyValueEditor(
+                        KeyValueEditor(
                           items: request.queryParams,
                           onChanged: (v) {
                             ref.read(unsavedChangesProvider.notifier).state = true;
@@ -1490,7 +1409,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
                                 request.copyWith(queryParams: v);
                           },
                         ),
-                        _KeyValueEditor(
+                        KeyValueEditor(
                           items: request.headers,
                           onChanged: (v) {
                             ref.read(unsavedChangesProvider.notifier).state = true;
@@ -1498,7 +1417,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
                                 request.copyWith(headers: v);
                           },
                         ),
-                        _AuthEditor(
+                        AuthEditor(
                           auth: request.auth,
                           onChanged: (a) {
                             ref.read(unsavedChangesProvider.notifier).state = true;
@@ -1506,7 +1425,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
                                 request.copyWith(auth: a);
                           },
                         ),
-                        _BodyEditor(
+                        BodyEditor(
                           body: request.body,
                           onChanged: (b) {
                             ref.read(unsavedChangesProvider.notifier).state = true;
@@ -1514,7 +1433,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
                                 request.copyWith(body: b);
                           },
                         ),
-                        _ScriptsEditor(
+                        ScriptsEditor(
                           scripts: request.scripts,
                           onChanged: (s) {
                             ref.read(unsavedChangesProvider.notifier).state = true;
@@ -1543,9 +1462,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
   }
 }
 
-// ---------------------------------------------------------------------------
 // Response Panel
-// ---------------------------------------------------------------------------
 
 class _ResponsePanel extends ConsumerWidget {
   @override
@@ -1590,7 +1507,7 @@ class _ResponsePanel extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           child: Row(
             children: [
-              _StatusTag(statusCode: response.statusCode),
+              StatusTag(statusCode: response.statusCode),
               const SizedBox(width: 12),
               Text('${response.durationMs} ms',
                   style: const TextStyle(
@@ -1600,7 +1517,7 @@ class _ResponsePanel extends ConsumerWidget {
                   style: const TextStyle(
                       fontSize: 12, color: AppColors.paneHeaderFg)),
               const Spacer(),
-              _ClickCursor(
+              ClickCursor(
                 child: IconButton(
                   icon: const Icon(Icons.save, size: 16),
                   tooltip: 'Save response',
@@ -1726,557 +1643,3 @@ class _ResponsePanel extends ConsumerWidget {
   }
 }
 
-class _StatusTag extends StatelessWidget {
-  final int statusCode;
-  const _StatusTag({required this.statusCode});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = statusCode >= 200 && statusCode < 300
-        ? AppColors.bgSuccess
-        : statusCode >= 300 && statusCode < 400
-            ? AppColors.bgInfo
-            : statusCode >= 400 && statusCode < 500
-                ? AppColors.bgWarning
-                : AppColors.bgDanger;
-    return Text(
-      '$statusCode',
-      style: TextStyle(
-        color: color,
-        fontSize: 13,
-        fontWeight: FontWeight.w700,
-        fontFamily: 'monospace',
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Editors
-// ---------------------------------------------------------------------------
-
-class _KeyValueEditor extends StatefulWidget {
-  final List<KeyValuePair> items;
-  final ValueChanged<List<KeyValuePair>> onChanged;
-
-  const _KeyValueEditor({required this.items, required this.onChanged});
-
-  @override
-  State<_KeyValueEditor> createState() => _KeyValueEditorState();
-}
-
-class _KeyValueEditorState extends State<_KeyValueEditor> {
-  final Map<int, TextEditingController> _keyControllers = {};
-  final Map<int, TextEditingController> _valueControllers = {};
-
-  @override
-  void dispose() {
-    for (final c in _keyControllers.values) {
-      c.dispose();
-    }
-    for (final c in _valueControllers.values) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
-  TextEditingController _getKeyController(int index, String text) {
-    if (!_keyControllers.containsKey(index)) {
-      _keyControllers[index] = TextEditingController(text: text);
-    }
-    return _keyControllers[index]!;
-  }
-
-  TextEditingController _getValueController(int index, String text) {
-    if (!_valueControllers.containsKey(index)) {
-      _valueControllers[index] = TextEditingController(text: text);
-    }
-    return _valueControllers[index]!;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final rows = widget.items.toList();
-    return Column(
-      children: [
-        _SidebarRow(
-          leading: const Icon(Icons.add, size: 16),
-          title: const Text('Add', style: TextStyle(fontSize: 12)),
-          onTap: () => widget.onChanged(
-              [...rows, const KeyValuePair(key: '', value: '')]),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: rows.length,
-            itemBuilder: (context, index) {
-              final item = rows[index];
-              return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom:
-                        BorderSide(color: AppColors.border, width: 0.5),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      value: item.enabled,
-                      onChanged: (v) {
-                        rows[index] = item.copyWith(enabled: v ?? true);
-                        widget.onChanged(rows);
-                      },
-                      materialTapTargetSize:
-                          MaterialTapTargetSize.shrinkWrap,
-                      visualDensity: VisualDensity.compact,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        style: const TextStyle(
-                            fontFamily: 'monospace', fontSize: 12),
-                        decoration: const InputDecoration(
-                            hintText: 'Key',
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            isDense: true),
-                        controller: _getKeyController(index, item.key),
-                        onChanged: (v) =>
-                            rows[index] = item.copyWith(key: v),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: TextField(
-                        style: const TextStyle(
-                            fontFamily: 'monospace', fontSize: 12),
-                        decoration: const InputDecoration(
-                            hintText: 'Value',
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            isDense: true),
-                        controller: _getValueController(index, item.value),
-                        onChanged: (v) =>
-                            rows[index] = item.copyWith(value: v),
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close, size: 14),
-                      onPressed: () {
-                        _keyControllers.remove(index)?.dispose();
-                        _valueControllers.remove(index)?.dispose();
-                        rows.removeAt(index);
-                        widget.onChanged(rows);
-                      },
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
-                          minWidth: 24, minHeight: 24),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _AuthEditor extends StatefulWidget {
-  final AuthConfig auth;
-  final ValueChanged<AuthConfig> onChanged;
-
-  const _AuthEditor({required this.auth, required this.onChanged});
-
-  @override
-  State<_AuthEditor> createState() => _AuthEditorState();
-}
-
-class _AuthEditorState extends State<_AuthEditor> {
-  final Map<String, TextEditingController> _controllers = {};
-
-  @override
-  void dispose() {
-    for (final c in _controllers.values) {
-      c.dispose();
-    }
-    super.dispose();
-  }
-
-  TextEditingController _controller(String field, String text) {
-    if (!_controllers.containsKey(field)) {
-      _controllers[field] = TextEditingController(text: text);
-    }
-    return _controllers[field]!;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final auth = widget.auth;
-    return Column(
-      children: [
-        DropdownButtonFormField<String>(
-          initialValue: auth.type,
-          key: ValueKey(auth.type),
-          items: const [
-            DropdownMenuItem(value: 'none', child: Text('None')),
-            DropdownMenuItem(
-                value: 'bearer', child: Text('Bearer Token')),
-            DropdownMenuItem(
-                value: 'basic', child: Text('Basic Auth')),
-            DropdownMenuItem(
-                value: 'apiKey', child: Text('API Key')),
-            DropdownMenuItem(
-                value: 'oauth2', child: Text('OAuth2')),
-          ],
-          onChanged: (type) {
-            widget.onChanged(switch (type) {
-              'bearer' => BearerAuth(token: ''),
-              'basic' => BasicAuth(username: '', password: ''),
-              'apiKey' => ApiKeyAuth(key: '', value: ''),
-              'oauth2' => OAuth2Auth(
-                  tokenUrl: '',
-                  clientId: '',
-                  clientSecret: '',
-                  scope: ''),
-              _ => const NoAuth(),
-            });
-          },
-        ),
-        Expanded(
-          child: _buildAuthForm(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAuthForm() {
-    final auth = widget.auth;
-    switch (auth) {
-      case BearerAuth a:
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: TextField(
-            style:
-                const TextStyle(fontFamily: 'monospace', fontSize: 12),
-            decoration: const InputDecoration(labelText: 'Token'),
-            controller: _controller('bearer.token', a.token),
-            onChanged: (v) =>
-                widget.onChanged(a.copyWith(token: v)),
-          ),
-        );
-      case BasicAuth a:
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              TextField(
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
-                decoration:
-                    const InputDecoration(labelText: 'Username'),
-                controller:
-                    _controller('basic.username', a.username),
-                onChanged: (v) =>
-                    widget.onChanged(a.copyWith(username: v)),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
-                decoration:
-                    const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                controller:
-                    _controller('basic.password', a.password),
-                onChanged: (v) =>
-                    widget.onChanged(a.copyWith(password: v)),
-              ),
-            ],
-          ),
-        );
-      case ApiKeyAuth a:
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              TextField(
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
-                decoration:
-                    const InputDecoration(labelText: 'Key'),
-                controller: _controller('apiKey.key', a.key),
-                onChanged: (v) =>
-                    widget.onChanged(a.copyWith(key: v)),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
-                decoration:
-                    const InputDecoration(labelText: 'Value'),
-                controller:
-                    _controller('apiKey.value', a.value),
-                onChanged: (v) =>
-                    widget.onChanged(a.copyWith(value: v)),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<ApiKeyLocation>(
-                initialValue: a.location,
-                key: ValueKey(a.location),
-                items: ApiKeyLocation.values
-                    .map((l) => DropdownMenuItem(
-                        value: l, child: Text(l.name)))
-                    .toList(),
-                onChanged: (l) {
-                  if (l != null) {
-                    widget.onChanged(a.copyWith(location: l));
-                  }
-                },
-              ),
-            ],
-          ),
-        );
-      case OAuth2Auth a:
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              TextField(
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
-                decoration: const InputDecoration(
-                    labelText: 'Token URL'),
-                controller:
-                    _controller('oauth2.tokenUrl', a.tokenUrl),
-                onChanged: (v) =>
-                    widget.onChanged(a.copyWith(tokenUrl: v)),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
-                decoration: const InputDecoration(
-                    labelText: 'Client ID'),
-                controller:
-                    _controller('oauth2.clientId', a.clientId),
-                onChanged: (v) =>
-                    widget.onChanged(a.copyWith(clientId: v)),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
-                decoration: const InputDecoration(
-                    labelText: 'Client Secret'),
-                obscureText: true,
-                controller: _controller(
-                    'oauth2.clientSecret', a.clientSecret),
-                onChanged: (v) => widget
-                    .onChanged(a.copyWith(clientSecret: v)),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
-                decoration:
-                    const InputDecoration(labelText: 'Scope'),
-                controller:
-                    _controller('oauth2.scope', a.scope),
-                onChanged: (v) =>
-                    widget.onChanged(a.copyWith(scope: v)),
-              ),
-            ],
-          ),
-        );
-      default:
-        return const Center(
-          child: Text('No authentication',
-              style:
-                  TextStyle(color: AppColors.fgMuted, fontSize: 12)),
-        );
-    }
-  }
-}
-
-class _BodyEditor extends StatefulWidget {
-  final RequestBody body;
-  final ValueChanged<RequestBody> onChanged;
-
-  const _BodyEditor({required this.body, required this.onChanged});
-
-  @override
-  State<_BodyEditor> createState() => _BodyEditorState();
-}
-
-class _BodyEditorState extends State<_BodyEditor> {
-  late TextEditingController _rawContentController;
-
-  @override
-  void initState() {
-    super.initState();
-    _rawContentController =
-        TextEditingController(text: widget.body.rawContent);
-  }
-
-  @override
-  void dispose() {
-    _rawContentController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final body = widget.body;
-    return Column(
-      children: [
-        DropdownButtonFormField<BodyMode>(
-          initialValue: body.mode,
-          key: ValueKey(body.mode),
-          items: BodyMode.values
-              .map((m) => DropdownMenuItem(
-                  value: m, child: Text(m.displayName)))
-              .toList(),
-          onChanged: (m) {
-            if (m != null) widget.onChanged(body.copyWith(mode: m));
-          },
-        ),
-        if (body.mode == BodyMode.raw) ...[
-          DropdownButtonFormField<RawContentType>(
-            initialValue: body.rawContentType,
-            key: ValueKey(body.rawContentType),
-            items: RawContentType.values
-                .map((t) => DropdownMenuItem(
-                    value: t, child: Text(t.displayName)))
-                .toList(),
-            onChanged: (t) {
-              if (t != null) {
-                widget.onChanged(body.copyWith(rawContentType: t));
-              }
-            },
-          ),
-          Expanded(
-            child: TextField(
-              maxLines: null,
-              expands: true,
-              style: const TextStyle(
-                  fontFamily: 'monospace', fontSize: 13),
-              decoration: const InputDecoration(
-                hintText: 'Body content',
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-              controller: _rawContentController,
-              onChanged: (v) =>
-                  widget.onChanged(body.copyWith(rawContent: v)),
-            ),
-          ),
-        ] else if (body.mode == BodyMode.formData ||
-            body.mode == BodyMode.urlEncoded) ...[
-          Expanded(
-            child: _KeyValueEditor(
-              items: body.formData,
-              onChanged: (v) =>
-                  widget.onChanged(body.copyWith(formData: v)),
-            ),
-          ),
-        ] else
-          const Center(
-            child: Text('No body',
-                style: TextStyle(
-                    color: AppColors.fgMuted, fontSize: 12)),
-          ),
-      ],
-    );
-  }
-}
-
-class _ScriptsEditor extends StatefulWidget {
-  final RequestScripts scripts;
-  final ValueChanged<RequestScripts> onChanged;
-
-  const _ScriptsEditor({required this.scripts, required this.onChanged});
-
-  @override
-  State<_ScriptsEditor> createState() => _ScriptsEditorState();
-}
-
-class _ScriptsEditorState extends State<_ScriptsEditor> {
-  late TextEditingController _preScriptController;
-  late TextEditingController _postScriptController;
-
-  @override
-  void initState() {
-    super.initState();
-    _preScriptController =
-        TextEditingController(text: widget.scripts.preRequest);
-    _postScriptController =
-        TextEditingController(text: widget.scripts.postResponse);
-  }
-
-  @override
-  void dispose() {
-    _preScriptController.dispose();
-    _postScriptController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Column(
-        children: [
-          const TabBar(tabs: [
-            Tab(text: 'Pre-request'),
-            Tab(text: 'Post-response'),
-          ]),
-          Expanded(
-            child: Container(
-              color: AppColors.paneBg,
-              child: TabBarView(
-                children: [
-                  TextField(
-                    maxLines: null,
-                    expands: true,
-                    style: const TextStyle(
-                        fontFamily: 'monospace', fontSize: 13),
-                    decoration: const InputDecoration(
-                      hintText: '// variables["key"] = "value";',
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                    ),
-                    controller: _preScriptController,
-                    onChanged: (v) => widget.onChanged(
-                        widget.scripts.copyWith(preRequest: v)),
-                  ),
-                  TextField(
-                    maxLines: null,
-                    expands: true,
-                    style: const TextStyle(
-                        fontFamily: 'monospace', fontSize: 13),
-                    decoration: const InputDecoration(
-                      hintText:
-                          '// test("status 200", response["statusCode"] == 200);',
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                    ),
-                    controller: _postScriptController,
-                    onChanged: (v) => widget.onChanged(
-                        widget.scripts.copyWith(postResponse: v)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
