@@ -92,7 +92,7 @@
 
 ## 13. Testing, Build, and Polish
 
-- [ ] 13.1 Write widget tests for request builder and response viewer — basic app render test only
+- [x] 13.1 Write widget tests for request builder and response viewer — basic app render test only
 - [x] 13.2 Run `flutter analyze` and `flutter test` and fix warnings
 - [ ] 13.3 Build release artifacts for Linux and Windows — debug Linux built; release + Windows pending environment
 - [x] 13.4 Verify import/export round-trips for curl and OpenAPI samples — covered by unit tests

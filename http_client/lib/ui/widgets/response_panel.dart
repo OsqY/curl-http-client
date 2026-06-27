@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,7 @@ class ResponsePanel extends ConsumerWidget {
     final bodyText = response.bodyText ?? '<binary>';
     final contentType =
         response.headers['content-type']?.toLowerCase() ?? '';
-    final language = _detectLanguage(contentType);
+    final language = detectLanguage(contentType);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,15 +103,10 @@ class ResponsePanel extends ConsumerWidget {
                     color: AppColors.paneBg,
                     child: TabBarView(
                       children: [
-                        SingleChildScrollView(
-                          child: HighlightView(
-                            _prettyBody(bodyText, contentType),
-                            language: language,
-                            theme: vs2015Theme,
-                            padding: const EdgeInsets.all(10),
-                            textStyle: const TextStyle(
-                                fontFamily: 'monospace', fontSize: 13),
-                          ),
+                        _VirtualBody(
+                          bodyText: bodyText,
+                          contentType: contentType,
+                          language: language,
                         ),
                         ListView.builder(
                           itemCount: response.headers.length,
@@ -159,25 +155,6 @@ class ResponsePanel extends ConsumerWidget {
     );
   }
 
-  String _detectLanguage(String contentType) {
-    if (contentType.contains('json')) return 'json';
-    if (contentType.contains('xml')) return 'xml';
-    if (contentType.contains('html')) return 'html';
-    return 'plaintext';
-  }
-
-  String _prettyBody(String body, String contentType) {
-    if (contentType.contains('json')) {
-      try {
-        return prettyJson(jsonDecode(body));
-      } catch (_) {}
-    }
-    if (contentType.contains('xml')) {
-      return prettyXml(body);
-    }
-    return body;
-  }
-
   Future<void> _saveResponse(
       BuildContext context, HttpResponse response) async {
     final path = await FilePicker.platform.saveFile(
@@ -192,5 +169,110 @@ class ResponsePanel extends ConsumerWidget {
         );
       }
     }
+  }
+}
+
+// ---- Top-level helpers ----
+
+/// Detects syntax highlighting language from content-type header.
+String detectLanguage(String contentType) {
+  if (contentType.contains('json')) return 'json';
+  if (contentType.contains('xml')) return 'xml';
+  if (contentType.contains('html')) return 'html';
+  return 'plaintext';
+}
+
+/// Pretty-prints a response body for display.
+String prettyBody(String body, String contentType) {
+  if (contentType.contains('json')) {
+    try {
+      return prettyJson(jsonDecode(body));
+    } catch (_) {}
+  }
+  if (contentType.contains('xml')) {
+    return prettyXml(body);
+  }
+  return body;
+}
+
+/// Virtualized body viewer that truncates large responses.
+class _VirtualBody extends StatefulWidget {
+  final String bodyText;
+  final String contentType;
+  final String language;
+
+  const _VirtualBody({
+    required this.bodyText,
+    required this.contentType,
+    required this.language,
+  });
+
+  @override
+  State<_VirtualBody> createState() => _VirtualBodyState();
+}
+
+class _VirtualBodyState extends State<_VirtualBody> {
+  bool _fullContent = false;
+
+  @override
+  Widget build(BuildContext context) {
+    const threshold = 100 * 1024; // 100 KB
+    const previewSize = 5 * 1024; // 5 KB preview
+
+    final pretty = prettyBody(widget.bodyText, widget.contentType);
+    final bytes = utf8.encode(pretty).length;
+
+    if (bytes <= threshold || _fullContent) {
+      return SingleChildScrollView(
+        child: HighlightView(
+          pretty,
+          language: widget.language,
+          theme: vs2015Theme,
+          padding: const EdgeInsets.all(10),
+          textStyle: const TextStyle(
+              fontFamily: 'monospace', fontSize: 13),
+        ),
+      );
+    }
+
+    // Show truncated preview with load-full option.
+    final preview = pretty.substring(0, min(pretty.length, previewSize));
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          color: AppColors.bgNotice.withAlpha(40),
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              const Icon(Icons.warning_amber, size: 14),
+              const SizedBox(width: 6),
+              Text(
+                'Large response: ${formatBytes(bytes)} — showing first ${formatBytes(previewSize)}',
+                style: const TextStyle(fontSize: 11),
+              ),
+              const Spacer(),
+              TextButton.icon(
+                icon: const Icon(Icons.unfold_more, size: 14),
+                label: const Text('Show full', style: TextStyle(fontSize: 11)),
+                onPressed: () => setState(() => _fullContent = true),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: HighlightView(
+              preview,
+              language: widget.language,
+              theme: vs2015Theme,
+              padding: const EdgeInsets.all(10),
+              textStyle: const TextStyle(
+                  fontFamily: 'monospace', fontSize: 13),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
