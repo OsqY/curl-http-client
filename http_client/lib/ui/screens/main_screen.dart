@@ -307,6 +307,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         const SnackBar(content: Text('Request saved')),
       );
     }
+    ref.read(unsavedChangesProvider.notifier).state = false;
   }
 
   // ---- Import/Export ----
@@ -1293,9 +1294,11 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
   @override
   Widget build(BuildContext context) {
     final request = ref.watch(currentRequestProvider);
+    final hasUnsaved = ref.watch(unsavedChangesProvider);
 
     if (request.id != _lastRequestId) {
       _lastRequestId = request.id;
+      ref.read(unsavedChangesProvider.notifier).state = false;
       _setControllerText(_urlController, request.url);
       _setControllerText(_nameController, request.name);
       _setControllerText(_bodyController, request.body.rawContent);
@@ -1309,27 +1312,44 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
         Container(
           color: AppColors.paneHeaderBg,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-          child: TextField(
-            controller: _nameController,
-            style: const TextStyle(
-              color: AppColors.fgDefault,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-            ),
-            decoration: const InputDecoration(
-              hintText: 'Request name',
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              filled: false,
-              isDense: true,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-              hintStyle: TextStyle(color: AppColors.fgMuted, fontSize: 13),
-            ),
-            onChanged: (v) => ref
-                .read(currentRequestProvider.notifier)
-                .state = request.copyWith(name: v),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _nameController,
+                  style: const TextStyle(
+                    color: AppColors.fgDefault,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  decoration: const InputDecoration(
+                    hintText: 'Request name',
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    filled: false,
+                    isDense: true,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+                    hintStyle: TextStyle(color: AppColors.fgMuted, fontSize: 13),
+                  ),
+                  onChanged: (v) {
+                    ref.read(unsavedChangesProvider.notifier).state = true;
+                    ref
+                        .read(currentRequestProvider.notifier)
+                        .state = request.copyWith(name: v);
+                  },
+                ),
+              ),
+              if (hasUnsaved)
+                const Padding(
+                  padding: EdgeInsets.only(right: 4),
+                  child: Tooltip(
+                    message: 'Unsaved changes',
+                    child: Icon(Icons.circle, size: 6, color: AppColors.bgWarning),
+                  ),
+                ),
+            ],
           ),
         ),
         // URL bar
@@ -1342,6 +1362,7 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
               _ClickCursor(
                 child: PopupMenuButton<HttpMethod>(
                   onSelected: (m) {
+                    ref.read(unsavedChangesProvider.notifier).state = true;
                     ref.read(currentRequestProvider.notifier).state =
                         request.copyWith(method: m);
                   },
@@ -1394,9 +1415,12 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   ),
-                  onChanged: (v) => ref
-                      .read(currentRequestProvider.notifier)
-                      .state = request.copyWith(url: v),
+                  onChanged: (v) {
+                    ref.read(unsavedChangesProvider.notifier).state = true;
+                    ref
+                        .read(currentRequestProvider.notifier)
+                        .state = request.copyWith(url: v);
+                  },
                 ),
               ),
               const SizedBox(width: 6),
@@ -1460,33 +1484,43 @@ class _RequestEditorState extends ConsumerState<_RequestEditor> {
                       children: [
                         _KeyValueEditor(
                           items: request.queryParams,
-                          onChanged: (v) =>
-                              ref.read(currentRequestProvider.notifier).state =
-                                  request.copyWith(queryParams: v),
+                          onChanged: (v) {
+                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(currentRequestProvider.notifier).state =
+                                request.copyWith(queryParams: v);
+                          },
                         ),
                         _KeyValueEditor(
                           items: request.headers,
-                          onChanged: (v) =>
-                              ref.read(currentRequestProvider.notifier).state =
-                                  request.copyWith(headers: v),
+                          onChanged: (v) {
+                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(currentRequestProvider.notifier).state =
+                                request.copyWith(headers: v);
+                          },
                         ),
                         _AuthEditor(
                           auth: request.auth,
-                          onChanged: (a) =>
-                              ref.read(currentRequestProvider.notifier).state =
-                                  request.copyWith(auth: a),
+                          onChanged: (a) {
+                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(currentRequestProvider.notifier).state =
+                                request.copyWith(auth: a);
+                          },
                         ),
                         _BodyEditor(
                           body: request.body,
-                          onChanged: (b) =>
-                              ref.read(currentRequestProvider.notifier).state =
-                                  request.copyWith(body: b),
+                          onChanged: (b) {
+                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(currentRequestProvider.notifier).state =
+                                request.copyWith(body: b);
+                          },
                         ),
                         _ScriptsEditor(
                           scripts: request.scripts,
-                          onChanged: (s) =>
-                              ref.read(currentRequestProvider.notifier).state =
-                                  request.copyWith(scripts: s),
+                          onChanged: (s) {
+                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(currentRequestProvider.notifier).state =
+                                request.copyWith(scripts: s);
+                          },
                         ),
                         const Padding(
                           padding: EdgeInsets.all(12),

@@ -150,3 +150,6 @@ final activeEnvironmentVariablesProvider = Provider<Map<String, String>>((ref) {
       if (v.enabled) v.key: v.value,
   };
 });
+
+/// Tracks whether the current request has unsaved changes.
+final unsavedChangesProvider = StateProvider<bool>((ref) => false);

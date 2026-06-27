@@ -25,7 +25,7 @@
 - [x] 4.2 Implement method selector, URL input, and "Send" button
 - [x] 4.3 Add editable key-value lists for headers and query parameters
 - [x] 4.4 Add body editor with modes: none, form-data, x-www-form-urlencoded, raw (JSON/XML/text), binary placeholder
-- [ ] 4.5 Implement unsaved-change indicator and request save action — save works, indicator not shown
+- [x] 4.5 Implement unsaved-change indicator and request save action — save works, indicator not shown
 
 ## 5. HTTP Execution Engine
 
