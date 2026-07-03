@@ -12,11 +12,11 @@ class SectionHeader extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      color: AppColors.paneHeaderBg,
+      color: AppColors.elevated,
       child: Text(
         title.toUpperCase(),
         style: const TextStyle(
-          color: AppColors.fgMuted,
+          color: AppColors.textMuted,
           fontSize: 10,
           fontWeight: FontWeight.w600,
           letterSpacing: 0.5,

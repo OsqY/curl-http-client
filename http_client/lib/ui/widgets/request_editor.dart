@@ -74,7 +74,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
       children: [
         // Title (above URL bar)
         Container(
-          color: AppColors.paneHeaderBg,
+          color: AppColors.elevated,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           child: Row(
             children: [
@@ -82,7 +82,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                 child: TextField(
                   controller: _nameController,
                   style: const TextStyle(
-                    color: AppColors.fgDefault,
+                    color: AppColors.text,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
@@ -95,7 +95,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                     isDense: true,
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                    hintStyle: TextStyle(color: AppColors.fgMuted, fontSize: 13),
+                    hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 13),
                   ),
                   onChanged: (v) {
                     ref.read(unsavedChangesProvider.notifier).state = true;
@@ -110,7 +110,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                   padding: EdgeInsets.only(right: 4),
                   child: Tooltip(
                     message: 'Unsaved changes',
-                    child: Icon(Icons.circle, size: 6, color: AppColors.bgWarning),
+                    child: Icon(Icons.circle, size: 6, color: AppColors.amber),
                   ),
                 ),
             ],
@@ -118,7 +118,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
         ),
         // URL bar
         Container(
-          color: AppColors.paneHeaderBg,
+          color: AppColors.elevated,
           padding: const EdgeInsets.all(6),
           child: Row(
             children: [
@@ -147,7 +147,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppColors.paneBg,
+                      color: AppColors.surface,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Row(
@@ -156,7 +156,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                         MethodBadge(method: request.method),
                         const SizedBox(width: 4),
                         const Icon(Icons.arrow_drop_down,
-                            size: 14, color: AppColors.fgMuted),
+                            size: 14, color: AppColors.textMuted),
                       ],
                     ),
                   ),
@@ -196,7 +196,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppColors.bgSuccess,
+                      color: AppColors.green,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
@@ -243,7 +243,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                 ),
                 Expanded(
                   child: Container(
-                    color: AppColors.paneBg,
+                    color: AppColors.surface,
                     child: TabBarView(
                       children: [
                         KeyValueEditor(
@@ -291,7 +291,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                           child: Center(
                             child: Text('Settings coming soon',
                                 style: TextStyle(
-                                    color: AppColors.fgMuted, fontSize: 12)),
+                                    color: AppColors.textMuted, fontSize: 12)),
                           ),
                         ),
                       ],

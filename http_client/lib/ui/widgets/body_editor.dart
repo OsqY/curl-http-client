@@ -192,13 +192,13 @@ class _BodyEditorState extends State<BodyEditor> {
           const Padding(
             padding: EdgeInsets.all(8),
             child: Text('Binary body not yet supported',
-                style: TextStyle(color: AppColors.fgMuted)),
+                style: TextStyle(color: AppColors.textMuted)),
           ),
         ] else ...[
           const Expanded(
             child: Center(
               child: Text('No body',
-                  style: TextStyle(color: AppColors.fgMuted)),
+                  style: TextStyle(color: AppColors.textMuted)),
             ),
           ),
         ],

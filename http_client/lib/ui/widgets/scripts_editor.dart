@@ -51,7 +51,7 @@ class _ScriptsEditorState extends State<ScriptsEditor> {
         children: [
           const Text('Pre-request Script',
               style: TextStyle(
-                  color: AppColors.fgDefault,
+                  color: AppColors.text,
                   fontSize: 12,
                   fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
@@ -74,7 +74,7 @@ class _ScriptsEditorState extends State<ScriptsEditor> {
           const SizedBox(height: 8),
           const Text('Post-response Script',
               style: TextStyle(
-                  color: AppColors.fgDefault,
+                  color: AppColors.text,
                   fontSize: 12,
                   fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),

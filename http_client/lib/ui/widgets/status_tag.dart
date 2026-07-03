@@ -10,12 +10,12 @@ class StatusTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = statusCode >= 200 && statusCode < 300
-        ? AppColors.bgSuccess
+        ? AppColors.green
         : statusCode >= 300 && statusCode < 400
-            ? AppColors.bgInfo
+            ? AppColors.steelBlue
             : statusCode >= 400 && statusCode < 500
-                ? AppColors.bgWarning
-                : AppColors.bgDanger;
+                ? AppColors.amber
+                : AppColors.accent;
     return Text(
       '$statusCode',
       style: TextStyle(

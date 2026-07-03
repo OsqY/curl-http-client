@@ -77,7 +77,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               SizedBox(
                 width: 260,
                 child: Container(
-                  color: AppColors.sidebarBg,
+                  color: AppColors.surface,
                   child: Sidebar(
                     onRequestSelected: (req) {
                       ref.read(currentRequestProvider.notifier).state = req;

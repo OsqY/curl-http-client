@@ -32,16 +32,16 @@ class _CollectionHeaderState extends State<CollectionHeader> {
       onExit: (_) => setState(() => _hovering = false),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        color: AppColors.paneHeaderBg,
+        color: AppColors.elevated,
         child: Row(
           children: [
-            const Icon(Icons.folder, size: 14, color: AppColors.fgMuted),
+            const Icon(Icons.folder, size: 14, color: AppColors.textMuted),
             const SizedBox(width: 6),
             Expanded(
               child: Text(
                 widget.collection.name,
                 style: const TextStyle(
-                  color: AppColors.fgMuted,
+                  color: AppColors.textMuted,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.3,

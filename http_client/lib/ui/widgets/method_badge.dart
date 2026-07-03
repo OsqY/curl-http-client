@@ -32,13 +32,13 @@ class MethodBadge extends StatelessWidget {
 
   static Color _methodColor(HttpMethod method) {
     return switch (method) {
-      HttpMethod.get => AppColors.bgSuccess,
-      HttpMethod.post => AppColors.bgNotice,
-      HttpMethod.put => AppColors.bgWarning,
-      HttpMethod.patch => AppColors.bgSurprise,
-      HttpMethod.delete => AppColors.bgDanger,
-      HttpMethod.head => AppColors.bgInfo,
-      HttpMethod.options => AppColors.bgInfo,
+      HttpMethod.get => AppColors.green,
+      HttpMethod.post => AppColors.amber,
+      HttpMethod.put => AppColors.amber,
+      HttpMethod.patch => AppColors.steelBlue,
+      HttpMethod.delete => AppColors.accent,
+      HttpMethod.head => AppColors.steelBlue,
+      HttpMethod.options => AppColors.steelBlue,
     };
   }
 }

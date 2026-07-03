@@ -17,17 +17,18 @@ import 'package:http_client/utils/utils.dart';
 
 /// Displays the HTTP response: status bar, body syntax-highlighted, headers.
 class ResponsePanel extends ConsumerWidget {
-  const ResponsePanel({super.key});
+  ResponsePanel({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(colorSetProvider);
     final response = ref.watch(responseProvider);
     final error = ref.watch(executionErrorProvider);
     final isSending = ref.watch(isSendingProvider);
     final scriptOutput = ref.watch(scriptOutputProvider);
 
     if (isSending) {
-      return const Center(
+      return Center(
         child: CircularProgressIndicator(strokeWidth: 2),
       );
     }
@@ -36,14 +37,14 @@ class ResponsePanel extends ConsumerWidget {
       return Padding(
         padding: const EdgeInsets.all(16),
         child: Text(error,
-            style: const TextStyle(color: AppColors.bgDanger, fontSize: 13)),
+            style: TextStyle(color: colors.accent, fontSize: 13)),
       );
     }
 
     if (response == null) {
-      return const Center(
+      return Center(
         child: Text('Send a request to see the response',
-            style: TextStyle(color: AppColors.fgMuted, fontSize: 13)),
+            style: TextStyle(color: colors.textMuted, fontSize: 13)),
       );
     }
 
@@ -57,38 +58,38 @@ class ResponsePanel extends ConsumerWidget {
       children: [
         // Status bar
         Container(
-          color: AppColors.paneHeaderBg,
+          color: colors.elevated,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           child: Row(
             children: [
               StatusTag(statusCode: response.statusCode),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Text('${response.durationMs} ms',
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColors.paneHeaderFg)),
-              const SizedBox(width: 12),
+                  style: TextStyle(
+                      fontSize: 12, color: colors.textMuted)),
+              SizedBox(width: 12),
               Text(formatBytes(response.sizeBytes),
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColors.paneHeaderFg)),
-              const Spacer(),
+                  style: TextStyle(
+                      fontSize: 12, color: colors.textMuted)),
+              Spacer(),
               ClickCursor(
                 child: IconButton(
-                  icon: const Icon(Icons.compare_arrows, size: 16),
+                  icon: Icon(Icons.compare_arrows, size: 16),
                   tooltip: 'Compare with saved response',
                   onPressed: () => _compareResponse(context, response.bodyText ?? ''),
                   padding: EdgeInsets.zero,
                   constraints:
-                      const BoxConstraints(minWidth: 24, minHeight: 24),
+                      BoxConstraints(minWidth: 24, minHeight: 24),
                 ),
               ),
               ClickCursor(
                 child: IconButton(
-                  icon: const Icon(Icons.save, size: 16),
+                  icon: Icon(Icons.save, size: 16),
                   tooltip: 'Save response',
                   onPressed: () => _saveResponse(context, response),
                   padding: EdgeInsets.zero,
                   constraints:
-                      const BoxConstraints(minWidth: 24, minHeight: 24),
+                      BoxConstraints(minWidth: 24, minHeight: 24),
                 ),
               ),
             ],
@@ -97,24 +98,25 @@ class ResponsePanel extends ConsumerWidget {
         if (scriptOutput != null)
           Container(
             width: double.infinity,
-            color: AppColors.paneHeaderBg,
+            color: colors.elevated,
             padding: const EdgeInsets.all(8),
             child: Text(scriptOutput,
-                style: const TextStyle(
-                    fontSize: 11, color: AppColors.fgMuted)),
+                style: TextStyle(
+                    fontSize: 11, color: colors.textMuted)),
           ),
         Expanded(
           child: DefaultTabController(
             length: 2,
             child: Column(
               children: [
-                const TabBar(tabs: [Tab(text: 'Body'), Tab(text: 'Headers')]),
+                TabBar(tabs: [Tab(text: 'Body'), Tab(text: 'Headers')]),
                 Expanded(
                   child: Container(
-                    color: AppColors.paneBg,
+                    color: colors.surface,
                     child: TabBarView(
                       children: [
                         _VirtualBody(
+                          colors: colors,
                           bodyText: bodyText,
                           contentType: contentType,
                           language: language,
@@ -127,10 +129,10 @@ class ResponsePanel extends ConsumerWidget {
                             return Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 4),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
-                                      color: AppColors.border, width: 0.5),
+                                      color: colors.border, width: 0.5),
                                 ),
                               ),
                               child: Row(
@@ -138,14 +140,14 @@ class ResponsePanel extends ConsumerWidget {
                                   SizedBox(
                                     width: 160,
                                     child: Text(entry.key,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontFamily: 'monospace',
                                             fontSize: 12,
-                                            color: AppColors.fgMuted)),
+                                            color: colors.textMuted)),
                                   ),
                                   Expanded(
                                     child: Text(entry.value,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontFamily: 'monospace',
                                             fontSize: 12)),
                                   ),
@@ -176,7 +178,7 @@ class ResponsePanel extends ConsumerWidget {
       await File(path).writeAsBytes(response.bodyBytes);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Response saved')),
+          SnackBar(content: Text('Response saved')),
         );
       }
     }
@@ -207,40 +209,40 @@ class ResponsePanel extends ConsumerWidget {
           width: 700,
           height: 500,
           child: SingleChildScrollView(
-            child: _buildDiffText(diffs),
+            child: _buildDiffText(diffs, ColorSet.dark),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
+            child: Text('Close'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDiffText(List<Diff> diffs) {
+  Widget _buildDiffText(List<Diff> diffs, ColorSet colors) {
     return RichText(
       text: TextSpan(
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'monospace',
           fontSize: 12,
-          color: AppColors.fgDefault,
+          color: colors.text,
         ),
         children: diffs.map((diff) {
           final style = switch (diff.operation) {
-            DIFF_INSERT => const TextStyle(
+            DIFF_INSERT => TextStyle(
               backgroundColor: Color(0x4027AE60),
               color: Color(0xFF27AE60),
             ),
-            DIFF_DELETE => const TextStyle(
+            DIFF_DELETE => TextStyle(
               backgroundColor: Color(0x40E74C3C),
               color: Color(0xFFE74C3C),
               decoration: TextDecoration.lineThrough,
             ),
-            DIFF_EQUAL => const TextStyle(color: AppColors.fgDefault),
-            _ => const TextStyle(color: AppColors.fgDefault),
+            DIFF_EQUAL => TextStyle(color: colors.text),
+            _ => TextStyle(color: colors.text),
           };
           return TextSpan(text: diff.text, style: style);
         }).toList(),
@@ -274,11 +276,12 @@ String prettyBody(String body, String contentType) {
 
 /// Virtualized body viewer that truncates large responses.
 class _VirtualBody extends StatefulWidget {
+  final ColorSet colors;
   final String bodyText;
   final String contentType;
   final String language;
 
-  const _VirtualBody({
+  const _VirtualBody({required this.colors,
     required this.bodyText,
     required this.contentType,
     required this.language,
@@ -306,7 +309,7 @@ class _VirtualBodyState extends State<_VirtualBody> {
           language: widget.language,
           theme: vs2015Theme,
           padding: const EdgeInsets.all(10),
-          textStyle: const TextStyle(
+          textStyle: TextStyle(
               fontFamily: 'monospace', fontSize: 13),
         ),
       );
@@ -318,20 +321,20 @@ class _VirtualBodyState extends State<_VirtualBody> {
       children: [
         Container(
           width: double.infinity,
-          color: AppColors.bgNotice.withAlpha(40),
+          color: widget.colors.amber.withAlpha(40),
           padding: const EdgeInsets.all(8),
           child: Row(
             children: [
-              const Icon(Icons.warning_amber, size: 14),
-              const SizedBox(width: 6),
+              Icon(Icons.warning_amber, size: 14),
+              SizedBox(width: 6),
               Text(
                 'Large response: ${formatBytes(bytes)} — showing first ${formatBytes(previewSize)}',
-                style: const TextStyle(fontSize: 11),
+                style: TextStyle(fontSize: 11),
               ),
-              const Spacer(),
+              Spacer(),
               TextButton.icon(
-                icon: const Icon(Icons.unfold_more, size: 14),
-                label: const Text('Show full', style: TextStyle(fontSize: 11)),
+                icon: Icon(Icons.unfold_more, size: 14),
+                label: Text('Show full', style: TextStyle(fontSize: 11)),
                 onPressed: () => setState(() => _fullContent = true),
               ),
             ],
@@ -344,7 +347,7 @@ class _VirtualBodyState extends State<_VirtualBody> {
               language: widget.language,
               theme: vs2015Theme,
               padding: const EdgeInsets.all(10),
-              textStyle: const TextStyle(
+              textStyle: TextStyle(
                   fontFamily: 'monospace', fontSize: 13),
             ),
           ),

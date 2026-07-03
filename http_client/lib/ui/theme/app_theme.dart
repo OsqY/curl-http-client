@@ -1,124 +1,173 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http_client/providers/app_state.dart';
 
-/// Insomnia-style dark color palette.
+/// Soot theme color palette — monochrome-dominant, dot-matrix-inspired,
+/// with sparse signal accents (Nothing Technology design language).
 class AppColors {
   AppColors._();
 
-  // Background
-  static const bgDefault = Color(0xFF2C2C2C);
-  static const bgSuccess = Color(0xFF7ECF2B);
-  static const bgNotice = Color(0xFFF0E137);
-  static const bgWarning = Color(0xFFFF9A1F);
-  static const bgDanger = Color(0xFFFF5631);
-  static const bgSurprise = Color(0xFFA896FF);
-  static const bgInfo = Color(0xFF46C1E6);
+  // ── Background hierarchy ─────────────────────────────────
+  static const bg = Color(0xFF0C0C0E);
+  static const surface = Color(0xFF161618);
+  static const elevated = Color(0xFF1C1C20);
+  static const hover = Color(0xFF202023);
+  static const active = Color(0xFF2A2A2E);
 
-  // Foreground
-  static const fgDefault = Color(0xFFDDDDDD);
-  static const fgMuted = Color(0xFF999999);
+  // ── Text ─────────────────────────────────────────────────
+  static const text = Color(0xFFE9E9EB);
+  static const textMuted = Color(0xFF8A8A8E);
+  static const textPlaceholder = Color(0xFF515154);
+  static const textDisabled = Color(0xFF515154);
 
-  // Sidebar
-  static const sidebarBg = Color(0xFF2C2C2C);
-  static const sidebarFg = Color(0xFFE0E0E0);
-  static const sidebarHeaderBg = Color(0xFF695EB8);
+  // ── Borders ──────────────────────────────────────────────
+  static const border = Color(0xFF3A3A3D);
+  static const borderVariant = Color(0xFF232327);
+  static const borderFocused = Color(0xFFE10F1C);
+  static const borderSelected = Color(0xFF6C0D14);
 
-  // Pane
-  static const paneBg = Color(0xFF292929);
-  static const paneFg = Color(0xFFE0E0E0);
-  static const paneHeaderBg = Color(0xFF212121);
-  static const paneHeaderFg = Color(0xFFCCCCCC);
+  // ── Accents ──────────────────────────────────────────────
+  static const accent = Color(0xFFE10F1C);
+  static const amber = Color(0xFFD9A441);
+  static const green = Color(0xFF8AB36C);
+  static const steelBlue = Color(0xFF7FA6B8);
+  static const lightSteel = Color(0xFFAEBBCB);
+  static const warmTan = Color(0xFFC9B9A6);
+  static const mutedGrey = Color(0xFF5D636F);
+  static const punctuationGrey = Color(0xFF8A8E96);
 
-  // Dialog
-  static const dialogBg = Color(0xFF2A2A2A);
+  // ── HTTP Status ──────────────────────────────────────────
+  static const statusSuccess = Color(0xFF8AB36C);
+  static const statusRedirect = Color(0xFF7FA6B8);
+  static const statusClientError = Color(0xFFD9A441);
+  static const statusServerError = Color(0xFFE10F1C);
 
-  // Borders
-  static const border = Color(0xFF3A3A3A);
-  static const borderLight = Color(0xFF444444);
+  // ── Scrollbar ────────────────────────────────────────────
+  static const scrollbarThumb = Color(0x2EE9E9EB);
+  static const scrollbarThumbHover = Color(0xFF4B4B4D);
+
+  // ── Diff ─────────────────────────────────────────────────
+  static const diffInsert = Color(0xFF8AB36C);
+  static const diffInsertBg = Color(0x408AB36C);
+  static const diffDelete = Color(0xFFE10F1C);
+  static const diffDeleteBg = Color(0x40E10F1C);
 }
 
-/// Insomnia-style dark theme.
+/// Active color set based on current theme variant.
+final colorSetProvider = Provider<ColorSet>((ref) {
+  final variant = ref.watch(themeVariantProvider);
+  return switch (variant) {
+    SootThemeVariant.dark => ColorSet.dark,
+    SootThemeVariant.light => ColorSet.light,
+    SootThemeVariant.orange => ColorSet.orangeDark,
+  };
+});
+
+/// A complete set of Soot color tokens for one theme variant.
+class ColorSet {
+  final Color bg, surface, elevated, hover, active;
+  final Color text, textMuted, textPlaceholder, textDisabled;
+  final Color border, borderVariant, borderFocused, borderSelected;
+  final Color accent, amber, green, steelBlue, lightSteel, warmTan, mutedGrey, punctuationGrey;
+  final Color statusSuccess, statusRedirect, statusClientError, statusServerError;
+  final Color scrollbarThumb, scrollbarThumbHover;
+  final Color diffInsert, diffInsertBg, diffDelete, diffDeleteBg;
+
+  const ColorSet({
+    required this.bg, required this.surface, required this.elevated,
+    required this.hover, required this.active,
+    required this.text, required this.textMuted, required this.textPlaceholder, required this.textDisabled,
+    required this.border, required this.borderVariant, required this.borderFocused, required this.borderSelected,
+    required this.accent, required this.amber, required this.green, required this.steelBlue,
+    required this.lightSteel, required this.warmTan, required this.mutedGrey, required this.punctuationGrey,
+    required this.statusSuccess, required this.statusRedirect, required this.statusClientError, required this.statusServerError,
+    required this.scrollbarThumb, required this.scrollbarThumbHover,
+    required this.diffInsert, required this.diffInsertBg, required this.diffDelete, required this.diffDeleteBg,
+  });
+
+  static const dark = ColorSet(
+    bg: Color(0xFF0C0C0E), surface: Color(0xFF161618), elevated: Color(0xFF1C1C20),
+    hover: Color(0xFF202023), active: Color(0xFF2A2A2E),
+    text: Color(0xFFE9E9EB), textMuted: Color(0xFF8A8A8E), textPlaceholder: Color(0xFF515154), textDisabled: Color(0xFF515154),
+    border: Color(0xFF3A3A3D), borderVariant: Color(0xFF232327), borderFocused: Color(0xFFE10F1C), borderSelected: Color(0xFF6C0D14),
+    accent: Color(0xFFE10F1C), amber: Color(0xFFD9A441), green: Color(0xFF8AB36C), steelBlue: Color(0xFF7FA6B8),
+    lightSteel: Color(0xFFAEBBCB), warmTan: Color(0xFFC9B9A6), mutedGrey: Color(0xFF5D636F), punctuationGrey: Color(0xFF8A8E96),
+    statusSuccess: Color(0xFF8AB36C), statusRedirect: Color(0xFF7FA6B8), statusClientError: Color(0xFFD9A441), statusServerError: Color(0xFFE10F1C),
+    scrollbarThumb: Color(0x2EE9E9EB), scrollbarThumbHover: Color(0xFF4B4B4D),
+    diffInsert: Color(0xFF8AB36C), diffInsertBg: Color(0x408AB36C), diffDelete: Color(0xFFE10F1C), diffDeleteBg: Color(0x40E10F1C),
+  );
+
+  static const orangeDark = ColorSet(
+    bg: Color(0xFF0C0C0E), surface: Color(0xFF161618), elevated: Color(0xFF1C1C20),
+    hover: Color(0xFF202023), active: Color(0xFF2A2A2E),
+    text: Color(0xFFE9E9EB), textMuted: Color(0xFF8A8A8E), textPlaceholder: Color(0xFF515154), textDisabled: Color(0xFF515154),
+    border: Color(0xFF3A3A3D), borderVariant: Color(0xFF232327), borderFocused: Color(0xFFFF6A00), borderSelected: Color(0xFFCC5500),
+    accent: Color(0xFFFF6A00), amber: Color(0xFFD9A441), green: Color(0xFF8AB36C), steelBlue: Color(0xFF7FA6B8),
+    lightSteel: Color(0xFFAEBBCB), warmTan: Color(0xFFC9B9A6), mutedGrey: Color(0xFF5D636F), punctuationGrey: Color(0xFF8A8E96),
+    statusSuccess: Color(0xFF8AB36C), statusRedirect: Color(0xFF7FA6B8), statusClientError: Color(0xFFD9A441), statusServerError: Color(0xFFFF6A00),
+    scrollbarThumb: Color(0x2EE9E9EB), scrollbarThumbHover: Color(0xFF4B4B4D),
+    diffInsert: Color(0xFF8AB36C), diffInsertBg: Color(0x408AB36C), diffDelete: Color(0xFFFF6A00), diffDeleteBg: Color(0x40FF6A00),
+  );
+
+  static const light = ColorSet(
+    bg: Color(0xFFFAFAFA), surface: Color(0xFFF4F1EA), elevated: Color(0xFFFFFFFF),
+    hover: Color(0xFFEDEAE2), active: Color(0xFFE0DCD4),
+    text: Color(0xFF1A1A1C), textMuted: Color(0xFF8A8A8E), textPlaceholder: Color(0xFFB0B0B4), textDisabled: Color(0xFFB0B0B4),
+    border: Color(0xFFE0DCD4), borderVariant: Color(0xFFD0CCC4), borderFocused: Color(0xFFE10F1C), borderSelected: Color(0xFF6C0D14),
+    accent: Color(0xFFE10F1C), amber: Color(0xFFD9A441), green: Color(0xFF8AB36C), steelBlue: Color(0xFF7FA6B8),
+    lightSteel: Color(0xFFAEBBCB), warmTan: Color(0xFFC9B9A6), mutedGrey: Color(0xFFB0B0B4), punctuationGrey: Color(0xFFC0C0C4),
+    statusSuccess: Color(0xFF8AB36C), statusRedirect: Color(0xFF7FA6B8), statusClientError: Color(0xFFD9A441), statusServerError: Color(0xFFE10F1C),
+    scrollbarThumb: Color(0x2E1A1A1C), scrollbarThumbHover: Color(0xFF4B4B4D),
+    diffInsert: Color(0xFF8AB36C), diffInsertBg: Color(0x408AB36C), diffDelete: Color(0xFFE10F1C), diffDeleteBg: Color(0x40E10F1C),
+  );
+}
+
+/// Soot dark theme — monochrome-dominant.
 final ThemeData appTheme = ThemeData(
   brightness: Brightness.dark,
   visualDensity: VisualDensity.compact,
-  scaffoldBackgroundColor: AppColors.paneBg,
+  scaffoldBackgroundColor: AppColors.bg,
   colorScheme: const ColorScheme.dark(
-    primary: AppColors.sidebarHeaderBg,
-    surface: AppColors.paneBg,
-    error: AppColors.bgDanger,
-    onPrimary: Colors.white,
-    onSurface: AppColors.paneFg,
-    onError: Colors.white,
+    primary: AppColors.accent,
+    surface: AppColors.surface,
+    error: AppColors.accent,
+    onPrimary: AppColors.text,
+    onSurface: AppColors.text,
+    onError: AppColors.text,
   ),
   appBarTheme: const AppBarTheme(
-    backgroundColor: AppColors.sidebarHeaderBg,
-    foregroundColor: Colors.white,
+    backgroundColor: AppColors.elevated,
+    foregroundColor: AppColors.text,
     elevation: 0,
-    titleTextStyle: TextStyle(
-      color: Colors.white,
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-    ),
+    titleTextStyle: TextStyle(color: AppColors.text, fontSize: 13, fontWeight: FontWeight.w500),
+    surfaceTintColor: Colors.transparent,
   ),
-  dividerTheme: const DividerThemeData(
-    color: AppColors.border,
-    thickness: 1,
-    space: 1,
-  ),
+  dividerTheme: const DividerThemeData(color: AppColors.border, thickness: 1, space: 1),
   tabBarTheme: const TabBarThemeData(
-    labelColor: AppColors.fgDefault,
-    unselectedLabelColor: AppColors.fgMuted,
-    labelStyle: TextStyle(fontSize: 13),
-    unselectedLabelStyle: TextStyle(fontSize: 13),
-    indicator: BoxDecoration(
-      border: Border(
-        bottom: BorderSide(color: AppColors.sidebarHeaderBg, width: 2),
-      ),
-    ),
+    labelColor: AppColors.text, unselectedLabelColor: AppColors.textMuted,
+    labelStyle: TextStyle(fontSize: 13), unselectedLabelStyle: TextStyle(fontSize: 13),
+    indicator: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.accent, width: 2))),
     dividerColor: AppColors.border,
     labelPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
   ),
   inputDecorationTheme: const InputDecorationTheme(
-    filled: true,
-    fillColor: AppColors.paneHeaderBg,
-    border: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.border),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.border),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.sidebarHeaderBg),
-    ),
+    filled: true, fillColor: AppColors.surface,
+    border: OutlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColors.borderFocused)),
     contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-    hintStyle: TextStyle(color: AppColors.fgMuted, fontSize: 13),
-    labelStyle: TextStyle(color: AppColors.fgMuted, fontSize: 13),
-    isDense: true,
+    hintStyle: TextStyle(color: AppColors.textPlaceholder, fontSize: 13),
+    labelStyle: TextStyle(color: AppColors.textMuted, fontSize: 13), isDense: true,
   ),
-  listTileTheme: const ListTileThemeData(
-    dense: true,
-    contentPadding: EdgeInsets.symmetric(horizontal: 8),
-    textColor: AppColors.sidebarFg,
-  ),
-  iconTheme: const IconThemeData(
-    color: AppColors.fgMuted,
-    size: 18,
-  ),
+  listTileTheme: const ListTileThemeData(dense: true, contentPadding: EdgeInsets.symmetric(horizontal: 8), textColor: AppColors.text),
+  iconTheme: const IconThemeData(color: AppColors.textMuted, size: 18),
   textTheme: const TextTheme(
-    bodyMedium: TextStyle(color: AppColors.fgDefault, fontSize: 13),
-    bodySmall: TextStyle(color: AppColors.fgMuted, fontSize: 12),
-    titleMedium: TextStyle(color: AppColors.fgDefault, fontSize: 14),
-    labelSmall: TextStyle(color: AppColors.fgMuted, fontSize: 11),
+    bodyMedium: TextStyle(color: AppColors.text, fontSize: 13),
+    bodySmall: TextStyle(color: AppColors.textMuted, fontSize: 12),
+    titleMedium: TextStyle(color: AppColors.text, fontSize: 14),
+    labelSmall: TextStyle(color: AppColors.textMuted, fontSize: 11),
   ),
-  popupMenuTheme: const PopupMenuThemeData(
-    color: AppColors.dialogBg,
-    surfaceTintColor: Colors.transparent,
-  ),
-  dialogTheme: const DialogThemeData(
-    backgroundColor: AppColors.dialogBg,
-    surfaceTintColor: Colors.transparent,
-  ),
-  snackBarTheme: const SnackBarThemeData(
-    backgroundColor: AppColors.paneHeaderBg,
-    contentTextStyle: TextStyle(color: AppColors.fgDefault),
-  ),
+  popupMenuTheme: const PopupMenuThemeData(color: AppColors.elevated, surfaceTintColor: Colors.transparent),
+  dialogTheme: const DialogThemeData(backgroundColor: AppColors.elevated, surfaceTintColor: Colors.transparent),
+  snackBarTheme: const SnackBarThemeData(backgroundColor: AppColors.elevated, contentTextStyle: TextStyle(color: AppColors.text)),
 );

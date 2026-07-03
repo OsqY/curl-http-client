@@ -41,7 +41,7 @@ class SidebarRow extends StatelessWidget {
                 Expanded(
                   child: DefaultTextStyle(
                     style: const TextStyle(
-                      color: AppColors.sidebarFg,
+                      color: AppColors.text,
                       fontSize: 12,
                       overflow: TextOverflow.ellipsis,
                     ),

@@ -153,3 +153,9 @@ final activeEnvironmentVariablesProvider = Provider<Map<String, String>>((ref) {
 
 /// Tracks whether the current request has unsaved changes.
 final unsavedChangesProvider = StateProvider<bool>((ref) => false);
+
+/// Available Soot theme variants.
+enum SootThemeVariant { dark, light, orange }
+
+/// Current active theme variant.
+final themeVariantProvider = StateProvider<SootThemeVariant>((ref) => SootThemeVariant.dark);
