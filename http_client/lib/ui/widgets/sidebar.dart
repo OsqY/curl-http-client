@@ -10,7 +10,7 @@ class Sidebar extends ConsumerWidget {
   final void Function(HttpRequest) onRequestSelected;
   final void Function(String action) onMenuAction;
 
-  Sidebar({
+  const Sidebar({
     super.key,
     required this.onRequestSelected,
     required this.onMenuAction,

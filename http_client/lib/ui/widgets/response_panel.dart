@@ -17,7 +17,7 @@ import 'package:http_client/utils/utils.dart';
 
 /// Displays the HTTP response: status bar, body syntax-highlighted, headers.
 class ResponsePanel extends ConsumerWidget {
-  ResponsePanel({super.key});
+  const ResponsePanel({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
