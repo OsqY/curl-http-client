@@ -8,30 +8,44 @@ Updated: 2026-07-04
 
 | Phase | Status | Details |
 |---|---|---|
-| Phase 1 — Theme Consistency | ✅ DONE | All 9 widgets converted from AppColors.* to colors.X via colorSetProvider |
-| Phase 2 — UX Polish | ✅ DONE | ClickCursor on close buttons, theme persistence with shared_preferences |
-| Phase 3 — Features | ✅ DONE | MIT LICENSE, updated README for Soot theme |
-| Phase 4 — Final Polish | ✅ DONE | sootSyntaxTheme, settings tab, cleanup |
+| Phase 1 — Theme Consistency | ✅ | All 9 widgets converted to dynamic colors |
+| Phase 2 — UX Polish | ✅ | ClickCursor, theme persistence |
+| Phase 3 — Features | ✅ | LICENSE, README |
+| Phase 4 — Final Polish | ✅ | sootSyntaxTheme, settings tab, cleanup |
+| Phase 5 — Dynamic Syntax + Search | ✅ | Dynamic syntax theme, history search field |
 
 ## Remaining Issues
 
-### Low Priority
+### Low Priority (optional improvements)
 
 | # | Issue | Effort | Notes |
 |---|---|---|---|
-| 1 | DropdownButtonFormField opens centered | High | Flutter limitation — would need migration to DropdownMenu (Material 3). Low user impact. |
-| 2 | ClickCursor on DropdownButtonFormField | Medium | 5 dropdowns — wraps are fragile, low visual impact since dropdowns already have visual hover state |
-| 3 | sidebar.dart refactoring (787 lines) | Medium | Could extract dialog methods to separate file for maintainability |
-| 4 | Syntax theme doesn't change with light mode | Low | sootSyntaxTheme uses dark accent colors even in light mode — would need dynamic syntax map |
-| 5 | Request search/find in history | Medium | No search functionality in sidebar history |
-| 6 | Keyboard shortcuts help | Low | Ctrl+Enter (send) and Ctrl+S (save) exist but not discoverable |
-| 7 | Request drag-and-drop reorder | High | Not implemented |
-| 8 | Request favorites/bookmarks | Low | Not implemented |
+| 1 | DropdownButtonFormField centered | High | Flutter limitation — would need DropdownMenu migration |
+| 2 | Sidebar dialog extraction | Medium | 787 lines, could extract 10+ dialog methods |
+| 3 | Request search/filter in history | Low | Search field added but filter logic not implemented |
+| 4 | Keyboard shortcuts help | Low | Ctrl+Enter/S exist but not discoverable |
+| 5 | Request drag-and-drop reorder | High | Not implemented |
+| 6 | Request favorites/bookmarks | Low | Not implemented |
+| 7 | Window title updates | Low | Always shows "HTTP Client" |
 
-### Technical Debt
+## Architecture Summary
 
-| # | Issue | Effort | Notes |
-|---|---|---|---|
-| 9 | Theme persistence only saves variant index | Low | Could also save custom colors in future |
-| 10 | No error boundaries | Low | FlutterError.onError not set |
-| 11 | No window title updates | Low | Window title always shows "HTTP Client" |
+```
+lib/ui/
+  theme/app_theme.dart     — AppColors, ColorSet, colorSetProvider, sootSyntaxTheme()
+  screens/main_screen.dart — Main layout, request/response split
+  widgets/
+    sidebar.dart           — Collections tree, history, env selector, theme switcher (787 lines)
+    request_editor.dart    — URL bar, method selector, 6 tabs including settings
+    response_panel.dart    — Response body, headers, diff viewer
+    method_badge.dart      — Colored HTTP method badges
+    status_tag.dart        — Status code display
+    body_editor.dart       — Request body editor
+    auth_editor.dart       — Authentication config
+    key_value_editor.dart  — Headers/params editor
+    scripts_editor.dart    — Pre/post request scripts
+    collection_header.dart — Collection tree header
+    sidebar_row.dart       — Sidebar list item
+    section_header.dart    — Section labels
+    click_cursor.dart      — Pointer cursor wrapper
+```
