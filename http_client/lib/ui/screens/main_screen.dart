@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
@@ -31,12 +33,27 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   void initState() {
     super.initState();
     _loadWorkspace();
+    _updateWindowTitle();
+  }
+
+  void _updateWindowTitle() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final request = ref.read(currentRequestProvider);
+      final title = request.name.isNotEmpty ? request.name : 'HTTP Client';
+      windowManager.setTitle('$title — HTTP Client');
+    });
   }
 
   Future<void> _loadWorkspace() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final workspacePath = '${dir.path}/http_client_workspace';
-    await _openWorkspace(workspacePath);
+    final prefs = await SharedPreferences.getInstance();
+    final savedPath = prefs.getString('workspace_path');
+    if (savedPath != null && savedPath.isNotEmpty) {
+      await _openWorkspace(savedPath);
+    } else {
+      final dir = await getApplicationDocumentsDirectory();
+      final workspacePath = '${dir.path}/http_client_workspace';
+      await _openWorkspace(workspacePath);
+    }
   }
 
   Future<void> _changeWorkspace() async {
@@ -45,6 +62,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     );
     if (path != null) {
       await _openWorkspace(path);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('workspace_path', path);
     }
   }
 
@@ -59,7 +78,17 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.watch(colorSetProvider);
     final workspacePath = ref.watch(workspacePathProvider);
+    final currentRequest = ref.watch(currentRequestProvider);
+
+    // Update window title when request changes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final title = currentRequest.name.isNotEmpty
+          ? currentRequest.name
+          : 'HTTP Client';
+      windowManager.setTitle('\$title — HTTP Client');
+    });
 
     return Scaffold(
       body: CallbackShortcuts(
@@ -77,7 +106,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               SizedBox(
                 width: 260,
                 child: Container(
-                  color: AppColors.surface,
+                  color: colors.surface,
                   child: Sidebar(
                     onRequestSelected: (req) {
                       ref.read(currentRequestProvider.notifier).state = req;

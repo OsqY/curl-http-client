@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:http_client/ui/theme/app_theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/ui/widgets/widgets.dart';
+import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/models/models.dart';
 
 /// Auth configuration editor for Bearer, Basic, API Key, and OAuth2.
-class AuthEditor extends StatefulWidget {
+class AuthEditor extends ConsumerStatefulWidget {
   final AuthConfig auth;
   final ValueChanged<AuthConfig> onChanged;
 
   const AuthEditor({super.key, required this.auth, required this.onChanged});
 
   @override
-  State<AuthEditor> createState() => _AuthEditorState();
+  ConsumerState<AuthEditor> createState() => _AuthEditorState();
 }
 
-class _AuthEditorState extends State<AuthEditor> {
+class _AuthEditorState extends ConsumerState<AuthEditor> {
   final Map<String, TextEditingController> _controllers = {};
 
   TextEditingController _controller(String field, String value) {
@@ -36,6 +39,7 @@ class _AuthEditorState extends State<AuthEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.watch(colorSetProvider);
     final auth = widget.auth;
     return Column(
       children: [
