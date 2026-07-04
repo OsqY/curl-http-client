@@ -59,10 +59,7 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
                   tooltip: 'New folder',
                   onPressed: widget.onNewFolder,
                   padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 20,
-                  ),
+                  constraints: BoxConstraints(minWidth: 20, minHeight: 20),
                 ),
               ),
               ClickCursor(
@@ -71,10 +68,7 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
                   tooltip: 'Rename',
                   onPressed: widget.onRename,
                   padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 20,
-                  ),
+                  constraints: BoxConstraints(minWidth: 20, minHeight: 20),
                 ),
               ),
               ClickCursor(
@@ -83,10 +77,7 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
                   tooltip: 'Delete',
                   onPressed: widget.onDelete,
                   padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(
-                    minWidth: 20,
-                    minHeight: 20,
-                  ),
+                  constraints: BoxConstraints(minWidth: 20, minHeight: 20),
                 ),
               ),
             ],

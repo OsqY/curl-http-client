@@ -9,11 +9,7 @@ class ScriptsEditor extends ConsumerStatefulWidget {
   final RequestScripts scripts;
   final ValueChanged<RequestScripts> onChanged;
 
-  ScriptsEditor({
-    super.key,
-    required this.scripts,
-    required this.onChanged,
-  });
+  ScriptsEditor({super.key, required this.scripts, required this.onChanged});
 
   @override
   ConsumerState<ScriptsEditor> createState() => _ScriptsEditorState();

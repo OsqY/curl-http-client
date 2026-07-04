@@ -201,10 +201,7 @@ class _BodyEditorState extends ConsumerState<BodyEditor> {
         ] else ...[
           Expanded(
             child: Center(
-              child: Text(
-                'No body',
-                style: TextStyle(color: colors.textMuted),
-              ),
+              child: Text('No body', style: TextStyle(color: colors.textMuted)),
             ),
           ),
         ],

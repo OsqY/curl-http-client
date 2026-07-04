@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/repositories/workspace_repository.dart';
 import 'package:http_client/services/auth_service.dart';
@@ -158,7 +159,28 @@ final unsavedChangesProvider = StateProvider<bool>((ref) => false);
 /// Available Soot theme variants.
 enum SootThemeVariant { dark, light, orange }
 
-/// Current active theme variant.
-final themeVariantProvider = StateProvider<SootThemeVariant>(
-  (ref) => SootThemeVariant.dark,
-);
+/// Current active theme variant with persistence.
+class ThemeVariantNotifier extends StateNotifier<SootThemeVariant> {
+  ThemeVariantNotifier() : super(SootThemeVariant.dark) {
+    _load();
+  }
+
+  Future<void> _load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final index = prefs.getInt('theme_variant') ?? 0;
+    if (index < SootThemeVariant.values.length) {
+      state = SootThemeVariant.values[index];
+    }
+  }
+
+  Future<void> setTheme(SootThemeVariant variant) async {
+    state = variant;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('theme_variant', variant.index);
+  }
+}
+
+final themeVariantProvider =
+    StateNotifierProvider<ThemeVariantNotifier, SootThemeVariant>(
+      (ref) => ThemeVariantNotifier(),
+    );

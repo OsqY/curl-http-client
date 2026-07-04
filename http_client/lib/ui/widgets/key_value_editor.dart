@@ -10,11 +10,7 @@ class KeyValueEditor extends ConsumerStatefulWidget {
   final List<KeyValuePair> items;
   final ValueChanged<List<KeyValuePair>> onChanged;
 
-  KeyValueEditor({
-    super.key,
-    required this.items,
-    required this.onChanged,
-  });
+  KeyValueEditor({super.key, required this.items, required this.onChanged});
 
   @override
   ConsumerState<KeyValueEditor> createState() => _KeyValueEditorState();
@@ -58,10 +54,8 @@ class _KeyValueEditorState extends ConsumerState<KeyValueEditor> {
         SidebarRow(
           leading: Icon(Icons.add, size: 16),
           title: Text('Add', style: TextStyle(fontSize: 12)),
-          onTap: () => widget.onChanged([
-            ...rows,
-            KeyValuePair(key: '', value: ''),
-          ]),
+          onTap: () =>
+              widget.onChanged([...rows, KeyValuePair(key: '', value: '')]),
         ),
         Expanded(
           child: ListView.builder(
@@ -88,10 +82,7 @@ class _KeyValueEditorState extends ConsumerState<KeyValueEditor> {
                     ),
                     Expanded(
                       child: TextField(
-                        style: TextStyle(
-                          fontFamily: 'monospace',
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(fontFamily: 'monospace', fontSize: 12),
                         decoration: InputDecoration(
                           hintText: 'Key',
                           border: InputBorder.none,
@@ -106,10 +97,7 @@ class _KeyValueEditorState extends ConsumerState<KeyValueEditor> {
                     SizedBox(width: 8),
                     Expanded(
                       child: TextField(
-                        style: TextStyle(
-                          fontFamily: 'monospace',
-                          fontSize: 12,
-                        ),
+                        style: TextStyle(fontFamily: 'monospace', fontSize: 12),
                         decoration: InputDecoration(
                           hintText: 'Value',
                           border: InputBorder.none,
@@ -130,10 +118,7 @@ class _KeyValueEditorState extends ConsumerState<KeyValueEditor> {
                         widget.onChanged(rows);
                       },
                       padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(
-                        minWidth: 24,
-                        minHeight: 24,
-                      ),
+                      constraints: BoxConstraints(minWidth: 24, minHeight: 24),
                     ),
                   ],
                 ),

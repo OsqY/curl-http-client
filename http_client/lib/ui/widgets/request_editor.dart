@@ -94,10 +94,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                       horizontal: 4,
                       vertical: 6,
                     ),
-                    hintStyle: TextStyle(
-                      color: colors.textMuted,
-                      fontSize: 13,
-                    ),
+                    hintStyle: TextStyle(color: colors.textMuted, fontSize: 13),
                   ),
                   onChanged: (v) {
                     ref.read(unsavedChangesProvider.notifier).state = true;
@@ -227,10 +224,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                   tooltip: 'Save (Ctrl+S)',
                   onPressed: widget.onSave,
                   padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(
-                    minWidth: 28,
-                    minHeight: 28,
-                  ),
+                  constraints: BoxConstraints(minWidth: 28, minHeight: 28),
                 ),
               ),
             ],

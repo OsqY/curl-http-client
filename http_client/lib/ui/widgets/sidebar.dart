@@ -45,7 +45,7 @@ class Sidebar extends ConsumerWidget {
               ClickCursor(
                 child: PopupMenuButton<SootThemeVariant>(
                   onSelected: (v) =>
-                      ref.read(themeVariantProvider.notifier).state = v,
+                      ref.read(themeVariantProvider.notifier).setTheme(v),
                   icon: Icon(
                     Icons.palette_outlined,
                     size: 16,
