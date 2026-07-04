@@ -220,9 +220,8 @@ class ColorSet {
   );
 }
 
-/// Soot dark theme — monochrome-dominant.
+// ── Syntax themes ──────────────────────────────────────────
 
-/// Soot syntax highlighting theme — adapts to current ColorSet.
 Map<String, TextStyle> sootSyntaxTheme(ColorSet colors) => {
   'keyword': TextStyle(color: colors.accent),
   'keyword.type': TextStyle(color: colors.accent),
@@ -278,7 +277,6 @@ Map<String, TextStyle> sootSyntaxTheme(ColorSet colors) => {
   'horizontal_rule': TextStyle(color: colors.punctuationGrey),
 };
 
-/// Soot light syntax theme — darker colors for light backgrounds.
 Map<String, TextStyle> sootLightSyntaxTheme(ColorSet colors) => {
   'keyword': TextStyle(color: colors.accent),
   'keyword.type': TextStyle(color: colors.accent),
@@ -334,83 +332,105 @@ Map<String, TextStyle> sootLightSyntaxTheme(ColorSet colors) => {
   'horizontal_rule': TextStyle(color: Color(0xFF6B7280)),
 };
 
-/// Soot dark theme — monochrome-dominant.
-final ThemeData appTheme = ThemeData(
-  brightness: Brightness.dark,
-  visualDensity: VisualDensity.compact,
-  scaffoldBackgroundColor: AppColors.bg,
-  colorScheme: const ColorScheme.dark(
-    primary: AppColors.accent,
-    surface: AppColors.surface,
-    error: AppColors.accent,
-    onPrimary: AppColors.text,
-    onSurface: AppColors.text,
-    onError: AppColors.text,
-  ),
-  appBarTheme: const AppBarTheme(
-    backgroundColor: AppColors.elevated,
-    foregroundColor: AppColors.text,
-    elevation: 0,
-    titleTextStyle: TextStyle(
-      color: AppColors.text,
-      fontSize: 13,
-      fontWeight: FontWeight.w500,
+// ── Dynamic theme builder ──────────────────────────────────
+
+/// Build a [ThemeData] from any [ColorSet].
+ThemeData buildAppTheme(ColorSet c) {
+  final isDark = c == ColorSet.dark || c == ColorSet.orangeDark;
+  return ThemeData(
+    brightness: isDark ? Brightness.dark : Brightness.light,
+    visualDensity: VisualDensity.compact,
+    scaffoldBackgroundColor: c.bg,
+    colorScheme: isDark
+        ? ColorScheme.dark(
+            primary: c.accent,
+            surface: c.surface,
+            error: c.accent,
+            onPrimary: c.text,
+            onSurface: c.text,
+            onError: c.text,
+          )
+        : ColorScheme.light(
+            primary: c.accent,
+            surface: c.surface,
+            error: c.accent,
+            onPrimary: Colors.white,
+            onSurface: c.text,
+            onError: Colors.white,
+          ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: c.elevated,
+      foregroundColor: c.text,
+      elevation: 0,
+      titleTextStyle: TextStyle(
+        color: c.text,
+        fontSize: 13,
+        fontWeight: FontWeight.w500,
+      ),
+      surfaceTintColor: Colors.transparent,
     ),
-    surfaceTintColor: Colors.transparent,
-  ),
-  dividerTheme: const DividerThemeData(
-    color: AppColors.border,
-    thickness: 1,
-    space: 1,
-  ),
-  tabBarTheme: const TabBarThemeData(
-    labelColor: AppColors.text,
-    unselectedLabelColor: AppColors.textMuted,
-    labelStyle: TextStyle(fontSize: 13),
-    unselectedLabelStyle: TextStyle(fontSize: 13),
-    indicator: BoxDecoration(
-      border: Border(bottom: BorderSide(color: AppColors.accent, width: 2)),
+    dividerTheme: DividerThemeData(color: c.border, thickness: 1, space: 1),
+    tabBarTheme: TabBarThemeData(
+      labelColor: c.text,
+      unselectedLabelColor: c.textMuted,
+      labelStyle: TextStyle(fontSize: 13),
+      unselectedLabelStyle: TextStyle(fontSize: 13),
+      indicator: BoxDecoration(
+        border: Border(bottom: BorderSide(color: c.accent, width: 2)),
+      ),
+      dividerColor: c.border,
+      labelPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     ),
-    dividerColor: AppColors.border,
-    labelPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-  ),
-  inputDecorationTheme: const InputDecorationTheme(
-    filled: true,
-    fillColor: AppColors.surface,
-    border: OutlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.border),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: c.surface,
+      border: OutlineInputBorder(borderSide: BorderSide(color: c.border)),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: c.border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: c.borderFocused),
+      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      hintStyle: TextStyle(color: c.textPlaceholder, fontSize: 13),
+      labelStyle: TextStyle(color: c.textMuted, fontSize: 13),
+      isDense: true,
     ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.borderFocused),
+    listTileTheme: ListTileThemeData(
+      dense: true,
+      contentPadding: EdgeInsets.symmetric(horizontal: 8),
+      textColor: c.text,
     ),
-    contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-    hintStyle: TextStyle(color: AppColors.textPlaceholder, fontSize: 13),
-    labelStyle: TextStyle(color: AppColors.textMuted, fontSize: 13),
-    isDense: true,
-  ),
-  listTileTheme: const ListTileThemeData(
-    dense: true,
-    contentPadding: EdgeInsets.symmetric(horizontal: 8),
-    textColor: AppColors.text,
-  ),
-  iconTheme: const IconThemeData(color: AppColors.textMuted, size: 18),
-  textTheme: const TextTheme(
-    bodyMedium: TextStyle(color: AppColors.text, fontSize: 13),
-    bodySmall: TextStyle(color: AppColors.textMuted, fontSize: 12),
-    titleMedium: TextStyle(color: AppColors.text, fontSize: 14),
-    labelSmall: TextStyle(color: AppColors.textMuted, fontSize: 11),
-  ),
-  popupMenuTheme: const PopupMenuThemeData(
-    color: AppColors.elevated,
-    surfaceTintColor: Colors.transparent,
-  ),
-  dialogTheme: const DialogThemeData(
-    backgroundColor: AppColors.elevated,
-    surfaceTintColor: Colors.transparent,
-  ),
-  snackBarTheme: const SnackBarThemeData(
-    backgroundColor: AppColors.elevated,
-    contentTextStyle: TextStyle(color: AppColors.text),
-  ),
-);
+    iconTheme: IconThemeData(color: c.textMuted, size: 18),
+    textTheme: TextTheme(
+      bodyMedium: TextStyle(color: c.text, fontSize: 13),
+      bodySmall: TextStyle(color: c.textMuted, fontSize: 12),
+      titleMedium: TextStyle(color: c.text, fontSize: 14),
+      labelSmall: TextStyle(color: c.textMuted, fontSize: 11),
+    ),
+    popupMenuTheme: PopupMenuThemeData(
+      color: c.elevated,
+      surfaceTintColor: Colors.transparent,
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: c.elevated,
+      surfaceTintColor: Colors.transparent,
+    ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: c.elevated,
+      contentTextStyle: TextStyle(color: c.text),
+    ),
+    checkboxTheme: CheckboxThemeData(
+      fillColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected)
+            ? c.accent
+            : Colors.transparent,
+      ),
+      checkColor: WidgetStateProperty.all(c.text),
+      side: BorderSide(color: c.border),
+    ),
+  );
+}
+
+/// Back-compat alias for tests and legacy references.
+final ThemeData appTheme = buildAppTheme(ColorSet.dark);

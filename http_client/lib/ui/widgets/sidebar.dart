@@ -24,6 +24,7 @@ class Sidebar extends ConsumerWidget {
     final historyAsync = ref.watch(historyProvider);
     final envsAsync = ref.watch(environmentsProvider);
     final activeEnv = ref.watch(activeEnvironmentProvider);
+    final historySearch = ref.watch(historySearchProvider);
     final dialogs = SidebarDialogs(ref, colors);
 
     return Column(
@@ -38,7 +39,7 @@ class Sidebar extends ConsumerWidget {
               Text(
                 'HTTP Client',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: colors.text,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),
@@ -429,27 +430,43 @@ class Sidebar extends ConsumerWidget {
         ),
         Expanded(
           child: historyAsync.when(
-            data: (entries) => ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: entries.length,
-              itemBuilder: (context, index) {
-                final entry = entries[index];
-                return SidebarRow(
-                  leading: MethodBadge(method: entry.request.method),
-                  title: Text(
-                    entry.request.url,
-                    style: TextStyle(fontSize: 11),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: Text(
-                    '${entry.statusCode} • ${entry.durationMs}ms',
-                    style: TextStyle(fontSize: 10, color: colors.textMuted),
-                  ),
-                  onTap: () => onRequestSelected(entry.request),
-                );
-              },
-            ),
+            data: (entries) {
+              final filtered = historySearch.isEmpty
+                  ? entries
+                  : entries
+                        .where(
+                          (e) =>
+                              e.request.url.toLowerCase().contains(
+                                historySearch.toLowerCase(),
+                              ) ||
+                              e.request.name.toLowerCase().contains(
+                                historySearch.toLowerCase(),
+                              ) ||
+                              e.statusCode.toString().contains(historySearch),
+                        )
+                        .toList();
+              return ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: filtered.length,
+                itemBuilder: (context, index) {
+                  final entry = filtered[index];
+                  return SidebarRow(
+                    leading: MethodBadge(method: entry.request.method),
+                    title: Text(
+                      entry.request.url,
+                      style: TextStyle(fontSize: 11),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: Text(
+                      '${entry.statusCode} • ${entry.durationMs}ms',
+                      style: TextStyle(fontSize: 10, color: colors.textMuted),
+                    ),
+                    onTap: () => onRequestSelected(entry.request),
+                  );
+                },
+              );
+            },
             loading: () => const SizedBox.shrink(),
             error: (_, _) => const SizedBox.shrink(),
           ),

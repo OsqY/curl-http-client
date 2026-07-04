@@ -184,3 +184,6 @@ final themeVariantProvider =
     StateNotifierProvider<ThemeVariantNotifier, SootThemeVariant>(
       (ref) => ThemeVariantNotifier(),
     );
+
+/// History search query.
+final historySearchProvider = StateProvider<String>((ref) => '');

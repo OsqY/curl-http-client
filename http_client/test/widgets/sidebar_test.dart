@@ -11,10 +11,7 @@ void main() {
         child: MaterialApp(
           theme: appTheme,
           home: Scaffold(
-            body: Sidebar(
-              onRequestSelected: (_) {},
-              onMenuAction: (_) {},
-            ),
+            body: Sidebar(onRequestSelected: (_) {}, onMenuAction: (_) {}),
           ),
         ),
       ),

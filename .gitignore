@@ -35,3 +35,5 @@
 .swiftpm/
 migrate_working_dir/
 #.vscode/
+*.zip
+*.tar.gz

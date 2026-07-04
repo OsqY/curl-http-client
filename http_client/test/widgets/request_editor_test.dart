@@ -11,10 +11,7 @@ void main() {
         child: MaterialApp(
           theme: appTheme,
           home: Scaffold(
-            body: RequestEditor(
-              onSend: () {},
-              onSave: () {},
-            ),
+            body: RequestEditor(onSend: () {}, onSave: () {}),
           ),
         ),
       ),
