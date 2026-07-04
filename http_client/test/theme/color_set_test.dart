@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/painting.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
 
 void main() {
@@ -16,7 +17,11 @@ void main() {
     });
 
     test('all color sets have required properties', () {
-      for (final colors in [ColorSet.dark, ColorSet.light, ColorSet.orangeDark]) {
+      for (final colors in [
+        ColorSet.dark,
+        ColorSet.light,
+        ColorSet.orangeDark,
+      ]) {
         expect(colors.bg, isNotNull);
         expect(colors.surface, isNotNull);
         expect(colors.text, isNotNull);

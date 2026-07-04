@@ -11,9 +11,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: appTheme,
-          home: const Scaffold(
-            body: MethodBadge(method: HttpMethod.get),
-          ),
+          home: const Scaffold(body: MethodBadge(method: HttpMethod.get)),
         ),
       ),
     );
@@ -22,14 +20,14 @@ void main() {
     expect(text.style?.color, isNotNull);
   });
 
-  testWidgets('MethodBadge renders with correct color for POST', (tester) async {
+  testWidgets('MethodBadge renders with correct color for POST', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
           theme: appTheme,
-          home: const Scaffold(
-            body: MethodBadge(method: HttpMethod.post),
-          ),
+          home: const Scaffold(body: MethodBadge(method: HttpMethod.post)),
         ),
       ),
     );

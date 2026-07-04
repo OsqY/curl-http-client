@@ -10,17 +10,16 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: appTheme,
-          home: const Scaffold(
+          home: Scaffold(
             body: Sidebar(
-              onRequestSelected: null,
-              onMenuAction: null,
+              onRequestSelected: (_) {},
+              onMenuAction: (_) {},
             ),
           ),
         ),
       ),
     );
 
-    // Verify sidebar renders
     expect(find.byType(Sidebar), findsOneWidget);
   });
 }

@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http_client/models/models.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
 import 'package:http_client/ui/widgets/request_editor.dart';
 
@@ -11,17 +10,16 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: appTheme,
-          home: const Scaffold(
+          home: Scaffold(
             body: RequestEditor(
-              onSend: null,
-              onSave: null,
+              onSend: () {},
+              onSave: () {},
             ),
           ),
         ),
       ),
     );
 
-    // Verify request editor renders
     expect(find.byType(RequestEditor), findsOneWidget);
   });
 }

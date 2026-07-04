@@ -10,9 +10,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: appTheme,
-          home: const Scaffold(
-            body: StatusTag(statusCode: 200),
-          ),
+          home: const Scaffold(body: StatusTag(statusCode: 200)),
         ),
       ),
     );
@@ -25,9 +23,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: appTheme,
-          home: const Scaffold(
-            body: StatusTag(statusCode: 404),
-          ),
+          home: const Scaffold(body: StatusTag(statusCode: 404)),
         ),
       ),
     );
@@ -40,9 +36,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: appTheme,
-          home: const Scaffold(
-            body: StatusTag(statusCode: 500),
-          ),
+          home: const Scaffold(body: StatusTag(statusCode: 500)),
         ),
       ),
     );

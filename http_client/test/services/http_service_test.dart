@@ -80,9 +80,7 @@ void main() {
           name: 'Header Test',
           method: HttpMethod.get,
           url: 'http://localhost:$port/echo',
-          headers: [
-            const KeyValuePair(key: 'X-Custom', value: 'my-value'),
-          ],
+          headers: [const KeyValuePair(key: 'X-Custom', value: 'my-value')],
         );
 
         final result = await service.execute(request);
@@ -214,8 +212,10 @@ void main() {
         final body = jsonDecode(result.response!.bodyText ?? '{}');
         expect(body['method'], 'POST');
         expect(body['body'], 'username=alice&password=secret');
-        expect(body['headers']['content-type'],
-            'application/x-www-form-urlencoded');
+        expect(
+          body['headers']['content-type'],
+          'application/x-www-form-urlencoded',
+        );
       } finally {
         await server.close();
       }
@@ -261,13 +261,11 @@ void main() {
       final server = await _startEchoServer();
       try {
         final port = server.port;
-        cookieJar = CookieJar(cookies: [
-          StoredCookie(
-            name: 'session',
-            value: 'abc123',
-            domain: 'localhost',
-          ),
-        ]);
+        cookieJar = CookieJar(
+          cookies: [
+            StoredCookie(name: 'session', value: 'abc123', domain: 'localhost'),
+          ],
+        );
         service = HttpService(cookieJar: cookieJar);
 
         final request = HttpRequest(
@@ -290,13 +288,15 @@ void main() {
       final server = await _startEchoServer();
       try {
         final port = server.port;
-        cookieJar = CookieJar(cookies: [
-          StoredCookie(
-            name: 'session',
-            value: 'abc123',
-            domain: 'other.example.com',
-          ),
-        ]);
+        cookieJar = CookieJar(
+          cookies: [
+            StoredCookie(
+              name: 'session',
+              value: 'abc123',
+              domain: 'other.example.com',
+            ),
+          ],
+        );
         service = HttpService(cookieJar: cookieJar);
 
         final request = HttpRequest(

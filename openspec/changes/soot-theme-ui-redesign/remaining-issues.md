@@ -17,6 +17,7 @@ Updated: 2026-07-04
 | Phase 7 — Light Syntax | ✅ | sootLightSyntaxTheme for light backgrounds |
 | Phase 8 — Widget Tests | ✅ | 8 test files covering key components |
 | Phase 9 — Code Quality | ✅ | Null-aware fix, unused code cleanup |
+| Phase 10 — Sidebar Refactor | ✅ | Dialogs extracted (866→453 lines) |
 
 ## Test Coverage
 
@@ -31,11 +32,25 @@ Updated: 2026-07-04
 | test/theme/color_set_test.dart | 4 |
 | **Total** | **13** |
 
-## Remaining (Low Priority)
+## Architecture
 
-| # | Item | Effort | Notes |
-|---|---|---|---|
-| 1 | Sidebar refactor | High | 866 lines, complex extraction |
-| 2 | Comprehensive test suite | Medium | Basic tests added |
-| 3 | History search filter | Low | UI present, logic not implemented |
-| 4 | Window title debounce | Low | Currently updates on every build |
+```
+lib/ui/
+  theme/app_theme.dart        — ColorSet, colorSetProvider, sootSyntaxTheme, sootLightSyntaxTheme
+  screens/main_screen.dart    — Main layout, keyboard shortcuts, window title
+  widgets/
+    sidebar.dart              — Collections tree, history, env selector (453 lines)
+    sidebar_dialogs.dart      — All 11 dialog methods (419 lines)
+    request_editor.dart       — URL bar, method selector, 6 tabs
+    response_panel.dart       — Response body, headers, diff viewer
+    method_badge.dart         — Colored HTTP method badges
+    status_tag.dart           — Status code display
+    body_editor.dart          — Request body editor (DropdownMenu)
+    auth_editor.dart          — Authentication config (DropdownMenu)
+    key_value_editor.dart     — Headers/params editor
+    scripts_editor.dart       — Pre/post request scripts
+    collection_header.dart    — Collection tree header
+    sidebar_row.dart          — Sidebar list item
+    section_header.dart       — Section labels
+    click_cursor.dart         — Pointer cursor wrapper
+```

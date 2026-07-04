@@ -100,8 +100,10 @@ void main() {
       );
 
       expect(req.headers.any((h) => h.key == 'Cookie'), isTrue);
-      expect(req.headers.firstWhere((h) => h.key == 'Cookie').value,
-          'session=abc123');
+      expect(
+        req.headers.firstWhere((h) => h.key == 'Cookie').value,
+        'session=abc123',
+      );
     });
 
     test('parses --data-urlencode flag', () {
@@ -142,9 +144,7 @@ void main() {
     });
 
     test('uses --url flag', () {
-      final req = CurlParser.parse(
-        'curl --url https://api.example.com/flag',
-      );
+      final req = CurlParser.parse('curl --url https://api.example.com/flag');
 
       expect(req.url, 'https://api.example.com/flag');
     });
@@ -209,7 +209,10 @@ void main() {
 
       expect(result.requests[2].name, 'getPet');
       expect(result.requests[2].method, HttpMethod.get);
-      expect(result.requests[2].url, 'https://api.petstore.com/v1/pets/{petId}');
+      expect(
+        result.requests[2].url,
+        'https://api.petstore.com/v1/pets/{petId}',
+      );
     });
 
     test('imports YAML OpenAPI', () {
@@ -484,7 +487,9 @@ paths:
 
       final decoded = jsonDecode(output) as Map<String, dynamic>;
       expect(decoded['paths'], <String, dynamic>{});
-      expect(decoded['servers'], [{'url': 'http://localhost'}]);
+      expect(decoded['servers'], [
+        {'url': 'http://localhost'},
+      ]);
     });
 
     test('exports query parameters as OpenAPI parameters', () {
@@ -495,9 +500,7 @@ paths:
           name: 'search',
           method: HttpMethod.get,
           url: 'https://api.example.com/search',
-          queryParams: [
-            KeyValuePair(key: 'q', value: 'flutter'),
-          ],
+          queryParams: [KeyValuePair(key: 'q', value: 'flutter')],
         ),
       ];
 

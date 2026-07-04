@@ -10,9 +10,7 @@ void main() {
       ProviderScope(
         child: MaterialApp(
           theme: appTheme,
-          home: const Scaffold(
-            body: ResponsePanel(),
-          ),
+          home: const Scaffold(body: ResponsePanel()),
         ),
       ),
     );

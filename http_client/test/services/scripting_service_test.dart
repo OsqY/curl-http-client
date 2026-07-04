@@ -20,9 +20,7 @@ void main() {
       headers: [
         const models.KeyValuePair(key: 'Authorization', value: 'Bearer tok'),
       ],
-      queryParams: [
-        const models.KeyValuePair(key: 'page', value: '1'),
-      ],
+      queryParams: [const models.KeyValuePair(key: 'page', value: '1')],
       body: const models.RequestBody(mode: models.BodyMode.none),
     );
 
@@ -40,11 +38,9 @@ void main() {
     test('runPreRequest sets a variable', () async {
       const script = "variables['token'] = variables['base_url']! + '/v1';";
 
-      final ctx = await service.runPreRequest(
-        script,
-        sampleRequest,
-        {'base_url': 'https://api.example.com'},
-      );
+      final ctx = await service.runPreRequest(script, sampleRequest, {
+        'base_url': 'https://api.example.com',
+      });
 
       expect(ctx.variables['token'], 'https://api.example.com/v1');
       expect(ctx.variables['base_url'], 'https://api.example.com');
@@ -56,27 +52,16 @@ void main() {
 variables['full_url'] = request['url'] + '?page=' + (request['queryParams'] as Map)['page'];
 ''';
 
-      final ctx = await service.runPreRequest(
-        script,
-        sampleRequest,
-        {},
-      );
+      final ctx = await service.runPreRequest(script, sampleRequest, {});
 
-      expect(
-        ctx.variables['full_url'],
-        'https://api.example.com/users?page=1',
-      );
+      expect(ctx.variables['full_url'], 'https://api.example.com/users?page=1');
       expect(ctx.errors, isEmpty);
     });
 
     test('runPreRequest captures script errors', () async {
       const script = "throw Exception('oops');";
 
-      final ctx = await service.runPreRequest(
-        script,
-        sampleRequest,
-        {},
-      );
+      final ctx = await service.runPreRequest(script, sampleRequest, {});
 
       expect(ctx.errors, isNotEmpty);
       expect(ctx.errors.first, contains('oops'));
@@ -85,11 +70,9 @@ variables['full_url'] = request['url'] + '?page=' + (request['queryParams'] as M
     test('runPreRequest empty script does nothing', () async {
       const script = '';
 
-      final ctx = await service.runPreRequest(
-        script,
-        sampleRequest,
-        {'keep': 'me'},
-      );
+      final ctx = await service.runPreRequest(script, sampleRequest, {
+        'keep': 'me',
+      });
 
       expect(ctx.variables, {'keep': 'me'});
       expect(ctx.errors, isEmpty);

@@ -92,9 +92,7 @@ void main() {
     });
 
     test('deleteCollection handles non-existent id gracefully', () async {
-      await repo.saveCollection(
-        RequestCollection(id: 'col-1', name: 'Keep'),
-      );
+      await repo.saveCollection(RequestCollection(id: 'col-1', name: 'Keep'));
       // Should not throw.
       await repo.deleteCollection('non-existent');
       final collections = await repo.loadCollections();
@@ -103,9 +101,7 @@ void main() {
 
     // ---- Folders ----
     test('saves and retrieves folders in a collection', () async {
-      await repo.saveCollection(
-        RequestCollection(id: 'col-1', name: 'API'),
-      );
+      await repo.saveCollection(RequestCollection(id: 'col-1', name: 'API'));
       final folder = RequestFolder(id: 'f-1', name: 'Auth');
 
       await repo.saveFolder('col-1', folder);
@@ -117,17 +113,9 @@ void main() {
     });
 
     test('deletes a folder from a collection', () async {
-      await repo.saveCollection(
-        RequestCollection(id: 'col-1', name: 'API'),
-      );
-      await repo.saveFolder(
-        'col-1',
-        RequestFolder(id: 'f-1', name: 'Auth'),
-      );
-      await repo.saveFolder(
-        'col-1',
-        RequestFolder(id: 'f-2', name: 'Users'),
-      );
+      await repo.saveCollection(RequestCollection(id: 'col-1', name: 'API'));
+      await repo.saveFolder('col-1', RequestFolder(id: 'f-1', name: 'Auth'));
+      await repo.saveFolder('col-1', RequestFolder(id: 'f-2', name: 'Users'));
 
       await repo.deleteFolder('col-1', 'f-1');
       final collections = await repo.loadCollections();
@@ -161,10 +149,7 @@ void main() {
       final collection = RequestCollection(id: 'col-1', name: 'API');
       await repo.saveCollection(collection);
 
-      await repo.saveFolder(
-        'col-1',
-        RequestFolder(id: 'f-1', name: 'Users'),
-      );
+      await repo.saveFolder('col-1', RequestFolder(id: 'f-1', name: 'Users'));
 
       final request = HttpRequest(
         id: 'req-1',
@@ -206,7 +191,10 @@ void main() {
         id: 'env-1',
         name: 'Production',
         variables: [
-          EnvironmentVariable(key: 'base_url', value: 'https://prod.example.com'),
+          EnvironmentVariable(
+            key: 'base_url',
+            value: 'https://prod.example.com',
+          ),
         ],
       );
 
@@ -317,9 +305,11 @@ void main() {
 
     // ---- Cookies ----
     test('saves and loads cookies', () async {
-      final jar = CookieJar(cookies: [
-        StoredCookie(name: 'session', value: 'abc123', domain: 'example.com'),
-      ]);
+      final jar = CookieJar(
+        cookies: [
+          StoredCookie(name: 'session', value: 'abc123', domain: 'example.com'),
+        ],
+      );
 
       await repo.saveCookies(jar);
       final loaded = await repo.loadCookies();
@@ -348,12 +338,8 @@ void main() {
         name: 'Create User',
         method: HttpMethod.post,
         url: 'https://api.example.com/users',
-        headers: [
-          const KeyValuePair(key: 'X-Custom', value: 'val'),
-        ],
-        queryParams: [
-          const KeyValuePair(key: 'debug', value: 'true'),
-        ],
+        headers: [const KeyValuePair(key: 'X-Custom', value: 'val')],
+        queryParams: [const KeyValuePair(key: 'debug', value: 'true')],
         body: const RequestBody(
           mode: BodyMode.raw,
           rawContent: '{"name":"Alice"}',
@@ -382,8 +368,10 @@ void main() {
       expect(loaded[0].auth, isA<BearerAuth>());
       expect((loaded[0].auth as BearerAuth).token, 'tok-secret');
       expect(loaded[0].scripts.preRequest, "variables['x'] = '1';");
-      expect(loaded[0].scripts.postResponse,
-          'assert(response.statusCode == 200);');
+      expect(
+        loaded[0].scripts.postResponse,
+        'assert(response.statusCode == 200);',
+      );
     });
   });
 }
