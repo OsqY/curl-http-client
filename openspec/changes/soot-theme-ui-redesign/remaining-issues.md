@@ -1,48 +1,41 @@
-# Soot Theme — Remaining Work Plan
+# Soot Theme — Final Status
 
 Updated: 2026-07-04
 
 ---
 
-## Completed (All Phases)
+## All Completed
 
 | Phase | Status | Details |
 |---|---|---|
-| Phase 1 — Theme Consistency | ✅ | All 9 widgets converted to dynamic colors |
+| Phase 1 — Theme Consistency | ✅ | All widgets converted to dynamic colors |
 | Phase 2 — UX Polish | ✅ | ClickCursor, theme persistence |
 | Phase 3 — Features | ✅ | LICENSE, README |
 | Phase 4 — Final Polish | ✅ | sootSyntaxTheme, settings tab, cleanup |
-| Phase 5 — Dynamic Syntax + Search | ✅ | Dynamic syntax theme |
-| Phase 6 — Technical Debt | ✅ | DropdownMenu migration, light syntax, tests |
+| Phase 5 — Dynamic Syntax | ✅ | Dynamic syntax theme |
+| Phase 6 — DropdownMenu | ✅ | DropdownButtonFormField → DropdownMenu |
+| Phase 7 — Light Syntax | ✅ | sootLightSyntaxTheme for light backgrounds |
+| Phase 8 — Widget Tests | ✅ | 8 test files covering key components |
+| Phase 9 — Code Quality | ✅ | Null-aware fix, unused code cleanup |
 
-## Remaining Issues (Low Priority)
+## Test Coverage
 
-| # | Issue | Effort | Notes |
+| Test File | Tests |
+|---|---|
+| test/widgets/method_badge_test.dart | 2 |
+| test/widgets/status_tag_test.dart | 3 |
+| test/widgets/click_cursor_test.dart | 1 |
+| test/widgets/sidebar_test.dart | 1 |
+| test/widgets/request_editor_test.dart | 1 |
+| test/widgets/response_panel_test.dart | 1 |
+| test/theme/color_set_test.dart | 4 |
+| **Total** | **13** |
+
+## Remaining (Low Priority)
+
+| # | Item | Effort | Notes |
 |---|---|---|---|
-| 1 | Sidebar refactor (866 lines) | High | Dialog extraction was fragile, keep as-is |
-| 2 | Full widget test suite | Medium | Basic tests added, comprehensive suite needs more work |
-| 3 | Window title edge cases | Low | Currently updates on build, could debounce |
-| 4 | History search field | Low | UI present, filter logic not implemented |
-
-## Architecture Summary
-
-```
-lib/ui/
-  theme/app_theme.dart     — AppColors, ColorSet, colorSetProvider,
-                              sootSyntaxTheme(), sootLightSyntaxTheme()
-  screens/main_screen.dart — Main layout, keyboard shortcuts, window title
-  widgets/
-    sidebar.dart           — Collections tree, history, env selector, theme switcher
-    request_editor.dart    — URL bar, method selector, 6 tabs including settings
-    response_panel.dart    — Response body, headers, diff viewer, dynamic syntax
-    method_badge.dart      — Colored HTTP method badges
-    status_tag.dart        — Status code display
-    body_editor.dart       — Request body editor (DropdownMenu)
-    auth_editor.dart       — Authentication config (DropdownMenu)
-    key_value_editor.dart  — Headers/params editor
-    scripts_editor.dart    — Pre/post request scripts
-    collection_header.dart — Collection tree header
-    sidebar_row.dart       — Sidebar list item
-    section_header.dart    — Section labels
-    click_cursor.dart      — Pointer cursor wrapper
-```
+| 1 | Sidebar refactor | High | 866 lines, complex extraction |
+| 2 | Comprehensive test suite | Medium | Basic tests added |
+| 3 | History search filter | Low | UI present, logic not implemented |
+| 4 | Window title debounce | Low | Currently updates on every build |
