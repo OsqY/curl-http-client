@@ -343,6 +343,22 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                                   fontSize: 12,
                                 ),
                               ),
+                              SizedBox(height: 16),
+                              Text(
+                                'Keyboard Shortcuts',
+                                style: TextStyle(
+                                  color: colors.text,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              _shortcutRow(
+                                'Ctrl+Enter',
+                                'Send request',
+                                colors,
+                              ),
+                              _shortcutRow('Ctrl+S', 'Save request', colors),
                             ],
                           ),
                         ),
@@ -367,6 +383,37 @@ Widget _settingRow(IconData icon, String label, ColorSet colors) {
         Icon(icon, size: 16, color: colors.accent),
         const SizedBox(width: 8),
         Text(label, style: TextStyle(color: colors.text, fontSize: 13)),
+      ],
+    ),
+  );
+}
+
+Widget _shortcutRow(String shortcut, String description, ColorSet colors) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: colors.surface,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: colors.border),
+          ),
+          child: Text(
+            shortcut,
+            style: TextStyle(
+              color: colors.text,
+              fontSize: 11,
+              fontFamily: 'monospace',
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          description,
+          style: TextStyle(color: colors.textMuted, fontSize: 13),
+        ),
       ],
     ),
   );

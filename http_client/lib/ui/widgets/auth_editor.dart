@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http_client/ui/widgets/widgets.dart';
 import 'package:http_client/models/models.dart';
 
 /// Auth configuration editor for Bearer, Basic, API Key, and OAuth2.
@@ -38,32 +39,34 @@ class _AuthEditorState extends State<AuthEditor> {
     final auth = widget.auth;
     return Column(
       children: [
-        DropdownButtonFormField<String>(
-          initialValue: auth.type,
-          key: ValueKey(auth.type),
-          items: const [
-            DropdownMenuItem(value: 'none', child: Text('None')),
-            DropdownMenuItem(value: 'bearer', child: Text('Bearer Token')),
-            DropdownMenuItem(value: 'basic', child: Text('Basic Auth')),
-            DropdownMenuItem(value: 'apiKey', child: Text('API Key')),
-            DropdownMenuItem(value: 'oauth2', child: Text('OAuth2')),
-          ],
-          onChanged: (type) {
-            widget.onChanged(switch (type) {
-              'bearer' => BearerAuth(token: ''),
-              'basic' => BasicAuth(username: '', password: ''),
-              'apiKey' => ApiKeyAuth(key: '', value: ''),
-              'oauth2' => OAuth2Auth(
-                tokenUrl: '',
-                clientId: '',
-                clientSecret: '',
-              ),
-              _ => const NoAuth(),
-            });
-          },
-          decoration: const InputDecoration(
-            isDense: true,
-            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        ClickCursor(
+          child: DropdownButtonFormField<String>(
+            initialValue: auth.type,
+            key: ValueKey(auth.type),
+            items: const [
+              DropdownMenuItem(value: 'none', child: Text('None')),
+              DropdownMenuItem(value: 'bearer', child: Text('Bearer Token')),
+              DropdownMenuItem(value: 'basic', child: Text('Basic Auth')),
+              DropdownMenuItem(value: 'apiKey', child: Text('API Key')),
+              DropdownMenuItem(value: 'oauth2', child: Text('OAuth2')),
+            ],
+            onChanged: (type) {
+              widget.onChanged(switch (type) {
+                'bearer' => BearerAuth(token: ''),
+                'basic' => BasicAuth(username: '', password: ''),
+                'apiKey' => ApiKeyAuth(key: '', value: ''),
+                'oauth2' => OAuth2Auth(
+                  tokenUrl: '',
+                  clientId: '',
+                  clientSecret: '',
+                ),
+                _ => const NoAuth(),
+              });
+            },
+            decoration: const InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            ),
           ),
         ),
         switch (auth) {
