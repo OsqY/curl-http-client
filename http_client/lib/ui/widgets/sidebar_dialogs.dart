@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
-import 'package:http_client/ui/widgets/widgets.dart';
 
 /// Dialog and context menu methods extracted from Sidebar.
 /// Takes WidgetRef and ColorSet as constructor parameters.
