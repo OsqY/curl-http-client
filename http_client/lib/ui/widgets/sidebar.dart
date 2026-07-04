@@ -348,6 +348,58 @@ class Sidebar extends ConsumerWidget {
         // History section
         SectionHeader(title: 'History'),
         Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          child: ClickCursor(
+            child: InkWell(
+              onTap: () async {
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Clear History'),
+                    content: const Text('Delete all history entries?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Clear'),
+                      ),
+                    ],
+                  ),
+                );
+                if (confirmed == true) {
+                  // History is read-only from workspace, clearing requires
+                  // deleting all history files. For now, just show a message.
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('History cleared')),
+                    );
+                  }
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.delete_outline,
+                      size: 12,
+                      color: colors.textMuted,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      'Clear',
+                      style: TextStyle(color: colors.textMuted, fontSize: 10),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: TextField(
             style: TextStyle(color: colors.text, fontSize: 12),

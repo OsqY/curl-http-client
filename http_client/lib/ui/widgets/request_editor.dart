@@ -221,7 +221,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
               ClickCursor(
                 child: IconButton(
                   icon: Icon(Icons.save, size: 18),
-                  tooltip: 'Save (Ctrl+S)',
+                  tooltip: 'Save (Ctrl+S)\nClick to save current request',
                   onPressed: widget.onSave,
                   padding: EdgeInsets.zero,
                   constraints: BoxConstraints(minWidth: 28, minHeight: 28),
@@ -324,6 +324,17 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                               _settingRow(
                                 Icons.cookie,
                                 'Send cookies with request',
+                                colors,
+                              ),
+                              SizedBox(height: 12),
+                              _settingRow(
+                                Icons.timer,
+                                'Request timeout: 30s',
+                                colors,
+                              ),
+                              _settingRow(
+                                Icons.storage,
+                                'Max response size: 10MB',
                                 colors,
                               ),
                               SizedBox(height: 16),
