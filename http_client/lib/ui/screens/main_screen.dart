@@ -33,15 +33,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   void initState() {
     super.initState();
     _loadWorkspace();
-    _updateWindowTitle();
-  }
-
-  void _updateWindowTitle() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final request = ref.read(currentRequestProvider);
-      final title = request.name.isNotEmpty ? request.name : 'HTTP Client';
-      windowManager.setTitle('$title — HTTP Client');
-    });
   }
 
   Future<void> _loadWorkspace() async {

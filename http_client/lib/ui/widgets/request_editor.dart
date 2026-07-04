@@ -418,7 +418,7 @@ Widget _settingRow(
             style: TextStyle(color: colors.text, fontSize: 13),
           ),
         ),
-        if (trailing != null) trailing,
+        ?trailing,
       ],
     ),
   );
