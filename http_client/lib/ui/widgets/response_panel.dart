@@ -255,12 +255,12 @@ class ResponsePanel extends ConsumerWidget {
         children: diffs.map((diff) {
           final style = switch (diff.operation) {
             DIFF_INSERT => TextStyle(
-              backgroundColor: Color(0x4027AE60),
-              color: Color(0xFF27AE60),
+              backgroundColor: colors.diffInsertBg,
+              color: colors.diffInsert,
             ),
             DIFF_DELETE => TextStyle(
-              backgroundColor: Color(0x40E74C3C),
-              color: Color(0xFFE74C3C),
+              backgroundColor: colors.diffDeleteBg,
+              color: colors.diffDelete,
               decoration: TextDecoration.lineThrough,
             ),
             DIFF_EQUAL => TextStyle(color: colors.text),

@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
+import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/widgets/sidebar_row.dart';
 
 /// Request body editor supporting none, form-data, url-encoded, raw, and binary modes.
-class BodyEditor extends StatefulWidget {
+class BodyEditor extends ConsumerStatefulWidget {
   final RequestBody body;
   final ValueChanged<RequestBody> onChanged;
 
-  const BodyEditor({super.key, required this.body, required this.onChanged});
+  BodyEditor({super.key, required this.body, required this.onChanged});
 
   @override
-  State<BodyEditor> createState() => _BodyEditorState();
+  ConsumerState<BodyEditor> createState() => _BodyEditorState();
 }
 
-class _BodyEditorState extends State<BodyEditor> {
+class _BodyEditorState extends ConsumerState<BodyEditor> {
   late TextEditingController _rawController;
   late TextEditingController _urlEncodedKeyController;
   late TextEditingController _urlEncodedValueController;
@@ -37,6 +39,7 @@ class _BodyEditorState extends State<BodyEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.watch(colorSetProvider);
     final body = widget.body;
     return Column(
       children: [
@@ -74,8 +77,8 @@ class _BodyEditorState extends State<BodyEditor> {
                 controller: _rawController,
                 maxLines: null,
                 expands: true,
-                style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
-                decoration: const InputDecoration(
+                style: TextStyle(fontFamily: 'monospace', fontSize: 12),
+                decoration: InputDecoration(
                   hintText: 'Body content',
                   border: OutlineInputBorder(),
                 ),
@@ -87,13 +90,13 @@ class _BodyEditorState extends State<BodyEditor> {
         ] else if (body.mode == BodyMode.formData ||
             body.mode == BodyMode.urlEncoded) ...[
           SidebarRow(
-            leading: const Icon(Icons.add, size: 16),
-            title: const Text('Add field', style: TextStyle(fontSize: 12)),
+            leading: Icon(Icons.add, size: 16),
+            title: Text('Add field', style: TextStyle(fontSize: 12)),
             onTap: () => widget.onChanged(
               body.copyWith(
                 formData: [
                   ...body.formData,
-                  const KeyValuePair(key: '', value: ''),
+                  KeyValuePair(key: '', value: ''),
                 ],
               ),
             ),
@@ -108,9 +111,9 @@ class _BodyEditorState extends State<BodyEditor> {
                     horizontal: 8,
                     vertical: 2,
                   ),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: AppColors.border, width: 0.5),
+                      bottom: BorderSide(color: colors.border, width: 0.5),
                     ),
                   ),
                   child: Row(
@@ -127,11 +130,11 @@ class _BodyEditorState extends State<BodyEditor> {
                       ),
                       Expanded(
                         child: TextField(
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'monospace',
                             fontSize: 12,
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Key',
                             border: InputBorder.none,
                             enabledBorder: InputBorder.none,
@@ -146,14 +149,14 @@ class _BodyEditorState extends State<BodyEditor> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Expanded(
                         child: TextField(
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontFamily: 'monospace',
                             fontSize: 12,
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'Value',
                             border: InputBorder.none,
                             enabledBorder: InputBorder.none,
@@ -169,14 +172,14 @@ class _BodyEditorState extends State<BodyEditor> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, size: 14),
+                        icon: Icon(Icons.close, size: 14),
                         onPressed: () {
                           final updated = [...body.formData];
                           updated.removeAt(index);
                           widget.onChanged(body.copyWith(formData: updated));
                         },
                         padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(
+                        constraints: BoxConstraints(
                           minWidth: 24,
                           minHeight: 24,
                         ),
@@ -188,19 +191,19 @@ class _BodyEditorState extends State<BodyEditor> {
             ),
           ),
         ] else if (body.mode == BodyMode.binary) ...[
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8),
             child: Text(
               'Binary body not yet supported',
-              style: TextStyle(color: AppColors.textMuted),
+              style: TextStyle(color: colors.textMuted),
             ),
           ),
         ] else ...[
-          const Expanded(
+          Expanded(
             child: Center(
               child: Text(
                 'No body',
-                style: TextStyle(color: AppColors.textMuted),
+                style: TextStyle(color: colors.textMuted),
               ),
             ),
           ),

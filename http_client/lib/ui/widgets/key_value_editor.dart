@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
+import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/widgets/sidebar_row.dart';
 
 /// Editable list of key-value pairs for headers and query parameters.
-class KeyValueEditor extends StatefulWidget {
+class KeyValueEditor extends ConsumerStatefulWidget {
   final List<KeyValuePair> items;
   final ValueChanged<List<KeyValuePair>> onChanged;
 
-  const KeyValueEditor({
+  KeyValueEditor({
     super.key,
     required this.items,
     required this.onChanged,
   });
 
   @override
-  State<KeyValueEditor> createState() => _KeyValueEditorState();
+  ConsumerState<KeyValueEditor> createState() => _KeyValueEditorState();
 }
 
-class _KeyValueEditorState extends State<KeyValueEditor> {
+class _KeyValueEditorState extends ConsumerState<KeyValueEditor> {
   final Map<int, TextEditingController> _keyControllers = {};
   final Map<int, TextEditingController> _valueControllers = {};
 
@@ -49,15 +51,16 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.watch(colorSetProvider);
     final rows = widget.items.toList();
     return Column(
       children: [
         SidebarRow(
-          leading: const Icon(Icons.add, size: 16),
-          title: const Text('Add', style: TextStyle(fontSize: 12)),
+          leading: Icon(Icons.add, size: 16),
+          title: Text('Add', style: TextStyle(fontSize: 12)),
           onTap: () => widget.onChanged([
             ...rows,
-            const KeyValuePair(key: '', value: ''),
+            KeyValuePair(key: '', value: ''),
           ]),
         ),
         Expanded(
@@ -67,9 +70,9 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
               final item = rows[index];
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   border: Border(
-                    bottom: BorderSide(color: AppColors.border, width: 0.5),
+                    bottom: BorderSide(color: colors.border, width: 0.5),
                   ),
                 ),
                 child: Row(
@@ -85,11 +88,11 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
                     ),
                     Expanded(
                       child: TextField(
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'monospace',
                           fontSize: 12,
                         ),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Key',
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -100,14 +103,14 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
                         onChanged: (v) => rows[index] = item.copyWith(key: v),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Expanded(
                       child: TextField(
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontFamily: 'monospace',
                           fontSize: 12,
                         ),
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           hintText: 'Value',
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -119,7 +122,7 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close, size: 14),
+                      icon: Icon(Icons.close, size: 14),
                       onPressed: () {
                         _keyControllers.remove(index)?.dispose();
                         _valueControllers.remove(index)?.dispose();
@@ -127,7 +130,7 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
                         widget.onChanged(rows);
                       },
                       padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
+                      constraints: BoxConstraints(
                         minWidth: 24,
                         minHeight: 24,
                       ),

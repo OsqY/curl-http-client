@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
+import 'package:http_client/providers/app_state.dart';
 
 /// Pre-request and post-response script editor.
-class ScriptsEditor extends StatefulWidget {
+class ScriptsEditor extends ConsumerStatefulWidget {
   final RequestScripts scripts;
   final ValueChanged<RequestScripts> onChanged;
 
-  const ScriptsEditor({
+  ScriptsEditor({
     super.key,
     required this.scripts,
     required this.onChanged,
   });
 
   @override
-  State<ScriptsEditor> createState() => _ScriptsEditorState();
+  ConsumerState<ScriptsEditor> createState() => _ScriptsEditorState();
 }
 
-class _ScriptsEditorState extends State<ScriptsEditor> {
+class _ScriptsEditorState extends ConsumerState<ScriptsEditor> {
   late TextEditingController _preController;
   late TextEditingController _postController;
 
@@ -48,27 +50,28 @@ class _ScriptsEditorState extends State<ScriptsEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.watch(colorSetProvider);
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Pre-request Script',
             style: TextStyle(
-              color: AppColors.text,
+              color: colors.text,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Expanded(
             child: TextField(
               controller: _preController,
               maxLines: null,
               expands: true,
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
-              decoration: const InputDecoration(
+              style: TextStyle(fontFamily: 'monospace', fontSize: 12),
+              decoration: InputDecoration(
                 hintText: 'Dart code run before each request',
                 border: OutlineInputBorder(),
               ),
@@ -76,23 +79,23 @@ class _ScriptsEditorState extends State<ScriptsEditor> {
                   widget.onChanged(widget.scripts.copyWith(preRequest: v)),
             ),
           ),
-          const SizedBox(height: 8),
-          const Text(
+          SizedBox(height: 8),
+          Text(
             'Post-response Script',
             style: TextStyle(
-              color: AppColors.text,
+              color: colors.text,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Expanded(
             child: TextField(
               controller: _postController,
               maxLines: null,
               expands: true,
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
-              decoration: const InputDecoration(
+              style: TextStyle(fontFamily: 'monospace', fontSize: 12),
+              decoration: InputDecoration(
                 hintText: 'Dart code run after receiving the response',
                 border: OutlineInputBorder(),
               ),

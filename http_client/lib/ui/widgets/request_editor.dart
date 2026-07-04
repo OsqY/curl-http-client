@@ -10,7 +10,7 @@ class RequestEditor extends ConsumerStatefulWidget {
   final VoidCallback onSend;
   final VoidCallback onSave;
 
-  const RequestEditor({super.key, required this.onSend, required this.onSave});
+  RequestEditor({super.key, required this.onSend, required this.onSave});
 
   @override
   ConsumerState<RequestEditor> createState() => _RequestEditorState();
@@ -53,6 +53,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = ref.watch(colorSetProvider);
     final request = ref.watch(currentRequestProvider);
     final hasUnsaved = ref.watch(unsavedChangesProvider);
 
@@ -70,19 +71,19 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
       children: [
         // Title (above URL bar)
         Container(
-          color: AppColors.elevated,
+          color: colors.elevated,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           child: Row(
             children: [
               Expanded(
                 child: TextField(
                   controller: _nameController,
-                  style: const TextStyle(
-                    color: AppColors.text,
+                  style: TextStyle(
+                    color: colors.text,
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Request name',
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
@@ -94,7 +95,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                       vertical: 6,
                     ),
                     hintStyle: TextStyle(
-                      color: AppColors.textMuted,
+                      color: colors.textMuted,
                       fontSize: 13,
                     ),
                   ),
@@ -106,11 +107,11 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                 ),
               ),
               if (hasUnsaved)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.only(right: 4),
                   child: Tooltip(
                     message: 'Unsaved changes',
-                    child: Icon(Icons.circle, size: 6, color: AppColors.amber),
+                    child: Icon(Icons.circle, size: 6, color: colors.amber),
                   ),
                 ),
             ],
@@ -118,7 +119,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
         ),
         // URL bar
         Container(
-          color: AppColors.elevated,
+          color: colors.elevated,
           padding: const EdgeInsets.all(6),
           child: Row(
             children: [
@@ -130,7 +131,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                     ref.read(currentRequestProvider.notifier).state = request
                         .copyWith(method: m);
                   },
-                  offset: const Offset(0, 30),
+                  offset: Offset(0, 30),
                   itemBuilder: (context) => HttpMethod.values
                       .map(
                         (m) => PopupMenuItem(
@@ -138,7 +139,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                           child: Row(
                             children: [
                               MethodBadge(method: m),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text(m.name.toUpperCase()),
                             ],
                           ),
@@ -151,31 +152,31 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.surface,
+                      color: colors.surface,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         MethodBadge(method: request.method),
-                        const SizedBox(width: 4),
-                        const Icon(
+                        SizedBox(width: 4),
+                        Icon(
                           Icons.arrow_drop_down,
                           size: 14,
-                          color: AppColors.textMuted,
+                          color: colors.textMuted,
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               // URL input
               Expanded(
                 child: TextField(
                   controller: _urlController,
-                  style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
-                  decoration: const InputDecoration(
+                  style: TextStyle(fontFamily: 'monospace', fontSize: 13),
+                  decoration: InputDecoration(
                     hintText: 'Enter URL',
                     border: InputBorder.none,
                     enabledBorder: InputBorder.none,
@@ -194,7 +195,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                   },
                 ),
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               // Send button
               ClickCursor(
                 child: InkWell(
@@ -205,10 +206,10 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.green,
+                      color: colors.green,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Send',
                       style: TextStyle(
                         color: Colors.black,
@@ -219,14 +220,14 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                   ),
                 ),
               ),
-              const SizedBox(width: 4),
+              SizedBox(width: 4),
               ClickCursor(
                 child: IconButton(
-                  icon: const Icon(Icons.save, size: 18),
+                  icon: Icon(Icons.save, size: 18),
                   tooltip: 'Save (Ctrl+S)',
                   onPressed: widget.onSave,
                   padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(
+                  constraints: BoxConstraints(
                     minWidth: 28,
                     minHeight: 28,
                   ),
@@ -241,7 +242,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
             length: 6,
             child: Column(
               children: [
-                const TabBar(
+                TabBar(
                   isScrollable: true,
                   tabs: [
                     Tab(text: 'Params'),
@@ -254,7 +255,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                 ),
                 Expanded(
                   child: Container(
-                    color: AppColors.surface,
+                    color: colors.surface,
                     child: TabBarView(
                       children: [
                         KeyValueEditor(
@@ -302,13 +303,13 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                                 request.copyWith(scripts: s);
                           },
                         ),
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.all(12),
                           child: Center(
                             child: Text(
                               'Settings coming soon',
                               style: TextStyle(
-                                color: AppColors.textMuted,
+                                color: colors.textMuted,
                                 fontSize: 12,
                               ),
                             ),

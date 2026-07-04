@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
+import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/widgets/click_cursor.dart';
 
 /// Sidebar row — replaces ListTile, no ListTile warnings.
-class SidebarRow extends StatelessWidget {
+class SidebarRow extends ConsumerWidget {
   final Widget? leading;
   final Widget? title;
   final Widget? trailing;
@@ -11,7 +13,7 @@ class SidebarRow extends StatelessWidget {
   final VoidCallback? onSecondaryTap;
   final double leftPadding;
 
-  const SidebarRow({
+  SidebarRow({
     super.key,
     this.leading,
     this.title,
@@ -22,7 +24,8 @@ class SidebarRow extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = ref.watch(colorSetProvider);
     return ClickCursor(
       child: GestureDetector(
         onSecondaryTapDown: onSecondaryTap != null
@@ -30,8 +33,8 @@ class SidebarRow extends StatelessWidget {
             : null,
         child: InkWell(
           onTap: onTap,
-          hoverColor: AppColors.border.withAlpha(40),
-          highlightColor: AppColors.border.withAlpha(60),
+          hoverColor: colors.border.withAlpha(40),
+          highlightColor: colors.border.withAlpha(60),
           child: Container(
             padding: EdgeInsets.only(
               left: leftPadding,
@@ -41,11 +44,11 @@ class SidebarRow extends StatelessWidget {
             ),
             child: Row(
               children: [
-                if (leading != null) ...[leading!, const SizedBox(width: 6)],
+                if (leading != null) ...[leading!, SizedBox(width: 6)],
                 Expanded(
                   child: DefaultTextStyle(
-                    style: const TextStyle(
-                      color: AppColors.text,
+                    style: TextStyle(
+                      color: colors.text,
                       fontSize: 12,
                       overflow: TextOverflow.ellipsis,
                     ),
