@@ -331,11 +331,25 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                                 Icons.timer,
                                 'Request timeout: 30s',
                                 colors,
+                                trailing: Text(
+                                  'Coming soon',
+                                  style: TextStyle(
+                                    color: colors.textMuted,
+                                    fontSize: 10,
+                                  ),
+                                ),
                               ),
                               _settingRow(
                                 Icons.storage,
                                 'Max response size: 10MB',
                                 colors,
+                                trailing: Text(
+                                  'Coming soon',
+                                  style: TextStyle(
+                                    color: colors.textMuted,
+                                    fontSize: 10,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 16),
                               Text(
@@ -386,14 +400,25 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
   }
 }
 
-Widget _settingRow(IconData icon, String label, ColorSet colors) {
+Widget _settingRow(
+  IconData icon,
+  String label,
+  ColorSet colors, {
+  Widget? trailing,
+}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4),
     child: Row(
       children: [
         Icon(icon, size: 16, color: colors.accent),
         const SizedBox(width: 8),
-        Text(label, style: TextStyle(color: colors.text, fontSize: 13)),
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(color: colors.text, fontSize: 13),
+          ),
+        ),
+        if (trailing != null) trailing,
       ],
     ),
   );

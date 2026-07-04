@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http_client/ui/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/ui/widgets/widgets.dart';
-import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/models/models.dart';
 
 /// Auth configuration editor for Bearer, Basic, API Key, and OAuth2.
@@ -39,7 +37,6 @@ class _AuthEditorState extends ConsumerState<AuthEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = ref.watch(colorSetProvider);
     final auth = widget.auth;
     return Column(
       children: [

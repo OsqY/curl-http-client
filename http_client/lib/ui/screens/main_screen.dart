@@ -87,7 +87,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       final title = currentRequest.name.isNotEmpty
           ? currentRequest.name
           : 'HTTP Client';
-      windowManager.setTitle('\$title — HTTP Client');
+      windowManager.setTitle('$title — HTTP Client');
     });
 
     return Scaffold(
