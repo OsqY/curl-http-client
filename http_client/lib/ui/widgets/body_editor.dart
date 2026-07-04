@@ -9,7 +9,7 @@ class BodyEditor extends ConsumerStatefulWidget {
   final RequestBody body;
   final ValueChanged<RequestBody> onChanged;
 
-  BodyEditor({super.key, required this.body, required this.onChanged});
+  const BodyEditor({super.key, required this.body, required this.onChanged});
 
   @override
   ConsumerState<BodyEditor> createState() => _BodyEditorState();

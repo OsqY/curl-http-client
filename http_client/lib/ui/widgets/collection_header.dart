@@ -11,7 +11,7 @@ class CollectionHeader extends ConsumerStatefulWidget {
   final VoidCallback onDelete;
   final VoidCallback onNewFolder;
 
-  CollectionHeader({
+  const CollectionHeader({
     super.key,
     required this.collection,
     required this.onRename,

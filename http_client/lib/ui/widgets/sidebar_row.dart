@@ -12,7 +12,7 @@ class SidebarRow extends ConsumerWidget {
   final VoidCallback? onSecondaryTap;
   final double leftPadding;
 
-  SidebarRow({
+  const SidebarRow({
     super.key,
     this.leading,
     this.title,

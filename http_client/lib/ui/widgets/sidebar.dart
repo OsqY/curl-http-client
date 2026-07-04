@@ -347,6 +347,33 @@ class Sidebar extends ConsumerWidget {
         Divider(height: 1),
         // History section
         SectionHeader(title: 'History'),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: TextField(
+            style: TextStyle(color: colors.text, fontSize: 12),
+            decoration: InputDecoration(
+              hintText: 'Search history...',
+              hintStyle: TextStyle(color: colors.textPlaceholder, fontSize: 12),
+              prefixIcon: Icon(Icons.search, size: 14, color: colors.textMuted),
+              isDense: true,
+              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: colors.border),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: colors.border),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: colors.borderFocused),
+              ),
+              filled: true,
+              fillColor: colors.surface,
+            ),
+            onChanged: (value) {
+              // TODO: filter history entries
+            },
+          ),
+        ),
         Expanded(
           child: historyAsync.when(
             data: (entries) => ListView.builder(
