@@ -329,7 +329,9 @@ class _VirtualBodyState extends State<_VirtualBody> {
         child: HighlightView(
           pretty,
           language: widget.language,
-          theme: sootSyntaxTheme(widget.colors),
+          theme: widget.colors == ColorSet.light
+              ? sootLightSyntaxTheme(widget.colors)
+              : sootSyntaxTheme(widget.colors),
           padding: const EdgeInsets.all(10),
           textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
         ),
@@ -366,7 +368,9 @@ class _VirtualBodyState extends State<_VirtualBody> {
             child: HighlightView(
               preview,
               language: widget.language,
-              theme: sootSyntaxTheme(widget.colors),
+              theme: widget.colors == ColorSet.light
+                  ? sootLightSyntaxTheme(widget.colors)
+                  : sootSyntaxTheme(widget.colors),
               padding: const EdgeInsets.all(10),
               textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
             ),
