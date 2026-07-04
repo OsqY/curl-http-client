@@ -15,11 +15,17 @@ class AuthService {
     final client = HttpClient();
     try {
       final request = await client.postUrl(uri);
-      request.headers
-          .set(HttpHeaders.contentTypeHeader, 'application/x-www-form-urlencoded');
-      final credentials =
-          base64Encode(utf8.encode('${oauth2.clientId}:${oauth2.clientSecret}'));
-      request.headers.set(HttpHeaders.authorizationHeader, 'Basic $credentials');
+      request.headers.set(
+        HttpHeaders.contentTypeHeader,
+        'application/x-www-form-urlencoded',
+      );
+      final credentials = base64Encode(
+        utf8.encode('${oauth2.clientId}:${oauth2.clientSecret}'),
+      );
+      request.headers.set(
+        HttpHeaders.authorizationHeader,
+        'Basic $credentials',
+      );
 
       final bodyParts = <String>[
         'grant_type=client_credentials',

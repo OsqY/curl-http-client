@@ -10,11 +10,7 @@ class RequestEditor extends ConsumerStatefulWidget {
   final VoidCallback onSend;
   final VoidCallback onSave;
 
-  const RequestEditor({
-    super.key,
-    required this.onSend,
-    required this.onSave,
-  });
+  const RequestEditor({super.key, required this.onSend, required this.onSave});
 
   @override
   ConsumerState<RequestEditor> createState() => _RequestEditorState();
@@ -93,15 +89,19 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                     focusedBorder: InputBorder.none,
                     filled: false,
                     isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-                    hintStyle: TextStyle(color: AppColors.textMuted, fontSize: 13),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 6,
+                    ),
+                    hintStyle: TextStyle(
+                      color: AppColors.textMuted,
+                      fontSize: 13,
+                    ),
                   ),
                   onChanged: (v) {
                     ref.read(unsavedChangesProvider.notifier).state = true;
-                    ref
-                        .read(currentRequestProvider.notifier)
-                        .state = request.copyWith(name: v);
+                    ref.read(currentRequestProvider.notifier).state = request
+                        .copyWith(name: v);
                   },
                 ),
               ),
@@ -127,25 +127,29 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                 child: PopupMenuButton<HttpMethod>(
                   onSelected: (m) {
                     ref.read(unsavedChangesProvider.notifier).state = true;
-                    ref.read(currentRequestProvider.notifier).state =
-                        request.copyWith(method: m);
+                    ref.read(currentRequestProvider.notifier).state = request
+                        .copyWith(method: m);
                   },
                   offset: const Offset(0, 30),
                   itemBuilder: (context) => HttpMethod.values
-                      .map((m) => PopupMenuItem(
-                            value: m,
-                            child: Row(
-                              children: [
-                                MethodBadge(method: m),
-                                const SizedBox(width: 8),
-                                Text(m.name.toUpperCase()),
-                              ],
-                            ),
-                          ))
+                      .map(
+                        (m) => PopupMenuItem(
+                          value: m,
+                          child: Row(
+                            children: [
+                              MethodBadge(method: m),
+                              const SizedBox(width: 8),
+                              Text(m.name.toUpperCase()),
+                            ],
+                          ),
+                        ),
+                      )
                       .toList(),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 6),
+                      horizontal: 8,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.surface,
                       borderRadius: BorderRadius.circular(4),
@@ -155,8 +159,11 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                       children: [
                         MethodBadge(method: request.method),
                         const SizedBox(width: 4),
-                        const Icon(Icons.arrow_drop_down,
-                            size: 14, color: AppColors.textMuted),
+                        const Icon(
+                          Icons.arrow_drop_down,
+                          size: 14,
+                          color: AppColors.textMuted,
+                        ),
                       ],
                     ),
                   ),
@@ -167,8 +174,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
               Expanded(
                 child: TextField(
                   controller: _urlController,
-                  style: const TextStyle(
-                      fontFamily: 'monospace', fontSize: 13),
+                  style: const TextStyle(fontFamily: 'monospace', fontSize: 13),
                   decoration: const InputDecoration(
                     hintText: 'Enter URL',
                     border: InputBorder.none,
@@ -176,14 +182,15 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                     focusedBorder: InputBorder.none,
                     filled: false,
                     isDense: true,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 8,
+                    ),
                   ),
                   onChanged: (v) {
                     ref.read(unsavedChangesProvider.notifier).state = true;
-                    ref
-                        .read(currentRequestProvider.notifier)
-                        .state = request.copyWith(url: v);
+                    ref.read(currentRequestProvider.notifier).state = request
+                        .copyWith(url: v);
                   },
                 ),
               ),
@@ -194,7 +201,9 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                   onTap: widget.onSend,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 6),
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.green,
                       borderRadius: BorderRadius.circular(4),
@@ -217,8 +226,10 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                   tooltip: 'Save (Ctrl+S)',
                   onPressed: widget.onSave,
                   padding: EdgeInsets.zero,
-                  constraints:
-                      const BoxConstraints(minWidth: 28, minHeight: 28),
+                  constraints: const BoxConstraints(
+                    minWidth: 28,
+                    minHeight: 28,
+                  ),
                 ),
               ),
             ],
@@ -249,7 +260,8 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                         KeyValueEditor(
                           items: request.queryParams,
                           onChanged: (v) {
-                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(unsavedChangesProvider.notifier).state =
+                                true;
                             ref.read(currentRequestProvider.notifier).state =
                                 request.copyWith(queryParams: v);
                           },
@@ -257,7 +269,8 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                         KeyValueEditor(
                           items: request.headers,
                           onChanged: (v) {
-                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(unsavedChangesProvider.notifier).state =
+                                true;
                             ref.read(currentRequestProvider.notifier).state =
                                 request.copyWith(headers: v);
                           },
@@ -265,7 +278,8 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                         AuthEditor(
                           auth: request.auth,
                           onChanged: (a) {
-                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(unsavedChangesProvider.notifier).state =
+                                true;
                             ref.read(currentRequestProvider.notifier).state =
                                 request.copyWith(auth: a);
                           },
@@ -273,7 +287,8 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                         BodyEditor(
                           body: request.body,
                           onChanged: (b) {
-                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(unsavedChangesProvider.notifier).state =
+                                true;
                             ref.read(currentRequestProvider.notifier).state =
                                 request.copyWith(body: b);
                           },
@@ -281,7 +296,8 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                         ScriptsEditor(
                           scripts: request.scripts,
                           onChanged: (s) {
-                            ref.read(unsavedChangesProvider.notifier).state = true;
+                            ref.read(unsavedChangesProvider.notifier).state =
+                                true;
                             ref.read(currentRequestProvider.notifier).state =
                                 request.copyWith(scripts: s);
                           },
@@ -289,9 +305,13 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                         const Padding(
                           padding: EdgeInsets.all(12),
                           child: Center(
-                            child: Text('Settings coming soon',
-                                style: TextStyle(
-                                    color: AppColors.textMuted, fontSize: 12)),
+                            child: Text(
+                              'Settings coming soon',
+                              style: TextStyle(
+                                color: AppColors.textMuted,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
                         ),
                       ],

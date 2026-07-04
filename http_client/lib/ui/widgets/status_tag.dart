@@ -12,10 +12,10 @@ class StatusTag extends StatelessWidget {
     final color = statusCode >= 200 && statusCode < 300
         ? AppColors.green
         : statusCode >= 300 && statusCode < 400
-            ? AppColors.steelBlue
-            : statusCode >= 400 && statusCode < 500
-                ? AppColors.amber
-                : AppColors.accent;
+        ? AppColors.steelBlue
+        : statusCode >= 400 && statusCode < 500
+        ? AppColors.amber
+        : AppColors.accent;
     return Text(
       '$statusCode',
       style: TextStyle(

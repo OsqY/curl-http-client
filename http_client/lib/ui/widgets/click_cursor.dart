@@ -7,9 +7,6 @@ class ClickCursor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      child: child,
-    );
+    return MouseRegion(cursor: SystemMouseCursors.click, child: child);
   }
 }

@@ -44,8 +44,9 @@ class _BodyEditorState extends State<BodyEditor> {
           initialValue: body.mode,
           key: ValueKey(body.mode),
           items: BodyMode.values
-              .map((m) => DropdownMenuItem(
-                  value: m, child: Text(m.displayName)))
+              .map(
+                (m) => DropdownMenuItem(value: m, child: Text(m.displayName)),
+              )
               .toList(),
           onChanged: (m) {
             if (m != null) widget.onChanged(body.copyWith(mode: m));
@@ -56,8 +57,9 @@ class _BodyEditorState extends State<BodyEditor> {
             initialValue: body.rawContentType,
             key: ValueKey(body.rawContentType),
             items: RawContentType.values
-                .map((t) => DropdownMenuItem(
-                    value: t, child: Text(t.displayName)))
+                .map(
+                  (t) => DropdownMenuItem(value: t, child: Text(t.displayName)),
+                )
                 .toList(),
             onChanged: (t) {
               if (t != null) {
@@ -72,14 +74,13 @@ class _BodyEditorState extends State<BodyEditor> {
                 controller: _rawController,
                 maxLines: null,
                 expands: true,
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12),
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
                 decoration: const InputDecoration(
                   hintText: 'Body content',
                   border: OutlineInputBorder(),
                 ),
-                onChanged: (v) => widget.onChanged(
-                    body.copyWith(rawContent: v)),
+                onChanged: (v) =>
+                    widget.onChanged(body.copyWith(rawContent: v)),
               ),
             ),
           ),
@@ -87,13 +88,15 @@ class _BodyEditorState extends State<BodyEditor> {
             body.mode == BodyMode.urlEncoded) ...[
           SidebarRow(
             leading: const Icon(Icons.add, size: 16),
-            title: const Text('Add field',
-                style: TextStyle(fontSize: 12)),
-            onTap: () => widget.onChanged(body.copyWith(
+            title: const Text('Add field', style: TextStyle(fontSize: 12)),
+            onTap: () => widget.onChanged(
+              body.copyWith(
                 formData: [
-              ...body.formData,
-              const KeyValuePair(key: '', value: ''),
-            ])),
+                  ...body.formData,
+                  const KeyValuePair(key: '', value: ''),
+                ],
+              ),
+            ),
           ),
           Expanded(
             child: ListView.builder(
@@ -102,11 +105,12 @@ class _BodyEditorState extends State<BodyEditor> {
                 final field = body.formData[index];
                 return Container(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 2),
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: const BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(
-                          color: AppColors.border, width: 0.5),
+                      bottom: BorderSide(color: AppColors.border, width: 0.5),
                     ),
                   ),
                   child: Row(
@@ -115,34 +119,30 @@ class _BodyEditorState extends State<BodyEditor> {
                         value: field.enabled,
                         onChanged: (v) {
                           final updated = [...body.formData];
-                          updated[index] =
-                              field.copyWith(enabled: v ?? true);
-                          widget.onChanged(
-                              body.copyWith(formData: updated));
+                          updated[index] = field.copyWith(enabled: v ?? true);
+                          widget.onChanged(body.copyWith(formData: updated));
                         },
-                        materialTapTargetSize:
-                            MaterialTapTargetSize.shrinkWrap,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         visualDensity: VisualDensity.compact,
                       ),
                       Expanded(
                         child: TextField(
                           style: const TextStyle(
-                              fontFamily: 'monospace',
-                              fontSize: 12),
+                            fontFamily: 'monospace',
+                            fontSize: 12,
+                          ),
                           decoration: const InputDecoration(
-                              hintText: 'Key',
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              isDense: true),
-                          controller: TextEditingController(
-                              text: field.key),
+                            hintText: 'Key',
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            isDense: true,
+                          ),
+                          controller: TextEditingController(text: field.key),
                           onChanged: (v) {
                             final updated = [...body.formData];
-                            updated[index] =
-                                field.copyWith(key: v);
-                            widget.onChanged(
-                                body.copyWith(formData: updated));
+                            updated[index] = field.copyWith(key: v);
+                            widget.onChanged(body.copyWith(formData: updated));
                           },
                         ),
                       ),
@@ -150,37 +150,36 @@ class _BodyEditorState extends State<BodyEditor> {
                       Expanded(
                         child: TextField(
                           style: const TextStyle(
-                              fontFamily: 'monospace',
-                              fontSize: 12),
+                            fontFamily: 'monospace',
+                            fontSize: 12,
+                          ),
                           decoration: const InputDecoration(
-                              hintText: 'Value',
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              isDense: true),
-                          controller: TextEditingController(
-                              text: field.value),
+                            hintText: 'Value',
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            isDense: true,
+                          ),
+                          controller: TextEditingController(text: field.value),
                           onChanged: (v) {
                             final updated = [...body.formData];
-                            updated[index] =
-                                field.copyWith(value: v);
-                            widget.onChanged(
-                                body.copyWith(formData: updated));
+                            updated[index] = field.copyWith(value: v);
+                            widget.onChanged(body.copyWith(formData: updated));
                           },
                         ),
                       ),
                       IconButton(
-                        icon:
-                            const Icon(Icons.close, size: 14),
+                        icon: const Icon(Icons.close, size: 14),
                         onPressed: () {
                           final updated = [...body.formData];
                           updated.removeAt(index);
-                          widget.onChanged(
-                              body.copyWith(formData: updated));
+                          widget.onChanged(body.copyWith(formData: updated));
                         },
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(
-                            minWidth: 24, minHeight: 24),
+                          minWidth: 24,
+                          minHeight: 24,
+                        ),
                       ),
                     ],
                   ),
@@ -191,14 +190,18 @@ class _BodyEditorState extends State<BodyEditor> {
         ] else if (body.mode == BodyMode.binary) ...[
           const Padding(
             padding: EdgeInsets.all(8),
-            child: Text('Binary body not yet supported',
-                style: TextStyle(color: AppColors.textMuted)),
+            child: Text(
+              'Binary body not yet supported',
+              style: TextStyle(color: AppColors.textMuted),
+            ),
           ),
         ] else ...[
           const Expanded(
             child: Center(
-              child: Text('No body',
-                  style: TextStyle(color: AppColors.textMuted)),
+              child: Text(
+                'No body',
+                style: TextStyle(color: AppColors.textMuted),
+              ),
             ),
           ),
         ],

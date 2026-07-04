@@ -2,10 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 /// Substitutes `{{variableName}}` in [input] using values from [variables].
-String substituteVariables(
-  String input,
-  Map<String, String> variables,
-) {
+String substituteVariables(String input, Map<String, String> variables) {
   final regex = RegExp(r'\{\{(\s*[a-zA-Z_][a-zA-Z0-9_]*\s*)\}\}');
   return input.replaceAllMapped(regex, (match) {
     final name = match.group(1)!.trim();
@@ -18,8 +15,12 @@ Map<String, String> substituteInHeaders(
   Map<String, String> headers,
   Map<String, String> variables,
 ) {
-  return headers.map((k, v) =>
-      MapEntry(substituteVariables(k, variables), substituteVariables(v, variables)));
+  return headers.map(
+    (k, v) => MapEntry(
+      substituteVariables(k, variables),
+      substituteVariables(v, variables),
+    ),
+  );
 }
 
 String substituteInUrl(String url, Map<String, String> variables) =>
@@ -29,8 +30,12 @@ Map<String, String> substituteInQueryParams(
   Map<String, String> params,
   Map<String, String> variables,
 ) {
-  return params.map((k, v) =>
-      MapEntry(substituteVariables(k, variables), substituteVariables(v, variables)));
+  return params.map(
+    (k, v) => MapEntry(
+      substituteVariables(k, variables),
+      substituteVariables(v, variables),
+    ),
+  );
 }
 
 String? substituteInBody(String? body, Map<String, String> variables) =>
@@ -40,7 +45,9 @@ String? substituteInBody(String? body, Map<String, String> variables) =>
 String? decodeBody(Uint8List bytes, Map<String, String> headers) {
   final contentType = headers['content-type']?.toLowerCase() ?? '';
   if (contentType.contains('charset=')) {
-    final charset = RegExp(r'charset=([^;]+)').firstMatch(contentType)?.group(1)?.trim();
+    final charset = RegExp(
+      r'charset=([^;]+)',
+    ).firstMatch(contentType)?.group(1)?.trim();
     try {
       if (charset != null) return Encoding.getByName(charset)?.decode(bytes);
     } catch (_) {}

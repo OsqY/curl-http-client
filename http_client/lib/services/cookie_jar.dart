@@ -6,15 +6,16 @@ import 'package:http_client/models/models.dart';
 class CookieJar {
   final List<StoredCookie> _cookies;
 
-  CookieJar({List<StoredCookie> cookies = const []}) : _cookies = List.from(cookies);
+  CookieJar({List<StoredCookie> cookies = const []})
+    : _cookies = List.from(cookies);
 
   List<StoredCookie> get cookies => List.unmodifiable(_cookies);
 
   factory CookieJar.fromJson(List<dynamic> json) => CookieJar(
-        cookies: json
-            .map((e) => StoredCookie.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    cookies: json
+        .map((e) => StoredCookie.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 
   List<Map<String, dynamic>> toJson() =>
       _cookies.map((e) => e.toJson()).toList();
@@ -42,7 +43,10 @@ class CookieJar {
 
   void _upsert(StoredCookie cookie) {
     _cookies.removeWhere(
-      (c) => c.name == cookie.name && c.domain == cookie.domain && c.path == cookie.path,
+      (c) =>
+          c.name == cookie.name &&
+          c.domain == cookie.domain &&
+          c.path == cookie.path,
     );
     _cookies.add(cookie);
   }

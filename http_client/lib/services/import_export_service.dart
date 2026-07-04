@@ -82,10 +82,12 @@ class CurlParser {
           final raw = tokens[i];
           final eqIdx = raw.indexOf('=');
           if (eqIdx > 0) {
-            urlEncodedPairs.add(KeyValuePair(
-              key: raw.substring(0, eqIdx),
-              value: raw.substring(eqIdx + 1),
-            ));
+            urlEncodedPairs.add(
+              KeyValuePair(
+                key: raw.substring(0, eqIdx),
+                value: raw.substring(eqIdx + 1),
+              ),
+            );
           } else {
             urlEncodedPairs.add(KeyValuePair(key: '', value: raw));
           }
@@ -115,10 +117,12 @@ class CurlParser {
           final raw = tokens[i];
           final eqIdx = raw.indexOf('=');
           if (eqIdx > 0) {
-            formPairs.add(KeyValuePair(
-              key: raw.substring(0, eqIdx),
-              value: raw.substring(eqIdx + 1),
-            ));
+            formPairs.add(
+              KeyValuePair(
+                key: raw.substring(0, eqIdx),
+                value: raw.substring(eqIdx + 1),
+              ),
+            );
           }
         }
       } else if (token == '--url') {
@@ -147,10 +151,7 @@ class CurlParser {
           formData: urlEncodedPairs,
         );
       } else if (formPairs.isNotEmpty) {
-        body = RequestBody(
-          mode: BodyMode.formData,
-          formData: formPairs,
-        );
+        body = RequestBody(mode: BodyMode.formData, formData: formPairs);
       } else if (rawBody.isNotEmpty) {
         body = _buildBodyFromRaw(rawBody, headers);
       }
@@ -271,15 +272,14 @@ class CurlParser {
       if (part.isEmpty) continue;
       final eqIdx = part.indexOf('=');
       if (eqIdx > 0) {
-        pairs.add(KeyValuePair(
-          key: Uri.decodeQueryComponent(part.substring(0, eqIdx)),
-          value: Uri.decodeQueryComponent(part.substring(eqIdx + 1)),
-        ));
+        pairs.add(
+          KeyValuePair(
+            key: Uri.decodeQueryComponent(part.substring(0, eqIdx)),
+            value: Uri.decodeQueryComponent(part.substring(eqIdx + 1)),
+          ),
+        );
       } else {
-        pairs.add(KeyValuePair(
-          key: Uri.decodeQueryComponent(part),
-          value: '',
-        ));
+        pairs.add(KeyValuePair(key: Uri.decodeQueryComponent(part), value: ''));
       }
     }
     return pairs;
@@ -396,8 +396,7 @@ class OpenApiImporter {
         if (!operations.containsKey(methodName)) continue;
 
         final operation = operations[methodName] as Map<String, dynamic>;
-        final request =
-            _buildRequest(baseUrl, path, methodName, operation);
+        final request = _buildRequest(baseUrl, path, methodName, operation);
         if (request != null) {
           requests.add(request);
         }
@@ -422,9 +421,7 @@ class OpenApiImporter {
   ) {
     final operationId = operation['operationId'] as String?;
     final summary = operation['summary'] as String?;
-    final name = operationId ??
-        summary ??
-        '${methodName.toUpperCase()} $path';
+    final name = operationId ?? summary ?? '${methodName.toUpperCase()} $path';
 
     final method = HttpMethod.fromName(methodName.toUpperCase());
     final url = '$baseUrl$path';
@@ -652,8 +649,10 @@ class OpenApiExporter {
       final path = _normalizePath(entry.key);
       final operations = <String, dynamic>{};
       for (final methodEntry in entry.value.entries) {
-        operations[methodEntry.key] =
-            _buildOperation(methodEntry.value, methodEntry.key);
+        operations[methodEntry.key] = _buildOperation(
+          methodEntry.value,
+          methodEntry.key,
+        );
       }
       paths[path] = operations;
     }
@@ -667,10 +666,7 @@ class OpenApiExporter {
   }
 
   /// Builds a single OpenAPI operation object from [req].
-  static Map<String, dynamic> _buildOperation(
-    HttpRequest req,
-    String method,
-  ) {
+  static Map<String, dynamic> _buildOperation(HttpRequest req, String method) {
     final parameters = <Map<String, dynamic>>[];
 
     // Query parameters
@@ -776,8 +772,11 @@ class ImportExportService {
   ImportResult importOpenApi(String source, {bool isYaml = false}) =>
       OpenApiImporter.import(source, isYaml: isYaml);
 
-  String exportCurl(List<HttpRequest> requests) => CurlExporter.export(requests);
+  String exportCurl(List<HttpRequest> requests) =>
+      CurlExporter.export(requests);
 
-  String exportOpenApi(RequestCollection collection, List<HttpRequest> requests) =>
-      OpenApiExporter.export(collection, requests);
+  String exportOpenApi(
+    RequestCollection collection,
+    List<HttpRequest> requests,
+  ) => OpenApiExporter.export(collection, requests);
 }

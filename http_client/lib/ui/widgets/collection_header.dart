@@ -56,8 +56,10 @@ class _CollectionHeaderState extends State<CollectionHeader> {
                   tooltip: 'New folder',
                   onPressed: widget.onNewFolder,
                   padding: EdgeInsets.zero,
-                  constraints:
-                      const BoxConstraints(minWidth: 20, minHeight: 20),
+                  constraints: const BoxConstraints(
+                    minWidth: 20,
+                    minHeight: 20,
+                  ),
                 ),
               ),
               ClickCursor(
@@ -66,8 +68,10 @@ class _CollectionHeaderState extends State<CollectionHeader> {
                   tooltip: 'Rename',
                   onPressed: widget.onRename,
                   padding: EdgeInsets.zero,
-                  constraints:
-                      const BoxConstraints(minWidth: 20, minHeight: 20),
+                  constraints: const BoxConstraints(
+                    minWidth: 20,
+                    minHeight: 20,
+                  ),
                 ),
               ),
               ClickCursor(
@@ -76,8 +80,10 @@ class _CollectionHeaderState extends State<CollectionHeader> {
                   tooltip: 'Delete',
                   onPressed: widget.onDelete,
                   padding: EdgeInsets.zero,
-                  constraints:
-                      const BoxConstraints(minWidth: 20, minHeight: 20),
+                  constraints: const BoxConstraints(
+                    minWidth: 20,
+                    minHeight: 20,
+                  ),
                 ),
               ),
             ],

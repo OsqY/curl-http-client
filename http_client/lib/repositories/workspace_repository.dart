@@ -25,11 +25,7 @@ class WorkspaceRepository {
   }
 
   Future<void> _ensureStructure() async {
-    final dirs = [
-      collectionsDir,
-      environmentsDir,
-      historyDir,
-    ];
+    final dirs = [collectionsDir, environmentsDir, historyDir];
     for (final dir in dirs) {
       if (!await dir.exists()) {
         await dir.create(recursive: true);
@@ -44,7 +40,8 @@ class WorkspaceRepository {
   Directory get historyDir =>
       Directory(path.join(_workspaceDir!.path, 'history'));
   File get cookiesFile => File(path.join(_workspaceDir!.path, 'cookies.json'));
-  File get settingsFile => File(path.join(_workspaceDir!.path, 'settings.json'));
+  File get settingsFile =>
+      File(path.join(_workspaceDir!.path, 'settings.json'));
 
   // === Collections ===
 
@@ -66,7 +63,9 @@ class WorkspaceRepository {
 
   Future<void> saveCollection(RequestCollection collection) async {
     if (!hasWorkspace) return;
-    final dir = Directory(path.join(collectionsDir.path, slugify(collection.name)));
+    final dir = Directory(
+      path.join(collectionsDir.path, slugify(collection.name)),
+    );
     if (!await dir.exists()) await dir.create(recursive: true);
     final metaFile = File(path.join(dir.path, 'collection.json'));
     await metaFile.writeAsString(_prettyJson(collection.toJson()));
@@ -93,17 +92,11 @@ class WorkspaceRepository {
 
   // === Folders ===
 
-  Future<void> saveFolder(
-    String collectionId,
-    RequestFolder folder,
-  ) async {
+  Future<void> saveFolder(String collectionId, RequestFolder folder) async {
     final collection = await _findCollection(collectionId);
     if (collection == null) return;
     final updated = collection.copyWith(
-      folders: [
-        ...collection.folders.where((f) => f.id != folder.id),
-        folder,
-      ],
+      folders: [...collection.folders.where((f) => f.id != folder.id), folder],
     );
     await saveCollection(updated);
   }
@@ -141,7 +134,9 @@ class WorkspaceRepository {
         : Directory(path.join(dir.path, slugify(folderId)));
     if (!await targetDir.exists()) return [];
     await for (final entity in targetDir.list()) {
-      if (entity is File && entity.path.endsWith('.json') && !entity.path.endsWith('collection.json')) {
+      if (entity is File &&
+          entity.path.endsWith('.json') &&
+          !entity.path.endsWith('collection.json')) {
         final json =
             jsonDecode(await entity.readAsString()) as Map<String, dynamic>;
         requests.add(HttpRequest.fromJson(json));
@@ -159,7 +154,9 @@ class WorkspaceRepository {
   Future<List<HttpRequest>> _loadRequestsRecursive(Directory dir) async {
     final requests = <HttpRequest>[];
     await for (final entity in dir.list(recursive: false)) {
-      if (entity is File && entity.path.endsWith('.json') && !entity.path.endsWith('collection.json')) {
+      if (entity is File &&
+          entity.path.endsWith('.json') &&
+          !entity.path.endsWith('collection.json')) {
         final json =
             jsonDecode(await entity.readAsString()) as Map<String, dynamic>;
         requests.add(HttpRequest.fromJson(json));
@@ -178,7 +175,9 @@ class WorkspaceRepository {
         ? Directory(path.join(dir.path, slugify(request.parentFolderId!)))
         : dir;
     if (!await folderDir.exists()) await folderDir.create(recursive: true);
-    final file = File(path.join(folderDir.path, '${slugify(request.name)}.json'));
+    final file = File(
+      path.join(folderDir.path, '${slugify(request.name)}.json'),
+    );
     await file.writeAsString(_prettyJson(request.toJson()));
   }
 
@@ -188,7 +187,9 @@ class WorkspaceRepository {
     final folderDir = request.parentFolderId != null
         ? Directory(path.join(dir.path, slugify(request.parentFolderId!)))
         : dir;
-    final file = File(path.join(folderDir.path, '${slugify(request.name)}.json'));
+    final file = File(
+      path.join(folderDir.path, '${slugify(request.name)}.json'),
+    );
     if (await file.exists()) await file.delete();
   }
 
@@ -209,7 +210,9 @@ class WorkspaceRepository {
 
   Future<void> saveEnvironment(Environment environment) async {
     if (!hasWorkspace) return;
-    final file = File(path.join(environmentsDir.path, '${slugify(environment.name)}.json'));
+    final file = File(
+      path.join(environmentsDir.path, '${slugify(environment.name)}.json'),
+    );
     await file.writeAsString(_prettyJson(environment.toJson()));
   }
 
@@ -222,7 +225,9 @@ class WorkspaceRepository {
       env = null;
     }
     if (env != null) {
-      final file = File(path.join(environmentsDir.path, '${slugify(env.name)}.json'));
+      final file = File(
+        path.join(environmentsDir.path, '${slugify(env.name)}.json'),
+      );
       if (await file.exists()) await file.delete();
     }
   }
@@ -278,7 +283,8 @@ class WorkspaceRepository {
 
   Future<Map<String, dynamic>> loadSettings() async {
     if (!hasWorkspace || !await settingsFile.exists()) return {};
-    return jsonDecode(await settingsFile.readAsString()) as Map<String, dynamic>;
+    return jsonDecode(await settingsFile.readAsString())
+        as Map<String, dynamic>;
   }
 
   Future<void> saveSettings(Map<String, dynamic> settings) async {
@@ -286,5 +292,6 @@ class WorkspaceRepository {
     await settingsFile.writeAsString(_prettyJson(settings));
   }
 
-  String _prettyJson(dynamic json) => const JsonEncoder.withIndent('  ').convert(json);
+  String _prettyJson(dynamic json) =>
+      const JsonEncoder.withIndent('  ').convert(json);
 }

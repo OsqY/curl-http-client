@@ -91,8 +91,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               Expanded(
                 child: workspacePath == null
                     ? const Center(
-                        child:
-                            CircularProgressIndicator(strokeWidth: 2))
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
                     : Column(
                         children: [
                           Expanded(
@@ -103,10 +103,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                             ),
                           ),
                           const Divider(height: 1, thickness: 1),
-                          Expanded(
-                            flex: 1,
-                            child: ResponsePanel(),
-                          ),
+                          Expanded(flex: 1, child: ResponsePanel()),
                         ],
                       ),
               ),
@@ -134,14 +131,18 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         final scriptResult = await ref
             .read(scriptingServiceProvider)
             .runPreRequest(
-                request.scripts.preRequest, request, effectiveVariables);
+              request.scripts.preRequest,
+              request,
+              effectiveVariables,
+            );
         effectiveVariables = Map<String, String>.from(scriptResult.variables);
         if (scriptResult.errors.isNotEmpty) {
           ref.read(scriptOutputProvider.notifier).state =
               'Pre-request script errors:\n${scriptResult.errors.join('\n')}';
         } else if (scriptResult.assertions.isNotEmpty) {
-          ref.read(scriptOutputProvider.notifier).state =
-              scriptResult.assertions.join('\n');
+          ref.read(scriptOutputProvider.notifier).state = scriptResult
+              .assertions
+              .join('\n');
         }
       }
 
@@ -154,8 +155,11 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
       final result = await ref
           .read(httpServiceProvider)
-          .execute(request,
-              variables: effectiveVariables, accessToken: accessToken);
+          .execute(
+            request,
+            variables: effectiveVariables,
+            accessToken: accessToken,
+          );
 
       if (result.error != null) {
         ref.read(executionErrorProvider.notifier).state = result.error;
@@ -164,13 +168,14 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         ref.read(responseProvider.notifier).state = response;
 
         if (request.scripts.postResponse.isNotEmpty) {
-          final scriptResult =
-              await ref.read(scriptingServiceProvider).runPostResponse(
-                    request.scripts.postResponse,
-                    request,
-                    response,
-                    effectiveVariables,
-                  );
+          final scriptResult = await ref
+              .read(scriptingServiceProvider)
+              .runPostResponse(
+                request.scripts.postResponse,
+                request,
+                response,
+                effectiveVariables,
+              );
           final output = StringBuffer();
           if (scriptResult.errors.isNotEmpty) {
             output.writeln('Post-response script errors:');
@@ -228,9 +233,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     }
     await ref.read(collectionsProvider.notifier).load();
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Request saved')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Request saved')));
     }
     ref.read(unsavedChangesProvider.notifier).state = false;
   }
@@ -277,14 +282,13 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     );
     if (result == null || result.isEmpty) return;
     try {
-      final request =
-          ref.read(importExportServiceProvider).parseCurl(result);
+      final request = ref.read(importExportServiceProvider).parseCurl(result);
       ref.read(currentRequestProvider.notifier).state = request;
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Import failed: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Import failed: $e')));
       }
     }
   }
@@ -300,8 +304,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     }
     try {
       final source = utf8.decode(file.files.first.bytes!);
-      final isYaml =
-          file.files.first.extension?.toLowerCase() != 'json';
+      final isYaml = file.files.first.extension?.toLowerCase() != 'json';
       final importResult = ref
           .read(importExportServiceProvider)
           .importOpenApi(source, isYaml: isYaml);
@@ -316,23 +319,22 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content:
-                  Text('Imported ${importResult.requests.length} requests')),
+            content: Text('Imported ${importResult.requests.length} requests'),
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('OpenAPI import failed: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('OpenAPI import failed: $e')));
       }
     }
   }
 
   void _exportCurl() async {
     final request = ref.read(currentRequestProvider);
-    final script =
-        ref.read(importExportServiceProvider).exportCurl([request]);
+    final script = ref.read(importExportServiceProvider).exportCurl([request]);
     final output = await FilePicker.platform.saveFile(
       dialogTitle: 'Save curl script',
       fileName: 'export.sh',
@@ -363,6 +365,3 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 }
 
 // Sidebar
-
-
-

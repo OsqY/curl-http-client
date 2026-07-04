@@ -32,39 +32,62 @@ class Sidebar extends ConsumerWidget {
           color: colors.elevated,
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
-              children: [
-                Text(
-                  'HTTP Client',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
+            children: [
+              Text(
+                'HTTP Client',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
                 ),
-                Spacer(),
-                ClickCursor(
-                  child: PopupMenuButton<SootThemeVariant>(
-                    onSelected: (v) => ref.read(themeVariantProvider.notifier).state = v,
-                    icon: Icon(Icons.palette_outlined, size: 16, color: colors.textMuted),
-                    tooltip: 'Theme',
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        value: SootThemeVariant.dark,
-                        child: Row(children: [Icon(Icons.dark_mode, size: 16), SizedBox(width: 8), Text('Soot Dark')]),
-                      ),
-                      PopupMenuItem(
-                        value: SootThemeVariant.light,
-                        child: Row(children: [Icon(Icons.light_mode, size: 16), SizedBox(width: 8), Text('Soot Light')]),
-                      ),
-                      PopupMenuItem(
-                        value: SootThemeVariant.orange,
-                        child: Row(children: [Icon(Icons.wb_sunny_outlined, size: 16), SizedBox(width: 8), Text('Soot Orange')]),
-                      ),
-                    ],
+              ),
+              Spacer(),
+              ClickCursor(
+                child: PopupMenuButton<SootThemeVariant>(
+                  onSelected: (v) =>
+                      ref.read(themeVariantProvider.notifier).state = v,
+                  icon: Icon(
+                    Icons.palette_outlined,
+                    size: 16,
+                    color: colors.textMuted,
                   ),
+                  tooltip: 'Theme',
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: SootThemeVariant.dark,
+                      child: Row(
+                        children: [
+                          Icon(Icons.dark_mode, size: 16),
+                          SizedBox(width: 8),
+                          Text('Soot Dark'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: SootThemeVariant.light,
+                      child: Row(
+                        children: [
+                          Icon(Icons.light_mode, size: 16),
+                          SizedBox(width: 8),
+                          Text('Soot Light'),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: SootThemeVariant.orange,
+                      child: Row(
+                        children: [
+                          Icon(Icons.wb_sunny_outlined, size: 16),
+                          SizedBox(width: 8),
+                          Text('Soot Orange'),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
         ),
         // New request + menu
         Container(
@@ -75,8 +98,9 @@ class Sidebar extends ConsumerWidget {
                 child: ClickCursor(
                   child: InkWell(
                     onTap: () {
-                      ref.read(currentRequestProvider.notifier).state =
-                          HttpRequest(
+                      ref
+                          .read(currentRequestProvider.notifier)
+                          .state = HttpRequest(
                         id: HttpRequest.generateId(),
                         name: 'Untitled',
                         method: HttpMethod.get,
@@ -85,7 +109,9 @@ class Sidebar extends ConsumerWidget {
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 6),
+                        horizontal: 8,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: colors.elevated,
                         borderRadius: BorderRadius.circular(4),
@@ -93,12 +119,15 @@ class Sidebar extends ConsumerWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.add,
-                              size: 14, color: colors.textMuted),
+                          Icon(Icons.add, size: 14, color: colors.textMuted),
                           SizedBox(width: 4),
-                          Text('New Request',
-                              style: TextStyle(
-                                  color: colors.textMuted, fontSize: 12)),
+                          Text(
+                            'New Request',
+                            style: TextStyle(
+                              color: colors.textMuted,
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -114,22 +143,32 @@ class Sidebar extends ConsumerWidget {
                     onMenuAction(v);
                   }
                 },
-                icon: Icon(Icons.more_vert,
-                    size: 16, color: colors.textMuted),
+                icon: Icon(Icons.more_vert, size: 16, color: colors.textMuted),
                 itemBuilder: (context) => [
                   PopupMenuItem(
-                      value: 'import_curl', child: Text('Import curl')),
+                    value: 'import_curl',
+                    child: Text('Import curl'),
+                  ),
                   PopupMenuItem(
-                      value: 'import_openapi', child: Text('Import OpenAPI')),
+                    value: 'import_openapi',
+                    child: Text('Import OpenAPI'),
+                  ),
                   PopupMenuItem(
-                      value: 'export_curl', child: Text('Export curl')),
+                    value: 'export_curl',
+                    child: Text('Export curl'),
+                  ),
                   PopupMenuItem(
-                      value: 'export_openapi', child: Text('Export OpenAPI')),
+                    value: 'export_openapi',
+                    child: Text('Export OpenAPI'),
+                  ),
                   PopupMenuItem(
-                      value: 'change_workspace',
-                      child: Text('Change workspace')),
+                    value: 'change_workspace',
+                    child: Text('Change workspace'),
+                  ),
                   PopupMenuItem(
-                      value: 'clear_cookies', child: Text('Clear cookies')),
+                    value: 'clear_cookies',
+                    child: Text('Clear cookies'),
+                  ),
                 ],
               ),
             ],
@@ -148,8 +187,7 @@ class Sidebar extends ConsumerWidget {
                     tooltip: 'New environment',
                     onPressed: () => _showEnvironmentDialog(context, ref),
                     padding: EdgeInsets.zero,
-                    constraints:
-                        BoxConstraints(minWidth: 24, minHeight: 24),
+                    constraints: BoxConstraints(minWidth: 24, minHeight: 24),
                   ),
                 ),
                 Expanded(
@@ -160,23 +198,29 @@ class Sidebar extends ConsumerWidget {
                     items: [
                       DropdownMenuItem<Environment?>(
                         value: null,
-                        child: Text('No environment',
-                            style: TextStyle(
-                                color: colors.textMuted, fontSize: 12)),
+                        child: Text(
+                          'No environment',
+                          style: TextStyle(
+                            color: colors.textMuted,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
-                      ...envs.map((env) => DropdownMenuItem(
-                            value: env,
-                            child: Text(env.name,
-                                style: TextStyle(fontSize: 12)),
-                          )),
+                      ...envs.map(
+                        (env) => DropdownMenuItem(
+                          value: env,
+                          child: Text(env.name, style: TextStyle(fontSize: 12)),
+                        ),
+                      ),
                     ],
-                    onChanged: (v) => ref
-                        .read(activeEnvironmentProvider.notifier)
-                        .state = v,
+                    onChanged: (v) =>
+                        ref.read(activeEnvironmentProvider.notifier).state = v,
                     decoration: InputDecoration(
                       isDense: true,
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 6,
+                      ),
                     ),
                   ),
                 ),
@@ -188,8 +232,7 @@ class Sidebar extends ConsumerWidget {
                       onPressed: () =>
                           _showEnvironmentDialog(context, ref, activeEnv),
                       padding: EdgeInsets.zero,
-                      constraints:
-                          BoxConstraints(minWidth: 24, minHeight: 24),
+                      constraints: BoxConstraints(minWidth: 24, minHeight: 24),
                     ),
                   ),
                   PopupMenuButton<String>(
@@ -198,11 +241,16 @@ class Sidebar extends ConsumerWidget {
                         _confirmDeleteEnvironment(context, ref, activeEnv);
                       }
                     },
-                    icon: Icon(Icons.more_vert,
-                        size: 14, color: colors.textMuted),
+                    icon: Icon(
+                      Icons.more_vert,
+                      size: 14,
+                      color: colors.textMuted,
+                    ),
                     itemBuilder: (context) => [
                       PopupMenuItem(
-                          value: 'delete', child: Text('Delete environment')),
+                        value: 'delete',
+                        child: Text('Delete environment'),
+                      ),
                     ],
                   ),
                 ],
@@ -221,11 +269,11 @@ class Sidebar extends ConsumerWidget {
               children: [
                 // New collection button
                 SidebarRow(
-                  leading:
-                      Icon(Icons.create_new_folder, size: 16),
-                  title: Text('New Collection',
-                      style: TextStyle(
-                          fontSize: 12, color: colors.textMuted)),
+                  leading: Icon(Icons.create_new_folder, size: 16),
+                  title: Text(
+                    'New Collection',
+                    style: TextStyle(fontSize: 12, color: colors.textMuted),
+                  ),
                   onTap: () => _showCollectionDialog(context, ref),
                 ),
                 ...collections.expand((collection) {
@@ -233,23 +281,30 @@ class Sidebar extends ConsumerWidget {
                     // Collection header with hover actions
                     CollectionHeader(
                       collection: collection,
-                      onRename: () => _showCollectionDialog(
-                          context, ref, collection),
+                      onRename: () =>
+                          _showCollectionDialog(context, ref, collection),
                       onDelete: () =>
                           _confirmDeleteCollection(context, ref, collection),
                       onNewFolder: () =>
                           _showFolderDialog(context, ref, collection),
                     ),
                     // Folders
-                    ...collection.folders.map((folder) => SidebarRow(
-                          leading:
-                              Icon(Icons.folder_open, size: 16),
-                          title: Text(folder.name,
-                              style: TextStyle(fontSize: 12)),
-                          leftPadding: 24,
-                          onSecondaryTap: () =>
-                              _showFolderContextMenu(context, ref, collection, folder),
-                        )),
+                    ...collection.folders.map(
+                      (folder) => SidebarRow(
+                        leading: Icon(Icons.folder_open, size: 16),
+                        title: Text(
+                          folder.name,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        leftPadding: 24,
+                        onSecondaryTap: () => _showFolderContextMenu(
+                          context,
+                          ref,
+                          collection,
+                          folder,
+                        ),
+                      ),
+                    ),
                     // Requests in collection
                     FutureBuilder<List<HttpRequest>>(
                       future: ref
@@ -259,17 +314,23 @@ class Sidebar extends ConsumerWidget {
                         if (!snapshot.hasData) return const SizedBox.shrink();
                         return Column(
                           children: snapshot.data!
-                              .map((req) => SidebarRow(
-                                    leading: MethodBadge(method: req.method),
-                                    title: Text(req.name,
-                                        style:
-                                            TextStyle(fontSize: 12)),
-                                    leftPadding: 24,
-                                    onTap: () => onRequestSelected(req),
-                                    onSecondaryTap: () =>
-                                        _showRequestContextMenu(
-                                            context, ref, collection, req),
-                                  ))
+                              .map(
+                                (req) => SidebarRow(
+                                  leading: MethodBadge(method: req.method),
+                                  title: Text(
+                                    req.name,
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  leftPadding: 24,
+                                  onTap: () => onRequestSelected(req),
+                                  onSecondaryTap: () => _showRequestContextMenu(
+                                    context,
+                                    ref,
+                                    collection,
+                                    req,
+                                  ),
+                                ),
+                              )
                               .toList(),
                         );
                       },
@@ -295,14 +356,15 @@ class Sidebar extends ConsumerWidget {
                 final entry = entries[index];
                 return SidebarRow(
                   leading: MethodBadge(method: entry.request.method),
-                  title: Text(entry.request.url,
-                      style: TextStyle(fontSize: 11),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
+                  title: Text(
+                    entry.request.url,
+                    style: TextStyle(fontSize: 11),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   trailing: Text(
                     '${entry.statusCode} • ${entry.durationMs}ms',
-                    style: TextStyle(
-                        fontSize: 10, color: colors.textMuted),
+                    style: TextStyle(fontSize: 10, color: colors.textMuted),
                   ),
                   onTap: () => onRequestSelected(entry.request),
                 );
@@ -351,12 +413,9 @@ class Sidebar extends ConsumerWidget {
           .read(collectionsProvider.notifier)
           .save(existing.copyWith(name: result));
     } else {
-      await ref.read(collectionsProvider.notifier).save(
-            RequestCollection(
-              id: HttpRequest.generateId(),
-              name: result,
-            ),
-          );
+      await ref
+          .read(collectionsProvider.notifier)
+          .save(RequestCollection(id: HttpRequest.generateId(), name: result));
     }
   }
 
@@ -383,9 +442,7 @@ class Sidebar extends ConsumerWidget {
       ),
     );
     if (confirmed == true) {
-      await ref
-          .read(collectionsProvider.notifier)
-          .delete(collection.id);
+      await ref.read(collectionsProvider.notifier).delete(collection.id);
     }
   }
 
@@ -423,10 +480,7 @@ class Sidebar extends ConsumerWidget {
       final idx = folders.indexWhere((f) => f.id == existing.id);
       if (idx >= 0) folders[idx] = existing.copyWith(name: result);
     } else {
-      folders.add(RequestFolder(
-        id: HttpRequest.generateId(),
-        name: result,
-      ));
+      folders.add(RequestFolder(id: HttpRequest.generateId(), name: result));
     }
     await ref
         .read(collectionsProvider.notifier)
@@ -611,16 +665,17 @@ class Sidebar extends ConsumerWidget {
     WidgetRef ref, [
     Environment? existing,
   ]) async {
-    final nameController =
-        TextEditingController(text: existing?.name ?? 'New Env');
-    final vars = existing?.variables.toList() ??
+    final nameController = TextEditingController(
+      text: existing?.name ?? 'New Env',
+    );
+    final vars =
+        existing?.variables.toList() ??
         [const EnvironmentVariable(key: '', value: '')];
 
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title:
-            Text(existing == null ? 'New Environment' : 'Edit Environment'),
+        title: Text(existing == null ? 'New Environment' : 'Edit Environment'),
         content: SizedBox(
           width: 400,
           child: Column(
@@ -640,32 +695,35 @@ class Sidebar extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: TextField(
-                            decoration:
-                                InputDecoration(labelText: 'Key'),
+                            decoration: InputDecoration(labelText: 'Key'),
                             onChanged: (v) =>
                                 vars[index] = vars[index].copyWith(key: v),
-                            controller:
-                                TextEditingController(text: vars[index].key),
+                            controller: TextEditingController(
+                              text: vars[index].key,
+                            ),
                           ),
                         ),
                         SizedBox(width: 8),
                         Expanded(
                           child: TextField(
-                            decoration:
-                                InputDecoration(labelText: 'Value'),
-                            onChanged: (v) => vars[index] =
-                                vars[index].copyWith(value: v),
+                            decoration: InputDecoration(labelText: 'Value'),
+                            onChanged: (v) =>
+                                vars[index] = vars[index].copyWith(value: v),
                             controller: TextEditingController(
-                                text: vars[index].value),
+                              text: vars[index].value,
+                            ),
                             obscureText: vars[index].secret,
                           ),
                         ),
                         IconButton(
-                          icon: Icon(vars[index].secret
-                              ? Icons.visibility_off
-                              : Icons.visibility),
-                          onPressed: () => vars[index] =
-                              vars[index].copyWith(secret: !vars[index].secret),
+                          icon: Icon(
+                            vars[index].secret
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () => vars[index] = vars[index].copyWith(
+                            secret: !vars[index].secret,
+                          ),
                         ),
                       ],
                     );
@@ -685,8 +743,7 @@ class Sidebar extends ConsumerWidget {
               final env = Environment(
                 id: existing?.id ?? HttpRequest.generateId(),
                 name: nameController.text,
-                variables:
-                    vars.where((v) => v.key.isNotEmpty).toList(),
+                variables: vars.where((v) => v.key.isNotEmpty).toList(),
               );
               ref.read(environmentsProvider.notifier).save(env);
               Navigator.pop(context);

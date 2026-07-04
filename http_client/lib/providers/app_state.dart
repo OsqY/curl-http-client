@@ -44,9 +44,10 @@ class CookieJarNotifier extends StateNotifier<CookieJar> {
 }
 
 final collectionsProvider =
-    StateNotifierProvider<CollectionsNotifier, AsyncValue<List<RequestCollection>>>(
-  (ref) => CollectionsNotifier(ref.read(workspaceRepositoryProvider)),
-);
+    StateNotifierProvider<
+      CollectionsNotifier,
+      AsyncValue<List<RequestCollection>>
+    >((ref) => CollectionsNotifier(ref.read(workspaceRepositoryProvider)));
 
 class CollectionsNotifier
     extends StateNotifier<AsyncValue<List<RequestCollection>>> {
@@ -71,8 +72,8 @@ class CollectionsNotifier
 
 final environmentsProvider =
     StateNotifierProvider<EnvironmentsNotifier, AsyncValue<List<Environment>>>(
-  (ref) => EnvironmentsNotifier(ref.read(workspaceRepositoryProvider)),
-);
+      (ref) => EnvironmentsNotifier(ref.read(workspaceRepositoryProvider)),
+    );
 
 class EnvironmentsNotifier
     extends StateNotifier<AsyncValue<List<Environment>>> {
@@ -99,8 +100,8 @@ final activeEnvironmentProvider = StateProvider<Environment?>((ref) => null);
 
 final historyProvider =
     StateNotifierProvider<HistoryNotifier, AsyncValue<List<HistoryEntry>>>(
-  (ref) => HistoryNotifier(ref.read(workspaceRepositoryProvider)),
-);
+      (ref) => HistoryNotifier(ref.read(workspaceRepositoryProvider)),
+    );
 
 class HistoryNotifier extends StateNotifier<AsyncValue<List<HistoryEntry>>> {
   final WorkspaceRepository _repo;
@@ -158,4 +159,6 @@ final unsavedChangesProvider = StateProvider<bool>((ref) => false);
 enum SootThemeVariant { dark, light, orange }
 
 /// Current active theme variant.
-final themeVariantProvider = StateProvider<SootThemeVariant>((ref) => SootThemeVariant.dark);
+final themeVariantProvider = StateProvider<SootThemeVariant>(
+  (ref) => SootThemeVariant.dark,
+);

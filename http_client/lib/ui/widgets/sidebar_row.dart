@@ -33,8 +33,12 @@ class SidebarRow extends StatelessWidget {
           hoverColor: AppColors.border.withAlpha(40),
           highlightColor: AppColors.border.withAlpha(60),
           child: Container(
-            padding:
-                EdgeInsets.only(left: leftPadding, right: 8, top: 4, bottom: 4),
+            padding: EdgeInsets.only(
+              left: leftPadding,
+              right: 8,
+              top: 4,
+              bottom: 4,
+            ),
             child: Row(
               children: [
                 if (leading != null) ...[leading!, const SizedBox(width: 6)],

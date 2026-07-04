@@ -60,8 +60,8 @@ class ScriptContext {
     this.response,
     List<String>? assertions,
     List<String>? errors,
-  })  : assertions = assertions ?? [],
-        errors = errors ?? [];
+  }) : assertions = assertions ?? [],
+       errors = errors ?? [];
 }
 
 // ---------------------------------------------------------------------------
@@ -189,12 +189,10 @@ class ScriptingService {
       method: req.method.name,
       url: req.url,
       headers: {
-        for (final h in req.headers.where((h) => h.enabled))
-          h.key: h.value,
+        for (final h in req.headers.where((h) => h.enabled)) h.key: h.value,
       },
       queryParams: {
-        for (final q in req.queryParams.where((q) => q.enabled))
-          q.key: q.value,
+        for (final q in req.queryParams.where((q) => q.enabled)) q.key: q.value,
       },
       body: req.body.mode == BodyMode.raw && req.body.rawContent.isNotEmpty
           ? req.body.rawContent
@@ -275,23 +273,27 @@ class ScriptingService {
     final varsLit = mapLit(variables);
     final headersLit = mapLit(requestHeaders);
     final queryLit = mapLit(requestQueryParams);
-    final escapedBody =
-        requestBody != null ? "'${_escape(requestBody)}'" : 'null';
+    final escapedBody = requestBody != null
+        ? "'${_escape(requestBody)}'"
+        : 'null';
 
     // Response block (pre-request has no response).
     final String responseBlock;
     if (responseStatusCode != null) {
       final respHeadersLit = mapLit(responseHeaders ?? {});
-      final escapedRespBody =
-          responseBody != null ? "'${_escape(responseBody)}'" : "''";
-      responseBlock = '''
+      final escapedRespBody = responseBody != null
+          ? "'${_escape(responseBody)}'"
+          : "''";
+      responseBlock =
+          '''
   final response = <String, dynamic>{
     'statusCode': $responseStatusCode,
     'headers': $respHeadersLit,
     'body': $escapedRespBody,
   };''';
     } else {
-      responseBlock = '  final Map<String, dynamic>? response; response = null;';
+      responseBlock =
+          '  final Map<String, dynamic>? response; response = null;';
     }
 
     return '''

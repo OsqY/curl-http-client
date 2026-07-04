@@ -34,7 +34,9 @@ class HttpService {
 
     try {
       final resolvedUrl = substituteInUrl(request.url, variables);
-      final uri = Uri.parse(_addQueryParams(resolvedUrl, request.queryParams, variables));
+      final uri = Uri.parse(
+        _addQueryParams(resolvedUrl, request.queryParams, variables),
+      );
 
       // Resolve headers.
       final headers = _resolveHeaders(request, variables, accessToken);
@@ -52,7 +54,10 @@ class HttpService {
       // Attach cookies for this domain.
       final cookies = cookieJar.cookiesFor(uri);
       if (cookies.isNotEmpty) {
-        ioRequest.headers.set('Cookie', cookies.map((c) => '${c.name}=${c.value}').join('; '));
+        ioRequest.headers.set(
+          'Cookie',
+          cookies.map((c) => '${c.name}=${c.value}').join('; '),
+        );
       }
 
       // Write body.
@@ -112,10 +117,14 @@ class HttpService {
     final params = <String, String>{};
     for (final param in queryParams) {
       if (!param.enabled) continue;
-      params[substituteVariables(param.key, variables)] =
-          substituteVariables(param.value, variables);
+      params[substituteVariables(param.key, variables)] = substituteVariables(
+        param.value,
+        variables,
+      );
     }
-    return uri.replace(queryParameters: {...uri.queryParameters, ...params}).toString();
+    return uri
+        .replace(queryParameters: {...uri.queryParameters, ...params})
+        .toString();
   }
 
   Map<String, String> _resolveHeaders(
@@ -126,16 +135,20 @@ class HttpService {
     final headers = <String, String>{};
     for (final h in request.headers) {
       if (!h.enabled) continue;
-      headers[substituteVariables(h.key, variables)] =
-          substituteVariables(h.value, variables);
+      headers[substituteVariables(h.key, variables)] = substituteVariables(
+        h.value,
+        variables,
+      );
     }
 
     final auth = request.auth;
     if (auth is BearerAuth && auth.token.isNotEmpty) {
-      headers['Authorization'] = 'Bearer ${substituteVariables(auth.token, variables)}';
+      headers['Authorization'] =
+          'Bearer ${substituteVariables(auth.token, variables)}';
     } else if (auth is BasicAuth) {
-      final credentials =
-          base64Encode(utf8.encode('${auth.username}:${auth.password}'));
+      final credentials = base64Encode(
+        utf8.encode('${auth.username}:${auth.password}'),
+      );
       headers['Authorization'] = 'Basic $credentials';
     } else if (auth is ApiKeyAuth) {
       if (auth.location == ApiKeyLocation.header) {
@@ -146,13 +159,15 @@ class HttpService {
     }
 
     // Ensure content-type for raw body.
-    if (request.body.mode == BodyMode.raw && request.body.rawContent.isNotEmpty) {
+    if (request.body.mode == BodyMode.raw &&
+        request.body.rawContent.isNotEmpty) {
       final contentType = request.body.rawContentType.mime;
       if (!headers.containsKey(HttpHeaders.contentTypeHeader)) {
         headers[HttpHeaders.contentTypeHeader] = contentType;
       }
     } else if (request.body.mode == BodyMode.urlEncoded) {
-      headers[HttpHeaders.contentTypeHeader] = 'application/x-www-form-urlencoded';
+      headers[HttpHeaders.contentTypeHeader] =
+          'application/x-www-form-urlencoded';
     } else if (request.body.mode == BodyMode.formData) {
       headers[HttpHeaders.contentTypeHeader] = 'multipart/form-data';
     }
@@ -171,9 +186,13 @@ class HttpService {
         if (text.isEmpty) return null;
         return text;
       case BodyMode.urlEncoded:
-        final pairs = body.formData.where((p) => p.enabled).map((p) =>
-            '${Uri.encodeComponent(substituteVariables(p.key, variables))}='
-            '${Uri.encodeComponent(substituteVariables(p.value, variables))}');
+        final pairs = body.formData
+            .where((p) => p.enabled)
+            .map(
+              (p) =>
+                  '${Uri.encodeComponent(substituteVariables(p.key, variables))}='
+                  '${Uri.encodeComponent(substituteVariables(p.value, variables))}',
+            );
         if (pairs.isEmpty) return null;
         return pairs.join('&');
       case BodyMode.formData:
@@ -185,13 +204,19 @@ class HttpService {
     List<KeyValuePair> formData,
     Map<String, String> variables,
   ) {
-    final boundary = '----HttpClientBoundary${DateTime.now().millisecondsSinceEpoch}';
+    final boundary =
+        '----HttpClientBoundary${DateTime.now().millisecondsSinceEpoch}';
     final buffer = BytesBuilder();
     for (final field in formData.where((p) => p.enabled)) {
       buffer.add(utf8.encode('--$boundary\r\n'));
-      buffer.add(utf8.encode(
-          'Content-Disposition: form-data; name="${substituteVariables(field.key, variables)}"\r\n\r\n'));
-      buffer.add(utf8.encode('${substituteVariables(field.value, variables)}\r\n'));
+      buffer.add(
+        utf8.encode(
+          'Content-Disposition: form-data; name="${substituteVariables(field.key, variables)}"\r\n\r\n',
+        ),
+      );
+      buffer.add(
+        utf8.encode('${substituteVariables(field.value, variables)}\r\n'),
+      );
     }
     buffer.add(utf8.encode('--$boundary--\r\n'));
     return buffer.toBytes();

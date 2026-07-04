@@ -7,7 +7,11 @@ class ScriptsEditor extends StatefulWidget {
   final RequestScripts scripts;
   final ValueChanged<RequestScripts> onChanged;
 
-  const ScriptsEditor({super.key, required this.scripts, required this.onChanged});
+  const ScriptsEditor({
+    super.key,
+    required this.scripts,
+    required this.onChanged,
+  });
 
   @override
   State<ScriptsEditor> createState() => _ScriptsEditorState();
@@ -49,49 +53,51 @@ class _ScriptsEditorState extends State<ScriptsEditor> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Pre-request Script',
-              style: TextStyle(
-                  color: AppColors.text,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600)),
+          const Text(
+            'Pre-request Script',
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 4),
           Expanded(
             child: TextField(
               controller: _preController,
               maxLines: null,
               expands: true,
-              style: const TextStyle(
-                  fontFamily: 'monospace', fontSize: 12),
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
               decoration: const InputDecoration(
-                hintText:
-                    'Dart code run before each request',
+                hintText: 'Dart code run before each request',
                 border: OutlineInputBorder(),
               ),
-              onChanged: (v) => widget.onChanged(
-                  widget.scripts.copyWith(preRequest: v)),
+              onChanged: (v) =>
+                  widget.onChanged(widget.scripts.copyWith(preRequest: v)),
             ),
           ),
           const SizedBox(height: 8),
-          const Text('Post-response Script',
-              style: TextStyle(
-                  color: AppColors.text,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600)),
+          const Text(
+            'Post-response Script',
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 4),
           Expanded(
             child: TextField(
               controller: _postController,
               maxLines: null,
               expands: true,
-              style: const TextStyle(
-                  fontFamily: 'monospace', fontSize: 12),
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
               decoration: const InputDecoration(
-                hintText:
-                    'Dart code run after receiving the response',
+                hintText: 'Dart code run after receiving the response',
                 border: OutlineInputBorder(),
               ),
-              onChanged: (v) => widget.onChanged(
-                  widget.scripts.copyWith(postResponse: v)),
+              onChanged: (v) =>
+                  widget.onChanged(widget.scripts.copyWith(postResponse: v)),
             ),
           ),
         ],

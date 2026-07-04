@@ -8,7 +8,11 @@ class KeyValueEditor extends StatefulWidget {
   final List<KeyValuePair> items;
   final ValueChanged<List<KeyValuePair>> onChanged;
 
-  const KeyValueEditor({super.key, required this.items, required this.onChanged});
+  const KeyValueEditor({
+    super.key,
+    required this.items,
+    required this.onChanged,
+  });
 
   @override
   State<KeyValueEditor> createState() => _KeyValueEditorState();
@@ -51,8 +55,10 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
         SidebarRow(
           leading: const Icon(Icons.add, size: 16),
           title: const Text('Add', style: TextStyle(fontSize: 12)),
-          onTap: () => widget.onChanged(
-              [...rows, const KeyValuePair(key: '', value: '')]),
+          onTap: () => widget.onChanged([
+            ...rows,
+            const KeyValuePair(key: '', value: ''),
+          ]),
         ),
         Expanded(
           child: ListView.builder(
@@ -60,12 +66,10 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
             itemBuilder: (context, index) {
               final item = rows[index];
               return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: const BoxDecoration(
                   border: Border(
-                    bottom:
-                        BorderSide(color: AppColors.border, width: 0.5),
+                    bottom: BorderSide(color: AppColors.border, width: 0.5),
                   ),
                 ),
                 child: Row(
@@ -76,39 +80,42 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
                         rows[index] = item.copyWith(enabled: v ?? true);
                         widget.onChanged(rows);
                       },
-                      materialTapTargetSize:
-                          MaterialTapTargetSize.shrinkWrap,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       visualDensity: VisualDensity.compact,
                     ),
                     Expanded(
                       child: TextField(
                         style: const TextStyle(
-                            fontFamily: 'monospace', fontSize: 12),
+                          fontFamily: 'monospace',
+                          fontSize: 12,
+                        ),
                         decoration: const InputDecoration(
-                            hintText: 'Key',
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            isDense: true),
+                          hintText: 'Key',
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          isDense: true,
+                        ),
                         controller: _getKeyController(index, item.key),
-                        onChanged: (v) =>
-                            rows[index] = item.copyWith(key: v),
+                        onChanged: (v) => rows[index] = item.copyWith(key: v),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: TextField(
                         style: const TextStyle(
-                            fontFamily: 'monospace', fontSize: 12),
+                          fontFamily: 'monospace',
+                          fontSize: 12,
+                        ),
                         decoration: const InputDecoration(
-                            hintText: 'Value',
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            isDense: true),
+                          hintText: 'Value',
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          isDense: true,
+                        ),
                         controller: _getValueController(index, item.value),
-                        onChanged: (v) =>
-                            rows[index] = item.copyWith(value: v),
+                        onChanged: (v) => rows[index] = item.copyWith(value: v),
                       ),
                     ),
                     IconButton(
@@ -121,7 +128,9 @@ class _KeyValueEditorState extends State<KeyValueEditor> {
                       },
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(
-                          minWidth: 24, minHeight: 24),
+                        minWidth: 24,
+                        minHeight: 24,
+                      ),
                     ),
                   ],
                 ),
