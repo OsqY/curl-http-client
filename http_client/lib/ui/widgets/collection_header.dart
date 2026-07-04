@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
-import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/widgets/click_cursor.dart';
 
 /// Header row for a collection in the sidebar with rename/delete/folder actions.

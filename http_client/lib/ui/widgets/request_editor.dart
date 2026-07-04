@@ -10,7 +10,7 @@ class RequestEditor extends ConsumerStatefulWidget {
   final VoidCallback onSend;
   final VoidCallback onSave;
 
-  RequestEditor({super.key, required this.onSend, required this.onSave});
+  const RequestEditor({super.key, required this.onSend, required this.onSave});
 
   @override
   ConsumerState<RequestEditor> createState() => _RequestEditorState();
@@ -299,14 +299,51 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                         ),
                         Padding(
                           padding: EdgeInsets.all(12),
-                          child: Center(
-                            child: Text(
-                              'Settings coming soon',
-                              style: TextStyle(
-                                color: colors.textMuted,
-                                fontSize: 12,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Request Settings',
+                                style: TextStyle(
+                                  color: colors.text,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
+                              SizedBox(height: 12),
+                              _settingRow(
+                                Icons.check_circle,
+                                'Follow redirects',
+                                colors,
+                              ),
+                              _settingRow(
+                                Icons.lock,
+                                'Verify SSL certificates',
+                                colors,
+                              ),
+                              _settingRow(
+                                Icons.cookie,
+                                'Send cookies with request',
+                                colors,
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                'Theme',
+                                style: TextStyle(
+                                  color: colors.text,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Switch themes from the palette icon  in the sidebar header.',
+                                style: TextStyle(
+                                  color: colors.textMuted,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -320,4 +357,17 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
       ],
     );
   }
+}
+
+Widget _settingRow(IconData icon, String label, ColorSet colors) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      children: [
+        Icon(icon, size: 16, color: colors.accent),
+        const SizedBox(width: 8),
+        Text(label, style: TextStyle(color: colors.text, fontSize: 13)),
+      ],
+    ),
+  );
 }

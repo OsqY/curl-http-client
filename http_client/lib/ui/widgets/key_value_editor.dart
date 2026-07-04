@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
-import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/widgets/sidebar_row.dart';
 
 /// Editable list of key-value pairs for headers and query parameters.
@@ -10,7 +9,11 @@ class KeyValueEditor extends ConsumerStatefulWidget {
   final List<KeyValuePair> items;
   final ValueChanged<List<KeyValuePair>> onChanged;
 
-  KeyValueEditor({super.key, required this.items, required this.onChanged});
+  const KeyValueEditor({
+    super.key,
+    required this.items,
+    required this.onChanged,
+  });
 
   @override
   ConsumerState<KeyValueEditor> createState() => _KeyValueEditorState();

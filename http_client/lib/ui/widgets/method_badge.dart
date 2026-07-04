@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
-import 'package:http_client/providers/app_state.dart';
 
 /// Colored badge for HTTP methods, matching Insomnia's style.
 class MethodBadge extends ConsumerWidget {
   final HttpMethod method;
   final double fontSize;
 
-  MethodBadge({super.key, required this.method, this.fontSize = 11});
+  const MethodBadge({super.key, required this.method, this.fontSize = 11});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

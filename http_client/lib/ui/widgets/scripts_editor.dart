@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
-import 'package:http_client/providers/app_state.dart';
 
 /// Pre-request and post-response script editor.
 class ScriptsEditor extends ConsumerStatefulWidget {
   final RequestScripts scripts;
   final ValueChanged<RequestScripts> onChanged;
 
-  ScriptsEditor({super.key, required this.scripts, required this.onChanged});
+  const ScriptsEditor({
+    super.key,
+    required this.scripts,
+    required this.onChanged,
+  });
 
   @override
   ConsumerState<ScriptsEditor> createState() => _ScriptsEditorState();

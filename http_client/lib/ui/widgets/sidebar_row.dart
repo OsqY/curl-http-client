@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
-import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/widgets/click_cursor.dart';
 
 /// Sidebar row — replaces ListTile, no ListTile warnings.

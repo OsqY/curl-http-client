@@ -8,7 +8,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/vs2015.dart';
 import 'package:http_client/models/models.dart';
 import 'package:http_client/providers/app_state.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
@@ -330,7 +329,7 @@ class _VirtualBodyState extends State<_VirtualBody> {
         child: HighlightView(
           pretty,
           language: widget.language,
-          theme: vs2015Theme,
+          theme: sootSyntaxTheme,
           padding: const EdgeInsets.all(10),
           textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
         ),
@@ -367,7 +366,7 @@ class _VirtualBodyState extends State<_VirtualBody> {
             child: HighlightView(
               preview,
               language: widget.language,
-              theme: vs2015Theme,
+              theme: sootSyntaxTheme,
               padding: const EdgeInsets.all(10),
               textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
             ),
