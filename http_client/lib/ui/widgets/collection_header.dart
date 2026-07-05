@@ -109,14 +109,14 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
 
     if (widget.isDragTarget && widget.onRequestDropped != null) {
       header = DragTarget<HttpRequest>(
-        onWillAcceptWithDetails: (data) {
+        onWillAcceptWithDetails: (details) {
           setState(() => _dragHovering = true);
           return true;
         },
         onLeave: (_) => setState(() => _dragHovering = false),
-        onAcceptWithDetails: (request) {
+        onAcceptWithDetails: (details) {
           setState(() => _dragHovering = false);
-          widget.onRequestDropped!(request.data);
+          widget.onRequestDropped!(details.data);
         },
         builder: (context, candidates, rejected) => header,
       );
