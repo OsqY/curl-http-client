@@ -449,36 +449,95 @@ class _SidebarState extends ConsumerState<Sidebar> {
                           ],
                         );
                       }),
-                    // Requests in collection
-                    FutureBuilder<List<HttpRequest>>(
-                      future: ref
-                          .read(workspaceRepositoryProvider)
-                          .loadAllRequests(collection.id),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) return const SizedBox.shrink();
-                        return Column(
-                          children: snapshot.data!
-                              .map(
-                                (req) => SidebarRow(
-                                  leading: MethodBadge(method: req.method),
-                                  title: Text(
-                                    req.name,
-                                    style: TextStyle(fontSize: 12),
-                                  ),
-                                  leftPadding: 24,
-                                  onTap: () => widget.onRequestSelected(req),
-                                  onSecondaryTap: () =>
-                                      dialogs.showRequestContextMenu(
-                                        context,
-                                        collection,
-                                        req,
-                                      ),
-                                ),
+                    // Requests in collection (root level, only if expanded)
+                    if (_expandedCollections.contains(collection.id))
+                      FutureBuilder<List<HttpRequest>>(
+                        future: ref
+                            .read(workspaceRepositoryProvider)
+                            .loadAllRequests(collection.id),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) return const SizedBox.shrink();
+                          // Filter out folder child requests
+                          final folderIds = collection.folders
+                              .map((f) => f.id)
+                              .toSet();
+                          final rootRequests = snapshot.data!
+                              .where(
+                                (r) =>
+                                    r.parentFolderId == null ||
+                                    !folderIds.contains(r.parentFolderId),
                               )
-                              .toList(),
-                        );
-                      },
-                    ),
+                              .toList();
+                          return Column(
+                            children: rootRequests
+                                .map(
+                                  (req) => LongPressDraggable<HttpRequest>(
+                                    data: req,
+                                    feedback: Material(
+                                      elevation: 4,
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 8,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: colors.elevated,
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            MethodBadge(method: req.method),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              req.name,
+                                              style: TextStyle(
+                                                color: colors.text,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    childWhenDragging: Opacity(
+                                      opacity: 0.3,
+                                      child: SidebarRow(
+                                        leading: MethodBadge(
+                                          method: req.method,
+                                        ),
+                                        title: Text(
+                                          req.name,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                        leftPadding: 24,
+                                      ),
+                                    ),
+                                    child: SidebarRow(
+                                      leading: MethodBadge(method: req.method),
+                                      title: Text(
+                                        req.name,
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      leftPadding: 24,
+                                      onTap: () =>
+                                          widget.onRequestSelected(req),
+                                      onSecondaryTap: () =>
+                                          dialogs.showRequestContextMenu(
+                                            context,
+                                            collection,
+                                            req,
+                                          ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          );
+                        },
+                      ),
                   ];
                 }),
               ],
