@@ -199,19 +199,15 @@ class Sidebar extends ConsumerWidget {
                       initialSelection: activeEnv,
                       expandedInsets: EdgeInsets.zero,
                       dropdownMenuEntries: [
-                        DropdownMenuEntry(
-                          value: null,
-                          label: 'No environment',
-                        ),
+                        DropdownMenuEntry(value: null, label: 'No environment'),
                         ...envs.map(
-                          (env) => DropdownMenuEntry(
-                            value: env,
-                            label: env.name,
-                          ),
+                          (env) =>
+                              DropdownMenuEntry(value: env, label: env.name),
                         ),
                       ],
                       onSelected: (v) =>
-                          ref.read(activeEnvironmentProvider.notifier).state = v,
+                          ref.read(activeEnvironmentProvider.notifier).state =
+                              v,
                     ),
                   ),
                 ),

@@ -187,3 +187,6 @@ final themeVariantProvider =
 
 /// History search query.
 final historySearchProvider = StateProvider<String>((ref) => '');
+
+/// UI font size.
+final fontSizeProvider = StateProvider<double>((ref) => 13.0);

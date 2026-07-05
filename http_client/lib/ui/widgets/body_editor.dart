@@ -29,62 +29,63 @@ class _BodyEditorState extends ConsumerState<BodyEditor> {
     _urlEncodedValueController = TextEditingController();
   }
 
-    @override
-    void dispose() {
-      _rawController.dispose();
-      _urlEncodedKeyController.dispose();
-      _urlEncodedValueController.dispose();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    _rawController.dispose();
+    _urlEncodedKeyController.dispose();
+    _urlEncodedValueController.dispose();
+    super.dispose();
+  }
 
-    void _formatBody() {
-      final body = widget.body;
-      if (body.rawContentType == RawContentType.json) {
-        try {
-          final parsed = jsonDecode(body.rawContent);
-          final formatted = JsonEncoder.withIndent('  ').convert(parsed);
-          _rawController.text = formatted;
-          widget.onChanged(body.copyWith(rawContent: formatted));
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Invalid JSON: $e')),
-          );
-        }
-      } else if (body.rawContentType == RawContentType.xml) {
-        try {
-          final formatted = _formatXml(body.rawContent);
-          _rawController.text = formatted;
-          widget.onChanged(body.copyWith(rawContent: formatted));
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('XML formatting failed: $e')),
-          );
-        }
+  void _formatBody() {
+    final body = widget.body;
+    if (body.rawContentType == RawContentType.json) {
+      try {
+        final parsed = jsonDecode(body.rawContent);
+        final formatted = JsonEncoder.withIndent('  ').convert(parsed);
+        _rawController.text = formatted;
+        widget.onChanged(body.copyWith(rawContent: formatted));
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Invalid JSON: $e')));
+      }
+    } else if (body.rawContentType == RawContentType.xml) {
+      try {
+        final formatted = _formatXml(body.rawContent);
+        _rawController.text = formatted;
+        widget.onChanged(body.copyWith(rawContent: formatted));
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('XML formatting failed: $e')));
       }
     }
+  }
 
-    String _formatXml(String xml) {
-      // Basic XML formatter - add newlines after > and before <
-      var formatted = xml.replaceAll(RegExp(r'\s*<'), '<');
-      formatted = formatted.replaceAll(RegExp(r'>\s*'), '>');
-      formatted = formatted.replaceAll('><', '><\n');
-      // Indent nested tags
-      final lines = formatted.split('\n');
-      var indent = 0;
-      final result = <String>[];
-      for (final line in lines) {
-        final trimmed = line.trim();
-        if (trimmed.startsWith('</')) {
-          indent--;
-        }
-        result.add('${'  ' * indent}$trimmed');
-        if (trimmed.startsWith('<') && !trimmed.startsWith('</') &&
-            !trimmed.endsWith('/>')) {
-          indent++;
-        }
+  String _formatXml(String xml) {
+    // Basic XML formatter - add newlines after > and before <
+    var formatted = xml.replaceAll(RegExp(r'\s*<'), '<');
+    formatted = formatted.replaceAll(RegExp(r'>\s*'), '>');
+    formatted = formatted.replaceAll('><', '><\n');
+    // Indent nested tags
+    final lines = formatted.split('\n');
+    var indent = 0;
+    final result = <String>[];
+    for (final line in lines) {
+      final trimmed = line.trim();
+      if (trimmed.startsWith('</')) {
+        indent--;
       }
-      return result.join('\n');
+      result.add('${'  ' * indent}$trimmed');
+      if (trimmed.startsWith('<') &&
+          !trimmed.startsWith('</') &&
+          !trimmed.endsWith('/>')) {
+        indent++;
+      }
     }
+    return result.join('\n');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,36 +105,39 @@ class _BodyEditorState extends ConsumerState<BodyEditor> {
             if (m != null) widget.onChanged(body.copyWith(mode: m));
           },
         ),
-            if (body.mode == BodyMode.raw) ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<RawContentType>(
-                      initialValue: body.rawContentType,
-                      key: ValueKey(body.rawContentType),
-                      items: RawContentType.values
-                          .map(
-                            (t) => DropdownMenuItem(value: t, child: Text(t.displayName)),
-                          )
-                          .toList(),
-                      onChanged: (t) {
-                        if (t != null) {
-                          widget.onChanged(body.copyWith(rawContentType: t));
-                        }
-                      },
-                    ),
-                  ),
-                  if (body.rawContentType == RawContentType.json ||
-                      body.rawContentType == RawContentType.xml)
-                    IconButton(
-                      icon: Icon(Icons.code, size: 16),
-                      tooltip: body.rawContentType == RawContentType.json
-                          ? 'Format JSON'
-                          : 'Format XML',
-                      onPressed: _formatBody,
-                    ),
-                ],
+        if (body.mode == BodyMode.raw) ...[
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<RawContentType>(
+                  initialValue: body.rawContentType,
+                  key: ValueKey(body.rawContentType),
+                  items: RawContentType.values
+                      .map(
+                        (t) => DropdownMenuItem(
+                          value: t,
+                          child: Text(t.displayName),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (t) {
+                    if (t != null) {
+                      widget.onChanged(body.copyWith(rawContentType: t));
+                    }
+                  },
+                ),
               ),
+              if (body.rawContentType == RawContentType.json ||
+                  body.rawContentType == RawContentType.xml)
+                IconButton(
+                  icon: Icon(Icons.code, size: 16),
+                  tooltip: body.rawContentType == RawContentType.json
+                      ? 'Format JSON'
+                      : 'Format XML',
+                  onPressed: _formatBody,
+                ),
+            ],
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8),

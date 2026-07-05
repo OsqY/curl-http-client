@@ -324,23 +324,23 @@ class _VirtualBodyState extends State<_VirtualBody> {
     final pretty = prettyBody(widget.bodyText, widget.contentType);
     final bytes = utf8.encode(pretty).length;
 
-        if (bytes <= threshold || _fullContent) {
-          return SingleChildScrollView(
-            child: SelectionArea(
-              child: Container(
-                color: widget.colors.surface,
-                child: HighlightView(
-                  pretty,
-                  language: widget.language,
-                  theme: widget.colors == ColorSet.light
-                      ? sootLightSyntaxTheme(widget.colors)
-                      : sootSyntaxTheme(widget.colors),
-                  padding: const EdgeInsets.all(10),
-                  textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
-                ),
-              ),
+    if (bytes <= threshold || _fullContent) {
+      return SingleChildScrollView(
+        child: SelectionArea(
+          child: Container(
+            color: widget.colors.surface,
+            child: HighlightView(
+              pretty,
+              language: widget.language,
+              theme: widget.colors == ColorSet.light
+                  ? sootLightSyntaxTheme(widget.colors)
+                  : sootSyntaxTheme(widget.colors),
+              padding: const EdgeInsets.all(10),
+              textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
             ),
-          );
+          ),
+        ),
+      );
     }
 
     // Show truncated preview with load-full option.
@@ -368,24 +368,24 @@ class _VirtualBodyState extends State<_VirtualBody> {
             ],
           ),
         ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: SelectionArea(
-                  child: Container(
-                    color: widget.colors.surface,
-                    child: HighlightView(
-                      preview,
-                      language: widget.language,
-                      theme: widget.colors == ColorSet.light
-                          ? sootLightSyntaxTheme(widget.colors)
-                          : sootSyntaxTheme(widget.colors),
-                      padding: const EdgeInsets.all(10),
-                      textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
-                    ),
-                  ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: SelectionArea(
+              child: Container(
+                color: widget.colors.surface,
+                child: HighlightView(
+                  preview,
+                  language: widget.language,
+                  theme: widget.colors == ColorSet.light
+                      ? sootLightSyntaxTheme(widget.colors)
+                      : sootSyntaxTheme(widget.colors),
+                  padding: const EdgeInsets.all(10),
+                  textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
                 ),
               ),
             ),
+          ),
+        ),
       ],
     );
   }

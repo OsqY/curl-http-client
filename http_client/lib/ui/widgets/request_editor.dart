@@ -71,6 +71,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
     final colors = ref.watch(colorSetProvider);
     final request = ref.watch(currentRequestProvider);
     final hasUnsaved = ref.watch(unsavedChangesProvider);
+    final fontSize = ref.watch(fontSizeProvider);
 
     return Column(
       children: [
@@ -372,9 +373,50 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                                   fontSize: 12,
                                 ),
                               ),
-                              SizedBox(height: 16),
-                              Text(
-                                'Keyboard Shortcuts',
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Font Size',
+                                    style: TextStyle(
+                                      color: colors.text,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'A',
+                                        style: TextStyle(
+                                          color: colors.textMuted,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Slider(
+                                          value: fontSize,
+                                          min: 10,
+                                          max: 18,
+                                          divisions: 8,
+                                          activeColor: colors.accent,
+                                          inactiveColor: colors.border,
+                                          onChanged: (v) => ref
+                                              .read(fontSizeProvider.notifier)
+                                              .state = v,
+                                        ),
+                                      ),
+                                      Text(
+                                        'A',
+                                        style: TextStyle(
+                                          color: colors.textMuted,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Keyboard Shortcuts',
                                 style: TextStyle(
                                   color: colors.text,
                                   fontSize: 14,

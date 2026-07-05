@@ -304,15 +304,16 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     );
     if (result == null || result.isEmpty) return;
     try {
-          final request = ref.read(importExportServiceProvider).parseCurl(result);
-          ref.read(currentRequestProvider.notifier).state = request;
-          // Auto-save imported request to first collection
-          final collections = ref.read(collectionsProvider).valueOrNull ?? [];
-          if (collections.isNotEmpty) {
-            await ref.read(workspaceRepositoryProvider)
-                .saveRequest(request, collections.first.id);
-            await ref.read(collectionsProvider.notifier).load();
-          }
+      final request = ref.read(importExportServiceProvider).parseCurl(result);
+      ref.read(currentRequestProvider.notifier).state = request;
+      // Auto-save imported request to first collection
+      final collections = ref.read(collectionsProvider).valueOrNull ?? [];
+      if (collections.isNotEmpty) {
+        await ref
+            .read(workspaceRepositoryProvider)
+            .saveRequest(request, collections.first.id);
+        await ref.read(collectionsProvider.notifier).load();
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
