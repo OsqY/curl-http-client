@@ -41,7 +41,7 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
     final colors = ref.watch(colorSetProvider);
     final bgColor = _dragHovering ? colors.hover : colors.elevated;
 
-    Widget header = MouseRegion(
+    final headerContent = MouseRegion(
       onEnter: (_) => setState(() => _hovering = true),
       onExit: (_) => setState(() => _hovering = false),
       child: Container(
@@ -107,8 +107,9 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
       ),
     );
 
+        Widget result = headerContent;
     if (widget.isDragTarget && widget.onRequestDropped != null) {
-      header = DragTarget<HttpRequest>(
+      result = DragTarget<HttpRequest>(
         onWillAcceptWithDetails: (details) {
           setState(() => _dragHovering = true);
           return true;
@@ -118,10 +119,10 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
           setState(() => _dragHovering = false);
           widget.onRequestDropped!(details.data);
         },
-        builder: (context, candidates, rejected) => header,
+        builder: (context, candidates, rejected) => headerContent,
       );
     }
 
-    return header;
+    return result;
   }
 }
