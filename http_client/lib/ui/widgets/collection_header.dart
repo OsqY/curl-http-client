@@ -107,7 +107,7 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
       ),
     );
 
-        Widget result = headerContent;
+    Widget result = headerContent;
     if (widget.isDragTarget && widget.onRequestDropped != null) {
       result = DragTarget<HttpRequest>(
         onWillAcceptWithDetails: (details) {
