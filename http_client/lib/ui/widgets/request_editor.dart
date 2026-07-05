@@ -34,20 +34,25 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
     _postScriptController = TextEditingController();
   }
 
-  @override
-  void didUpdateWidget(covariant RequestEditor oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final request = ref.read(currentRequestProvider);
-    if (request.id != _lastRequestId) {
-      _lastRequestId = request.id;
-      ref.read(unsavedChangesProvider.notifier).state = false;
-      _setControllerText(_urlController, request.url);
-      _setControllerText(_nameController, request.name);
-      _setControllerText(_bodyController, request.body.rawContent);
-      _setControllerText(_preScriptController, request.scripts.preRequest);
-      _setControllerText(_postScriptController, request.scripts.postResponse);
+    @override
+    void didUpdateWidget(covariant RequestEditor oldWidget) {
+      super.didUpdateWidget(oldWidget);
+      final request = ref.read(currentRequestProvider);
+      if (request.id != _lastRequestId) {
+        _lastRequestId = request.id;
+        _setControllerText(_urlController, request.url);
+        _setControllerText(_nameController, request.name);
+        _setControllerText(_bodyController, request.body.rawContent);
+        _setControllerText(_preScriptController, request.scripts.preRequest);
+        _setControllerText(_postScriptController, request.scripts.postResponse);
+        // Defer provider modification until after build completes
+        Future.microtask(() {
+          if (mounted) {
+            ref.read(unsavedChangesProvider.notifier).state = false;
+          }
+        });
+      }
     }
-  }
 
   @override
   void dispose() {
@@ -373,50 +378,54 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                                   fontSize: 12,
                                 ),
                               ),
-                                  SizedBox(height: 16),
+                              SizedBox(height: 16),
+                              Text(
+                                'Font Size',
+                                style: TextStyle(
+                                  color: colors.text,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
                                   Text(
-                                    'Font Size',
+                                    'A',
                                     style: TextStyle(
-                                      color: colors.text,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
+                                      color: colors.textMuted,
+                                      fontSize: 11,
                                     ),
                                   ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'A',
-                                        style: TextStyle(
-                                          color: colors.textMuted,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Slider(
-                                          value: fontSize,
-                                          min: 10,
-                                          max: 18,
-                                          divisions: 8,
-                                          activeColor: colors.accent,
-                                          inactiveColor: colors.border,
-                                          onChanged: (v) => ref
-                                              .read(fontSizeProvider.notifier)
-                                              .state = v,
-                                        ),
-                                      ),
-                                      Text(
-                                        'A',
-                                        style: TextStyle(
-                                          color: colors.textMuted,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ],
+                                  Expanded(
+                                    child: Slider(
+                                      value: fontSize,
+                                      min: 10,
+                                      max: 18,
+                                      divisions: 8,
+                                      activeColor: colors.accent,
+                                      inactiveColor: colors.border,
+                                      onChanged: (v) =>
+                                          ref
+                                                  .read(
+                                                    fontSizeProvider.notifier,
+                                                  )
+                                                  .state =
+                                              v,
+                                    ),
                                   ),
-                                  SizedBox(height: 16),
                                   Text(
-                                    'Keyboard Shortcuts',
+                                    'A',
+                                    style: TextStyle(
+                                      color: colors.textMuted,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                'Keyboard Shortcuts',
                                 style: TextStyle(
                                   color: colors.text,
                                   fontSize: 14,
