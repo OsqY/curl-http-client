@@ -30,6 +30,7 @@ class MainScreen extends ConsumerStatefulWidget {
 
 class _MainScreenState extends ConsumerState<MainScreen> {
   double _topPanelHeight = 300;
+  double _sidebarWidth = 260;
   @override
   void initState() {
     super.initState();
@@ -98,7 +99,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             children: [
               // Sidebar
               SizedBox(
-                width: 260,
+                width: _sidebarWidth,
                 child: Container(
                   color: colors.surface,
                   child: Sidebar(
@@ -109,8 +110,22 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   ),
                 ),
               ),
-              const VerticalDivider(width: 1, thickness: 1),
-              // Center: request + response stacked
+                  GestureDetector(
+                    onHorizontalDragUpdate: (details) {
+                      setState(() {
+                        _sidebarWidth += details.delta.dx;
+                        _sidebarWidth = _sidebarWidth.clamp(180, 400);
+                      });
+                    },
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.resizeColumn,
+                      child: Container(
+                        width: 4,
+                        color: colors.border,
+                      ),
+                    ),
+                  ),
+                  // Center: request + response stacked
               Expanded(
                 child: workspacePath == null
                     ? const Center(
