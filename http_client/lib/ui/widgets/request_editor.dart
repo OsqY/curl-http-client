@@ -34,25 +34,25 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
     _postScriptController = TextEditingController();
   }
 
-    @override
-    void didUpdateWidget(covariant RequestEditor oldWidget) {
-      super.didUpdateWidget(oldWidget);
-      final request = ref.read(currentRequestProvider);
-      if (request.id != _lastRequestId) {
-        _lastRequestId = request.id;
-        _setControllerText(_urlController, request.url);
-        _setControllerText(_nameController, request.name);
-        _setControllerText(_bodyController, request.body.rawContent);
-        _setControllerText(_preScriptController, request.scripts.preRequest);
-        _setControllerText(_postScriptController, request.scripts.postResponse);
-        // Defer provider modification until after build completes
-        Future.microtask(() {
-          if (mounted) {
-            ref.read(unsavedChangesProvider.notifier).state = false;
-          }
-        });
-      }
+  @override
+  void didUpdateWidget(covariant RequestEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final request = ref.read(currentRequestProvider);
+    if (request.id != _lastRequestId) {
+      _lastRequestId = request.id;
+      _setControllerText(_urlController, request.url);
+      _setControllerText(_nameController, request.name);
+      _setControllerText(_bodyController, request.body.rawContent);
+      _setControllerText(_preScriptController, request.scripts.preRequest);
+      _setControllerText(_postScriptController, request.scripts.postResponse);
+      // Defer provider modification until after build completes
+      Future.microtask(() {
+        if (mounted) {
+          ref.read(unsavedChangesProvider.notifier).state = false;
+        }
+      });
     }
+  }
 
   @override
   void dispose() {
@@ -91,7 +91,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                   controller: _nameController,
                   style: TextStyle(
                     color: colors.text,
-                    fontSize: 13,
+                    fontSize: fontSize,
                     fontWeight: FontWeight.w500,
                   ),
                   decoration: InputDecoration(
@@ -105,7 +105,10 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
                       horizontal: 4,
                       vertical: 6,
                     ),
-                    hintStyle: TextStyle(color: colors.textMuted, fontSize: 13),
+                    hintStyle: TextStyle(
+                      color: colors.textMuted,
+                      fontSize: fontSize,
+                    ),
                   ),
                   onChanged: (v) {
                     ref.read(unsavedChangesProvider.notifier).state = true;
@@ -183,7 +186,7 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
               Expanded(
                 child: TextField(
                   controller: _urlController,
-                  style: TextStyle(fontFamily: 'monospace', fontSize: 13),
+                  style: TextStyle(fontFamily: 'monospace', fontSize: fontSize),
                   decoration: InputDecoration(
                     hintText: 'Enter URL',
                     border: InputBorder.none,
@@ -460,6 +463,7 @@ Widget _settingRow(
   String label,
   ColorSet colors, {
   Widget? trailing,
+  double fontSize = 13,
 }) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4),
@@ -470,7 +474,7 @@ Widget _settingRow(
         Expanded(
           child: Text(
             label,
-            style: TextStyle(color: colors.text, fontSize: 13),
+            style: TextStyle(color: colors.text, fontSize: fontSize),
           ),
         ),
         ?trailing,
@@ -479,7 +483,12 @@ Widget _settingRow(
   );
 }
 
-Widget _shortcutRow(String shortcut, String description, ColorSet colors) {
+Widget _shortcutRow(
+  String shortcut,
+  String description,
+  ColorSet colors, {
+  double fontSize = 13,
+}) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4),
     child: Row(
@@ -503,7 +512,7 @@ Widget _shortcutRow(String shortcut, String description, ColorSet colors) {
         const SizedBox(width: 8),
         Text(
           description,
-          style: TextStyle(color: colors.textMuted, fontSize: 13),
+          style: TextStyle(color: colors.textMuted, fontSize: fontSize),
         ),
       ],
     ),

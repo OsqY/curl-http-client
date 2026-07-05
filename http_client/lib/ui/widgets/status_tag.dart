@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_client/ui/theme/app_theme.dart';
+import 'package:http_client/providers/app_state.dart';
 
 /// Displays an HTTP status code with color-coded severity.
 class StatusTag extends ConsumerWidget {
@@ -11,6 +12,7 @@ class StatusTag extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(colorSetProvider);
+    final fontSize = ref.watch(fontSizeProvider);
     final color = statusCode >= 200 && statusCode < 300
         ? colors.green
         : statusCode >= 300 && statusCode < 400
@@ -22,7 +24,7 @@ class StatusTag extends ConsumerWidget {
       '$statusCode',
       style: TextStyle(
         color: color,
-        fontSize: 13,
+        fontSize: fontSize,
         fontWeight: FontWeight.w700,
         fontFamily: 'monospace',
       ),

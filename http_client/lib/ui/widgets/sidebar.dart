@@ -20,6 +20,7 @@ class Sidebar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(colorSetProvider);
+    final fontSize = ref.watch(fontSizeProvider);
     final collectionsAsync = ref.watch(collectionsProvider);
     final historyAsync = ref.watch(historyProvider);
     final envsAsync = ref.watch(environmentsProvider);
@@ -40,7 +41,7 @@ class Sidebar extends ConsumerWidget {
                 'HTTP Client',
                 style: TextStyle(
                   color: colors.text,
-                  fontSize: 13,
+                  fontSize: fontSize,
                   fontWeight: FontWeight.w600,
                 ),
               ),

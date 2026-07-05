@@ -29,6 +29,7 @@ class MainScreen extends ConsumerStatefulWidget {
 }
 
 class _MainScreenState extends ConsumerState<MainScreen> {
+  double _topPanelHeight = 300;
   @override
   void initState() {
     super.initState();
@@ -115,18 +116,52 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                     ? const Center(
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Column(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: RequestEditor(
-                              onSend: _sendRequest,
-                              onSave: _saveRequest,
-                            ),
-                          ),
-                          const Divider(height: 1, thickness: 1),
-                          Expanded(flex: 1, child: ResponsePanel()),
-                        ],
+                    : LayoutBuilder(
+                        builder: (context, constraints) {
+                          final totalHeight = constraints.maxHeight;
+                          final topHeight = _topPanelHeight.clamp(
+                            200.0,
+                            totalHeight - 200.0,
+                          );
+                          return Column(
+                            children: [
+                              SizedBox(
+                                height: topHeight,
+                                child: RequestEditor(
+                                  onSend: _sendRequest,
+                                  onSave: _saveRequest,
+                                ),
+                              ),
+                              GestureDetector(
+                                onVerticalDragUpdate: (details) {
+                                  setState(() {
+                                    _topPanelHeight += details.delta.dy;
+                                  });
+                                },
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.resizeRow,
+                                  child: Container(
+                                    height: 6,
+                                    color: colors.border,
+                                    child: Center(
+                                      child: Container(
+                                        height: 2,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                          color: colors.textMuted,
+                                          borderRadius: BorderRadius.circular(
+                                            2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(child: ResponsePanel()),
+                            ],
+                          );
+                        },
                       ),
               ),
             ],

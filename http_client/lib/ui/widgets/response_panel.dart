@@ -22,6 +22,7 @@ class ResponsePanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = ref.watch(colorSetProvider);
+    final fontSize = ref.watch(fontSizeProvider);
     final response = ref.watch(responseProvider);
     final error = ref.watch(executionErrorProvider);
     final isSending = ref.watch(isSendingProvider);
@@ -36,7 +37,7 @@ class ResponsePanel extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: Text(
           error,
-          style: TextStyle(color: colors.accent, fontSize: 13),
+          style: TextStyle(color: colors.accent, fontSize: fontSize),
         ),
       );
     }
@@ -45,7 +46,7 @@ class ResponsePanel extends ConsumerWidget {
       return Center(
         child: Text(
           'Send a request to see the response',
-          style: TextStyle(color: colors.textMuted, fontSize: 13),
+          style: TextStyle(color: colors.textMuted, fontSize: fontSize),
         ),
       );
     }
@@ -128,6 +129,7 @@ class ResponsePanel extends ConsumerWidget {
                           bodyText: bodyText,
                           contentType: contentType,
                           language: language,
+                          fontSize: fontSize,
                         ),
                         ListView.builder(
                           itemCount: response.headers.length,
@@ -301,12 +303,14 @@ class _VirtualBody extends StatefulWidget {
   final String bodyText;
   final String contentType;
   final String language;
+  final double fontSize;
 
   const _VirtualBody({
     required this.colors,
     required this.bodyText,
     required this.contentType,
     required this.language,
+    required this.fontSize,
   });
 
   @override
@@ -336,7 +340,10 @@ class _VirtualBodyState extends State<_VirtualBody> {
                   ? sootLightSyntaxTheme(widget.colors)
                   : sootSyntaxTheme(widget.colors),
               padding: const EdgeInsets.all(10),
-              textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
+              textStyle: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: widget.fontSize,
+              ),
             ),
           ),
         ),
@@ -380,7 +387,10 @@ class _VirtualBodyState extends State<_VirtualBody> {
                       ? sootLightSyntaxTheme(widget.colors)
                       : sootSyntaxTheme(widget.colors),
                   padding: const EdgeInsets.all(10),
-                  textStyle: TextStyle(fontFamily: 'monospace', fontSize: 13),
+                  textStyle: TextStyle(
+                    fontFamily: 'monospace',
+                    fontSize: widget.fontSize,
+                  ),
                 ),
               ),
             ),
