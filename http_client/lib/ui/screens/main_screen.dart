@@ -28,12 +28,14 @@ class MainScreen extends ConsumerStatefulWidget {
   ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends ConsumerState<MainScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _loadWorkspace();
-  }
+    class _MainScreenState extends ConsumerState<MainScreen> {
+      @override
+      void initState() {
+        super.initState();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _loadWorkspace();
+        });
+      }
 
   Future<void> _loadWorkspace() async {
     final prefs = await SharedPreferences.getInstance();

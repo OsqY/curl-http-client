@@ -35,6 +35,21 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
   }
 
   @override
+  void didUpdateWidget(covariant RequestEditor oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final request = ref.read(currentRequestProvider);
+    if (request.id != _lastRequestId) {
+      _lastRequestId = request.id;
+      ref.read(unsavedChangesProvider.notifier).state = false;
+      _setControllerText(_urlController, request.url);
+      _setControllerText(_nameController, request.name);
+      _setControllerText(_bodyController, request.body.rawContent);
+      _setControllerText(_preScriptController, request.scripts.preRequest);
+      _setControllerText(_postScriptController, request.scripts.postResponse);
+    }
+  }
+
+  @override
   void dispose() {
     _urlController.dispose();
     _nameController.dispose();
@@ -56,16 +71,6 @@ class _RequestEditorState extends ConsumerState<RequestEditor> {
     final colors = ref.watch(colorSetProvider);
     final request = ref.watch(currentRequestProvider);
     final hasUnsaved = ref.watch(unsavedChangesProvider);
-
-    if (request.id != _lastRequestId) {
-      _lastRequestId = request.id;
-      ref.read(unsavedChangesProvider.notifier).state = false;
-      _setControllerText(_urlController, request.url);
-      _setControllerText(_nameController, request.name);
-      _setControllerText(_bodyController, request.body.rawContent);
-      _setControllerText(_preScriptController, request.scripts.preRequest);
-      _setControllerText(_postScriptController, request.scripts.postResponse);
-    }
 
     return Column(
       children: [

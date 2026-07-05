@@ -424,7 +424,7 @@ class Sidebar extends ConsumerWidget {
               fillColor: colors.surface,
             ),
             onChanged: (value) {
-              // TODO: filter history entries
+              ref.read(historySearchProvider.notifier).state = value;
             },
           ),
         ),
