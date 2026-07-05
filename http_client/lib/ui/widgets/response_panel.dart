@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:diff_match_patch/diff_match_patch.dart'
     show diff, cleanupSemantic, Diff, DIFF_DELETE, DIFF_INSERT, DIFF_EQUAL;
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
@@ -70,18 +71,35 @@ class ResponsePanel extends ConsumerWidget {
                 '${response.durationMs} ms',
                 style: TextStyle(fontSize: 12, color: colors.textMuted),
               ),
-              SizedBox(width: 12),
-              Text(
-                formatBytes(response.sizeBytes),
-                style: TextStyle(fontSize: 12, color: colors.textMuted),
-              ),
-              Spacer(),
-              ClickCursor(
-                child: IconButton(
-                  icon: Icon(Icons.compare_arrows, size: 16),
-                  tooltip: 'Compare with saved response',
-                  onPressed: () =>
-                      _compareResponse(context, response.bodyText ?? ''),
+                  SizedBox(width: 12),
+                  Text(
+                    formatBytes(response.sizeBytes),
+                    style: TextStyle(fontSize: 12, color: colors.textMuted),
+                  ),
+                  Spacer(),
+                  ClickCursor(
+                    child: IconButton(
+                      icon: Icon(Icons.copy, size: 16),
+                      tooltip: 'Copy response body',
+                      onPressed: () {
+                        final text = response.bodyText;
+                        if (text != null) {
+                          Clipboard.setData(ClipboardData(text: text));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Copied to clipboard')),
+                          );
+                        }
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(minWidth: 24, minHeight: 24),
+                    ),
+                  ),
+                  ClickCursor(
+                    child: IconButton(
+                      icon: Icon(Icons.compare_arrows, size: 16),
+                      tooltip: 'Compare with saved response',
+                      onPressed: () =>
+                          _compareResponse(context, response.bodyText ?? ''),
                   padding: EdgeInsets.zero,
                   constraints: BoxConstraints(minWidth: 24, minHeight: 24),
                 ),
@@ -121,7 +139,7 @@ class ResponsePanel extends ConsumerWidget {
                 ),
                 Expanded(
                   child: Container(
-                    color: colors.surface,
+                    color: colors.bg,
                     child: TabBarView(
                       children: [
                         _VirtualBody(
@@ -332,7 +350,7 @@ class _VirtualBodyState extends State<_VirtualBody> {
       return SingleChildScrollView(
         child: SelectionArea(
           child: Container(
-            color: widget.colors.surface,
+            color: widget.colors.bg,
             child: HighlightView(
               pretty,
               language: widget.language,
