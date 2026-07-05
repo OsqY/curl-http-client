@@ -31,8 +31,8 @@ class SidebarRow extends ConsumerWidget {
       child: InkWell(
         onTap: onTap,
         mouseCursor: SystemMouseCursors.click,
-        hoverColor: colors.border.withAlpha(40),
-        highlightColor: colors.border.withAlpha(60),
+        hoverColor: colors.hover,
+        highlightColor: colors.active,
         child: Container(
           padding: EdgeInsets.only(
             left: leftPadding,

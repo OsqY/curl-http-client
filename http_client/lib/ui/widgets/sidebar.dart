@@ -194,36 +194,24 @@ class Sidebar extends ConsumerWidget {
                   ),
                 ),
                 Expanded(
-                  child: DropdownButtonFormField<Environment?>(
-                    initialValue: activeEnv,
-                    key: ValueKey(activeEnv?.id),
-                    isExpanded: true,
-                    items: [
-                      DropdownMenuItem<Environment?>(
-                        value: null,
-                        child: Text(
-                          'No environment',
-                          style: TextStyle(
-                            color: colors.textMuted,
-                            fontSize: 12,
+                  child: ClickCursor(
+                    child: DropdownMenu<Environment?>(
+                      initialSelection: activeEnv,
+                      expandedInsets: EdgeInsets.zero,
+                      dropdownMenuEntries: [
+                        DropdownMenuEntry(
+                          value: null,
+                          label: 'No environment',
+                        ),
+                        ...envs.map(
+                          (env) => DropdownMenuEntry(
+                            value: env,
+                            label: env.name,
                           ),
                         ),
-                      ),
-                      ...envs.map(
-                        (env) => DropdownMenuItem(
-                          value: env,
-                          child: Text(env.name, style: TextStyle(fontSize: 12)),
-                        ),
-                      ),
-                    ],
-                    onChanged: (v) =>
-                        ref.read(activeEnvironmentProvider.notifier).state = v,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 6,
-                      ),
+                      ],
+                      onSelected: (v) =>
+                          ref.read(activeEnvironmentProvider.notifier).state = v,
                     ),
                   ),
                 ),

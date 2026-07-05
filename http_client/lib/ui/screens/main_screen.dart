@@ -28,14 +28,14 @@ class MainScreen extends ConsumerStatefulWidget {
   ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-    class _MainScreenState extends ConsumerState<MainScreen> {
-      @override
-      void initState() {
-        super.initState();
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _loadWorkspace();
-        });
-      }
+class _MainScreenState extends ConsumerState<MainScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadWorkspace();
+    });
+  }
 
   Future<void> _loadWorkspace() async {
     final prefs = await SharedPreferences.getInstance();
@@ -304,8 +304,15 @@ class MainScreen extends ConsumerStatefulWidget {
     );
     if (result == null || result.isEmpty) return;
     try {
-      final request = ref.read(importExportServiceProvider).parseCurl(result);
-      ref.read(currentRequestProvider.notifier).state = request;
+          final request = ref.read(importExportServiceProvider).parseCurl(result);
+          ref.read(currentRequestProvider.notifier).state = request;
+          // Auto-save imported request to first collection
+          final collections = ref.read(collectionsProvider).valueOrNull ?? [];
+          if (collections.isNotEmpty) {
+            await ref.read(workspaceRepositoryProvider)
+                .saveRequest(request, collections.first.id);
+            await ref.read(collectionsProvider.notifier).load();
+          }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
