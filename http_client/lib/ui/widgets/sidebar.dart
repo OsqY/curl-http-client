@@ -321,21 +321,134 @@ class _SidebarState extends ConsumerState<Sidebar> {
                           _moveRequest(request, collection.id),
                     ),
                     // Folders
-                    ...collection.folders.map(
-                      (folder) => SidebarRow(
-                        leading: Icon(Icons.folder_open, size: 16),
-                        title: Text(
-                          folder.name,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        leftPadding: 24,
-                        onSecondaryTap: () => dialogs.showFolderContextMenu(
-                          context,
-                          collection,
-                          folder,
-                        ),
-                      ),
-                    ),
+                    if (_expandedCollections.contains(collection.id))
+                      ...collection.folders.map((folder) {
+                        final isExpanded = _expandedFolders.contains(folder.id);
+                        return Column(
+                          children: [
+                            DragTarget<HttpRequest>(
+                              onWillAcceptWithDetails: (details) => true,
+                              onAcceptWithDetails: (details) => _moveRequest(
+                                details.data,
+                                collection.id,
+                                newFolderId: folder.id,
+                              ),
+                              builder: (context, candidates, rejected) {
+                                return SidebarRow(
+                                  leading: ClickCursor(
+                                    child: InkWell(
+                                      onTap: () => _toggleFolder(folder.id),
+                                      child: Icon(
+                                        isExpanded
+                                            ? Icons.expand_more
+                                            : Icons.chevron_right,
+                                        size: 14,
+                                        color: colors.textMuted,
+                                      ),
+                                    ),
+                                  ),
+                                  title: Text(
+                                    folder.name,
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  leftPadding: 24,
+                                  onSecondaryTap: () =>
+                                      dialogs.showFolderContextMenu(
+                                        context,
+                                        collection,
+                                        folder,
+                                      ),
+                                );
+                              },
+                            ),
+                            if (isExpanded)
+                              FutureBuilder<List<HttpRequest>>(
+                                future: ref
+                                    .read(workspaceRepositoryProvider)
+                                    .loadRequestsForCollection(
+                                      collection.id,
+                                      folderId: folder.id,
+                                    ),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return SizedBox.shrink();
+                                  }
+                                  return Column(
+                                    children: snapshot.data!
+                                        .map(
+                                          (
+                                            req,
+                                          ) => LongPressDraggable<HttpRequest>(
+                                            data: req,
+                                            feedback: Material(
+                                              elevation: 4,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 12,
+                                                  vertical: 8,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: colors.elevated,
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    MethodBadge(
+                                                      method: req.method,
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Text(
+                                                      req.name,
+                                                      style: TextStyle(
+                                                        color: colors.text,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            childWhenDragging: Opacity(
+                                              opacity: 0.3,
+                                              child: SidebarRow(
+                                                leading: MethodBadge(
+                                                  method: req.method,
+                                                ),
+                                                title: Text(
+                                                  req.name,
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                leftPadding: 48,
+                                              ),
+                                            ),
+                                            child: SidebarRow(
+                                              leading: MethodBadge(
+                                                method: req.method,
+                                              ),
+                                              title: Text(
+                                                req.name,
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                              leftPadding: 48,
+                                              onTap: () =>
+                                                  widget.onRequestSelected(req),
+                                            ),
+                                          ),
+                                        )
+                                        .toList(),
+                                  );
+                                },
+                              ),
+                          ],
+                        );
+                      }),
                     // Requests in collection
                     FutureBuilder<List<HttpRequest>>(
                       future: ref
