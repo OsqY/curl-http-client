@@ -7,7 +7,7 @@ import 'package:http_client/ui/widgets/widgets.dart';
 import 'package:http_client/ui/widgets/sidebar_dialogs.dart';
 
 /// Sidebar with collections tree, environment selector, and history.
-class Sidebar extends ConsumerWidget {
+class Sidebar extends ConsumerStatefulWidget {
   final void Function(HttpRequest) onRequestSelected;
   final void Function(String action) onMenuAction;
 
@@ -18,7 +18,47 @@ class Sidebar extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Sidebar> createState() => _SidebarState();
+}
+
+class _SidebarState extends ConsumerState<Sidebar> {
+  final Set<String> _expandedCollections = {};
+  final Set<String> _expandedFolders = {};
+
+  void _toggleCollection(String id) {
+    setState(() {
+      if (!_expandedCollections.add(id)) _expandedCollections.remove(id);
+    });
+  }
+
+  void _toggleFolder(String id) {
+    setState(() {
+      if (!_expandedFolders.add(id)) _expandedFolders.remove(id);
+    });
+  }
+
+  Future<void> _moveRequest(
+    HttpRequest request,
+    String newCollectionId, {
+    String? newFolderId,
+  }) async {
+    final updated = request.copyWith(
+      collectionId: newCollectionId,
+      parentFolderId: newFolderId,
+    );
+    await ref
+        .read(workspaceRepositoryProvider)
+        .saveRequest(updated, newCollectionId);
+    if (request.collectionId != null) {
+      await ref
+          .read(workspaceRepositoryProvider)
+          .deleteRequest(request, request.collectionId!);
+    }
+    await ref.read(collectionsProvider.notifier).load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final colors = ref.watch(colorSetProvider);
     final fontSize = ref.watch(fontSizeProvider);
     final collectionsAsync = ref.watch(collectionsProvider);
@@ -144,7 +184,7 @@ class Sidebar extends ConsumerWidget {
                   if (v == 'clear_cookies') {
                     ref.read(cookieJarProvider.notifier).clearCookies();
                   } else {
-                    onMenuAction(v);
+                    widget.onMenuAction(v);
                   }
                 },
                 icon: Icon(Icons.more_vert, size: 16, color: colors.textMuted),
@@ -269,12 +309,16 @@ class Sidebar extends ConsumerWidget {
                     // Collection header with hover actions
                     CollectionHeader(
                       collection: collection,
+                      isExpanded: _expandedCollections.contains(collection.id),
+                      onToggle: () => _toggleCollection(collection.id),
                       onRename: () =>
                           dialogs.showCollectionDialog(context, collection),
                       onDelete: () =>
                           dialogs.confirmDeleteCollection(context, collection),
                       onNewFolder: () =>
                           dialogs.showFolderDialog(context, collection),
+                      onRequestDropped: (request) =>
+                          _moveRequest(request, collection.id),
                     ),
                     // Folders
                     ...collection.folders.map(
@@ -309,7 +353,7 @@ class Sidebar extends ConsumerWidget {
                                     style: TextStyle(fontSize: 12),
                                   ),
                                   leftPadding: 24,
-                                  onTap: () => onRequestSelected(req),
+                                  onTap: () => widget.onRequestSelected(req),
                                   onSecondaryTap: () =>
                                       dialogs.showRequestContextMenu(
                                         context,
@@ -447,7 +491,7 @@ class Sidebar extends ConsumerWidget {
                       '${entry.statusCode} • ${entry.durationMs}ms',
                       style: TextStyle(fontSize: 10, color: colors.textMuted),
                     ),
-                    onTap: () => onRequestSelected(entry.request),
+                    onTap: () => widget.onRequestSelected(entry.request),
                   );
                 },
               );

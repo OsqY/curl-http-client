@@ -5,11 +5,16 @@ import 'package:http_client/ui/theme/app_theme.dart';
 import 'package:http_client/ui/widgets/click_cursor.dart';
 
 /// Header row for a collection in the sidebar with rename/delete/folder actions.
+/// Also acts as a DragTarget for moving requests between collections.
 class CollectionHeader extends ConsumerStatefulWidget {
   final RequestCollection collection;
   final VoidCallback onRename;
   final VoidCallback onDelete;
   final VoidCallback onNewFolder;
+  final VoidCallback onToggle;
+  final bool isExpanded;
+  final void Function(HttpRequest request)? onRequestDropped;
+  final bool isDragTarget;
 
   const CollectionHeader({
     super.key,
@@ -17,6 +22,10 @@ class CollectionHeader extends ConsumerStatefulWidget {
     required this.onRename,
     required this.onDelete,
     required this.onNewFolder,
+    required this.onToggle,
+    required this.isExpanded,
+    this.onRequestDropped,
+    this.isDragTarget = true,
   });
 
   @override
@@ -25,18 +34,31 @@ class CollectionHeader extends ConsumerStatefulWidget {
 
 class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
   bool _hovering = false;
+  bool _dragHovering = false;
 
   @override
   Widget build(BuildContext context) {
     final colors = ref.watch(colorSetProvider);
-    return MouseRegion(
+    final bgColor = _dragHovering ? colors.hover : colors.elevated;
+
+    Widget header = MouseRegion(
       onEnter: (_) => setState(() => _hovering = true),
       onExit: (_) => setState(() => _hovering = false),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        color: colors.elevated,
+        color: bgColor,
         child: Row(
           children: [
+            ClickCursor(
+              child: InkWell(
+                onTap: widget.onToggle,
+                child: Icon(
+                  widget.isExpanded ? Icons.expand_more : Icons.chevron_right,
+                  size: 14,
+                  color: colors.textMuted,
+                ),
+              ),
+            ),
             Icon(Icons.folder, size: 14, color: colors.textMuted),
             SizedBox(width: 6),
             Expanded(
@@ -84,5 +106,22 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
         ),
       ),
     );
+
+    if (widget.isDragTarget && widget.onRequestDropped != null) {
+      header = DragTarget<HttpRequest>(
+        onWillAcceptWithDetails: (data) {
+          setState(() => _dragHovering = true);
+          return true;
+        },
+        onLeave: (_) => setState(() => _dragHovering = false),
+        onAcceptWithDetails: (request) {
+          setState(() => _dragHovering = false);
+          widget.onRequestDropped!(request.data);
+        },
+        builder: (context, candidates, rejected) => header,
+      );
+    }
+
+    return header;
   }
 }
