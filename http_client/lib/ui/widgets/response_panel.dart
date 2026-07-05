@@ -71,35 +71,35 @@ class ResponsePanel extends ConsumerWidget {
                 '${response.durationMs} ms',
                 style: TextStyle(fontSize: 12, color: colors.textMuted),
               ),
-                  SizedBox(width: 12),
-                  Text(
-                    formatBytes(response.sizeBytes),
-                    style: TextStyle(fontSize: 12, color: colors.textMuted),
-                  ),
-                  Spacer(),
-                  ClickCursor(
-                    child: IconButton(
-                      icon: Icon(Icons.copy, size: 16),
-                      tooltip: 'Copy response body',
-                      onPressed: () {
-                        final text = response.bodyText;
-                        if (text != null) {
-                          Clipboard.setData(ClipboardData(text: text));
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Copied to clipboard')),
-                          );
-                        }
-                      },
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(minWidth: 24, minHeight: 24),
-                    ),
-                  ),
-                  ClickCursor(
-                    child: IconButton(
-                      icon: Icon(Icons.compare_arrows, size: 16),
-                      tooltip: 'Compare with saved response',
-                      onPressed: () =>
-                          _compareResponse(context, response.bodyText ?? ''),
+              SizedBox(width: 12),
+              Text(
+                formatBytes(response.sizeBytes),
+                style: TextStyle(fontSize: 12, color: colors.textMuted),
+              ),
+              Spacer(),
+              ClickCursor(
+                child: IconButton(
+                  icon: Icon(Icons.copy, size: 16),
+                  tooltip: 'Copy response body',
+                  onPressed: () {
+                    final text = response.bodyText;
+                    if (text != null) {
+                      Clipboard.setData(ClipboardData(text: text));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Copied to clipboard')),
+                      );
+                    }
+                  },
+                  padding: EdgeInsets.zero,
+                  constraints: BoxConstraints(minWidth: 24, minHeight: 24),
+                ),
+              ),
+              ClickCursor(
+                child: IconButton(
+                  icon: Icon(Icons.compare_arrows, size: 16),
+                  tooltip: 'Compare with saved response',
+                  onPressed: () =>
+                      _compareResponse(context, response.bodyText ?? ''),
                   padding: EdgeInsets.zero,
                   constraints: BoxConstraints(minWidth: 24, minHeight: 24),
                 ),
@@ -128,12 +128,13 @@ class ResponsePanel extends ConsumerWidget {
           ),
         Expanded(
           child: DefaultTabController(
-            length: 2,
+            length: 3,
             child: Column(
               children: [
                 TabBar(
                   tabs: [
-                    Tab(text: 'Body'),
+                    Tab(text: 'Formatted'),
+                    Tab(text: 'Raw'),
                     Tab(text: 'Headers'),
                   ],
                 ),
@@ -148,6 +149,17 @@ class ResponsePanel extends ConsumerWidget {
                           contentType: contentType,
                           language: language,
                           fontSize: fontSize,
+                        ),
+                        SingleChildScrollView(
+                          padding: EdgeInsets.all(10),
+                          child: SelectableText(
+                            bodyText,
+                            style: TextStyle(
+                              fontFamily: 'monospace',
+                              fontSize: fontSize,
+                              color: colors.text,
+                            ),
+                          ),
                         ),
                         ListView.builder(
                           itemCount: response.headers.length,

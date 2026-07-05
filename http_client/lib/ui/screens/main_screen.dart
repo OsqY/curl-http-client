@@ -110,22 +110,51 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   ),
                 ),
               ),
-                  GestureDetector(
-                    onHorizontalDragUpdate: (details) {
-                      setState(() {
-                        _sidebarWidth += details.delta.dx;
-                        _sidebarWidth = _sidebarWidth.clamp(180, 400);
-                      });
-                    },
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.resizeColumn,
-                      child: Container(
-                        width: 4,
-                        color: colors.border,
+              if (_sidebarWidth > 0)
+                GestureDetector(
+                  behavior: HitTestBehavior.deferToChild,
+                  onHorizontalDragUpdate: (details) {
+                    setState(() {
+                      _sidebarWidth += details.delta.dx;
+                      _sidebarWidth = _sidebarWidth.clamp(0, 400);
+                    });
+                  },
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.resizeColumn,
+                    child: Container(
+                      width: 6,
+                      color: colors.border,
+                      child: Center(
+                        child: Container(
+                          width: 2,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: colors.textMuted,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  // Center: request + response stacked
+                ),
+              if (_sidebarWidth == 0)
+                ClickCursor(
+                  child: InkWell(
+                    onTap: () => setState(() => _sidebarWidth = 260),
+                    child: Container(
+                      width: 20,
+                      color: colors.elevated,
+                      child: Center(
+                        child: Icon(
+                          Icons.chevron_right,
+                          size: 16,
+                          color: colors.textMuted,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              // Center: request + response stacked
               Expanded(
                 child: workspacePath == null
                     ? const Center(
@@ -148,6 +177,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                                 ),
                               ),
                               GestureDetector(
+                                behavior: HitTestBehavior.deferToChild,
                                 onVerticalDragUpdate: (details) {
                                   setState(() {
                                     _topPanelHeight += details.delta.dy;
