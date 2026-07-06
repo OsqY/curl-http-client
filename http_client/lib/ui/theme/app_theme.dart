@@ -223,7 +223,7 @@ class ColorSet {
 // ── Syntax themes ──────────────────────────────────────────
 
 Map<String, TextStyle> sootSyntaxTheme(ColorSet colors) => {
-  'keyword': TextStyle(color: colors.accent),
+  'root': TextStyle(backgroundColor: colors.bg, color: colors.text),
   'keyword.type': TextStyle(color: colors.accent),
   'built_in': TextStyle(color: colors.lightSteel),
   'type': TextStyle(color: colors.steelBlue),
@@ -278,7 +278,7 @@ Map<String, TextStyle> sootSyntaxTheme(ColorSet colors) => {
 };
 
 Map<String, TextStyle> sootLightSyntaxTheme(ColorSet colors) => {
-  'keyword': TextStyle(color: colors.accent),
+  'root': TextStyle(backgroundColor: colors.bg, color: colors.text),
   'keyword.type': TextStyle(color: colors.accent),
   'built_in': TextStyle(color: Color(0xFF6B7280)),
   'type': TextStyle(color: Color(0xFF2563EB)),

@@ -376,45 +376,61 @@ class _SidebarState extends ConsumerState<Sidebar> {
                                   return Column(
                                     children: snapshot.data!
                                         .map(
-                                          (
-                                            req,
-                                          ) => LongPressDraggable<HttpRequest>(
-                                            data: req,
-                                            feedback: Material(
-                                              elevation: 4,
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 12,
-                                                  vertical: 8,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  color: colors.elevated,
-                                                  borderRadius:
-                                                      BorderRadius.circular(4),
-                                                ),
-                                                child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    MethodBadge(
-                                                      method: req.method,
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Text(
-                                                      req.name,
-                                                      style: TextStyle(
-                                                        color: colors.text,
-                                                        fontSize: 12,
+                                          (req) => GestureDetector(
+                                            onTap: () =>
+                                                widget.onRequestSelected(req),
+                                            child: Draggable<HttpRequest>(
+                                              data: req,
+                                              feedback: Material(
+                                                elevation: 4,
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 8,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: colors.elevated,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          4,
+                                                        ),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      MethodBadge(
+                                                        method: req.method,
                                                       ),
-                                                    ),
-                                                  ],
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        req.name,
+                                                        style: TextStyle(
+                                                          color: colors.text,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            childWhenDragging: Opacity(
-                                              opacity: 0.3,
+                                              childWhenDragging: Opacity(
+                                                opacity: 0.3,
+                                                child: SidebarRow(
+                                                  leading: MethodBadge(
+                                                    method: req.method,
+                                                  ),
+                                                  title: Text(
+                                                    req.name,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  leftPadding: 48,
+                                                ),
+                                              ),
                                               child: SidebarRow(
                                                 leading: MethodBadge(
                                                   method: req.method,
@@ -427,18 +443,6 @@ class _SidebarState extends ConsumerState<Sidebar> {
                                                 ),
                                                 leftPadding: 48,
                                               ),
-                                            ),
-                                            child: SidebarRow(
-                                              leading: MethodBadge(
-                                                method: req.method,
-                                              ),
-                                              title: Text(
-                                                req.name,
-                                                style: TextStyle(fontSize: 12),
-                                              ),
-                                              leftPadding: 48,
-                                              onTap: () =>
-                                                  widget.onRequestSelected(req),
                                             ),
                                           ),
                                         )
@@ -471,40 +475,53 @@ class _SidebarState extends ConsumerState<Sidebar> {
                           return Column(
                             children: rootRequests
                                 .map(
-                                  (req) => LongPressDraggable<HttpRequest>(
-                                    data: req,
-                                    feedback: Material(
-                                      elevation: 4,
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 8,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: colors.elevated,
-                                          borderRadius: BorderRadius.circular(
-                                            4,
+                                  (req) => GestureDetector(
+                                    onTap: () => widget.onRequestSelected(req),
+                                    child: Draggable<HttpRequest>(
+                                      data: req,
+                                      feedback: Material(
+                                        elevation: 4,
+                                        borderRadius: BorderRadius.circular(4),
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: colors.elevated,
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              MethodBadge(method: req.method),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                req.name,
+                                                style: TextStyle(
+                                                  color: colors.text,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            MethodBadge(method: req.method),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              req.name,
-                                              style: TextStyle(
-                                                color: colors.text,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
+                                      ),
+                                      childWhenDragging: Opacity(
+                                        opacity: 0.3,
+                                        child: SidebarRow(
+                                          leading: MethodBadge(
+                                            method: req.method,
+                                          ),
+                                          title: Text(
+                                            req.name,
+                                            style: TextStyle(fontSize: 12),
+                                          ),
+                                          leftPadding: 24,
                                         ),
                                       ),
-                                    ),
-                                    childWhenDragging: Opacity(
-                                      opacity: 0.3,
                                       child: SidebarRow(
                                         leading: MethodBadge(
                                           method: req.method,
@@ -514,23 +531,13 @@ class _SidebarState extends ConsumerState<Sidebar> {
                                           style: TextStyle(fontSize: 12),
                                         ),
                                         leftPadding: 24,
+                                        onSecondaryTap: () =>
+                                            dialogs.showRequestContextMenu(
+                                              context,
+                                              collection,
+                                              req,
+                                            ),
                                       ),
-                                    ),
-                                    child: SidebarRow(
-                                      leading: MethodBadge(method: req.method),
-                                      title: Text(
-                                        req.name,
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                      leftPadding: 24,
-                                      onTap: () =>
-                                          widget.onRequestSelected(req),
-                                      onSecondaryTap: () =>
-                                          dialogs.showRequestContextMenu(
-                                            context,
-                                            collection,
-                                            req,
-                                          ),
                                     ),
                                   ),
                                 )
