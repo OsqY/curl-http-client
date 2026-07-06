@@ -139,7 +139,8 @@ class WorkspaceRepository {
           !entity.path.endsWith('collection.json')) {
         final json =
             jsonDecode(await entity.readAsString()) as Map<String, dynamic>;
-        requests.add(HttpRequest.fromJson(json));
+        final request = HttpRequest.fromJson(json);
+        requests.add(request.copyWith(collectionId: collectionId));
       }
     }
     return requests;
@@ -148,10 +149,13 @@ class WorkspaceRepository {
   Future<List<HttpRequest>> loadAllRequests(String collectionId) async {
     final dir = await _collectionDirById(collectionId);
     if (dir == null) return [];
-    return _loadRequestsRecursive(dir);
+    return _loadRequestsRecursive(dir, collectionId);
   }
 
-  Future<List<HttpRequest>> _loadRequestsRecursive(Directory dir) async {
+  Future<List<HttpRequest>> _loadRequestsRecursive(
+    Directory dir,
+    String collectionId,
+  ) async {
     final requests = <HttpRequest>[];
     await for (final entity in dir.list(recursive: false)) {
       if (entity is File &&
@@ -159,9 +163,10 @@ class WorkspaceRepository {
           !entity.path.endsWith('collection.json')) {
         final json =
             jsonDecode(await entity.readAsString()) as Map<String, dynamic>;
-        requests.add(HttpRequest.fromJson(json));
+        final request = HttpRequest.fromJson(json);
+        requests.add(request.copyWith(collectionId: collectionId));
       } else if (entity is Directory) {
-        requests.addAll(await _loadRequestsRecursive(entity));
+        requests.addAll(await _loadRequestsRecursive(entity, collectionId));
       }
     }
     return requests;

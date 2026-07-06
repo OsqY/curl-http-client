@@ -1,5 +1,6 @@
 # Pi runtime state (AGENTS.md, skill-registry, etc.)
 .atl/
+.pi-subagents/
 
 # Flutter / Dart build artifacts (child: http_client/)
 **/build/

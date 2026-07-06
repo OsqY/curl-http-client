@@ -73,35 +73,50 @@ class _CollectionHeaderState extends ConsumerState<CollectionHeader> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            if (_hovering) ...[
-              ClickCursor(
-                child: IconButton(
-                  icon: Icon(Icons.add, size: 14),
-                  tooltip: 'New folder',
-                  onPressed: widget.onNewFolder,
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(minWidth: 20, minHeight: 20),
+            if (_hovering)
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClickCursor(
+                      child: IconButton(
+                        icon: Icon(Icons.add, size: 14),
+                        tooltip: 'New folder',
+                        onPressed: widget.onNewFolder,
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(
+                          minWidth: 20,
+                          minHeight: 20,
+                        ),
+                      ),
+                    ),
+                    ClickCursor(
+                      child: IconButton(
+                        icon: Icon(Icons.edit, size: 14),
+                        tooltip: 'Rename',
+                        onPressed: widget.onRename,
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(
+                          minWidth: 20,
+                          minHeight: 20,
+                        ),
+                      ),
+                    ),
+                    ClickCursor(
+                      child: IconButton(
+                        icon: Icon(Icons.delete, size: 14),
+                        tooltip: 'Delete',
+                        onPressed: widget.onDelete,
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(
+                          minWidth: 20,
+                          minHeight: 20,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              ClickCursor(
-                child: IconButton(
-                  icon: Icon(Icons.edit, size: 14),
-                  tooltip: 'Rename',
-                  onPressed: widget.onRename,
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(minWidth: 20, minHeight: 20),
-                ),
-              ),
-              ClickCursor(
-                child: IconButton(
-                  icon: Icon(Icons.delete, size: 14),
-                  tooltip: 'Delete',
-                  onPressed: widget.onDelete,
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(minWidth: 20, minHeight: 20),
-                ),
-              ),
-            ],
           ],
         ),
       ),

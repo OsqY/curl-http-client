@@ -60,6 +60,13 @@ jobs:
           sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
       - run: flutter pub get
       - run: flutter build linux --release
+      - name: Smoke test (binary runs without init crash)
+        run: |
+          sudo apt-get install -y xvfb
+          timeout 10 xvfb-run ./build/linux/x64/release/bundle/http_client 2>&1 | \
+            (grep -v 'Bad state: No ProviderScope found' || \
+            (echo 'FAIL: No ProviderScope found in release binary' && exit 1))
+          echo 'Smoke test passed'
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
